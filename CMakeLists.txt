@@ -14,6 +14,10 @@ find_package(GLUT REQUIRED)
 # 查找 Benchmark
 find_package(benchmark REQUIRED)
 
+# 查找 Gtest库
+find_package(GTest REQUIRED)
+
+# 添加子目录
 add_subdirectory(src)
 add_subdirectory(test)
-add_subdirectory(test_benchmark)
+add_subdirectory(bench_mark)

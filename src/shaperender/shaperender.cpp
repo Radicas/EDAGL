@@ -10,16 +10,15 @@
 #include <iostream>
 
 /* region Constructors / Destructor */
-ShapeRender::ShapeRender() {}
+ShapeRender::ShapeRender() = default;
 
-ShapeRender::~ShapeRender() {}
+ShapeRender::~ShapeRender() = default;
 
 /* endregion */
 
 /* region General Methods */
 void ShapeRender::drawRectangle()
 {
-    std::cout << "drawRectangle" << std::endl;
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 设置绘制模式为线框模式
     glBegin(GL_QUADS);
     glVertex2f(-0.3f, -0.3f); // 左下角顶点
@@ -30,22 +29,26 @@ void ShapeRender::drawRectangle()
     // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // 恢复绘制模式为填充模式
 }
 
-void ShapeRender::drawCircle()
-{
-    std::cout << "drawCircle" << std::endl;
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 设置绘制模式为线框模式
+void ShapeRender::drawArc(double cx, double cy,
+                          double radius,
+                          double startAngle, double endAngle,
+                          int numSegments) {
+
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(0.0f, 0.0f); // 圆心
-    int numSegments = 100;  // 圆形细分的线段数
-    float radius = 0.3f;    // 半径
-    for (int i = 0; i <= numSegments; i++)
-    {
-        float theta = 2.0f * 3.14159f * static_cast<float>(i) /
-                      static_cast<float>(numSegments);
-        float x = radius * cos(theta);
-        float y = radius * sin(theta);
-        glVertex2f(x, y);
+
+    // 画圆心
+    glVertex2d(cx, cy);
+
+    for (int i = 0; i <= numSegments; i++) {
+        double angle = startAngle + i * (endAngle - startAngle) / numSegments;
+
+        // 计算弧上每个点的坐标
+        double x = radius * cos(angle);
+        double y = radius * sin(angle);
+
+        glVertex2d(x + cx, y + cy);
     }
+
     glEnd();
 }
 /* endregion */
