@@ -3,4 +3,6 @@ build
 cmake-build-debug
 install
 .clang-tidy
+.clang-format
 .vscode
+.VSCodeCounter

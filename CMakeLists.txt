@@ -24,7 +24,7 @@ find_package(GTest REQUIRED)
 
 # 添加子目录
 add_subdirectory(geometry) # 几何库
-add_subdirectory(src)      # 源文件
+add_subdirectory(src) # 源文件
+add_subdirectory(test) # google test 单元测试
 
-#add_subdirectory(test)
-#add_subdirectory(bench_mark)
+# add_subdirectory(bench_mark)

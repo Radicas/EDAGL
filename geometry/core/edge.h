@@ -11,13 +11,22 @@
 #ifndef EDA_GL_EDGE_H
 #define EDA_GL_EDGE_H
 
+#include <vector>
+
 namespace core
 {
-    struct Edge
+    class Edge
     {
-        /* data */
+    public:
     };
 
+    class EdgeDomain
+    {
+    public:
+        Edge relatedEdge;
+        std::vector<float> location;
+        short int arcMark;
+    };
 } // namespace core
 
 #endif // EDA_GL_EDGE_H
