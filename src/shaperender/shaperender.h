@@ -32,6 +32,8 @@ public:
                         double radius,
                         double startAngle, double endAngle,
                         int numSegments);
+
+    static void drawTest();
     /* endregion */
 
 private:
