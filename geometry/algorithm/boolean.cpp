@@ -4,6 +4,7 @@
 #include "core/bbox.h"
 #include "core/edge.h"
 #include "core/point.h"
+#include "engine/geometry.h"
 
 namespace core
 {
@@ -51,7 +52,7 @@ namespace algorithm
         auto* bBox1 = AP1->getBBox();
         auto* bBox2 = AP2->getBBox();
         BBox newBBox;
-        BBox::intersectionBBox(*bBox1, *bBox2, newBBox);
+        geometry::unionBBoxes(*bBox1, *bBox2, newBBox);
 
         // 有效轴，false为x，true为y
         bool effectiveAxis = (newBBox.getMaxX() - newBBox.getMinX() >=

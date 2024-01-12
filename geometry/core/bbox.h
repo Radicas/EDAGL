@@ -13,61 +13,52 @@
 
 #include <vector>
 
-namespace core
-{
-    class BBox
-    {
+namespace core {
+class BBox {
 
-    public:
-        /* region Constructors / Destructor */
-        BBox(/* args */);
+public:
+  /* region Constructors / Destructor */
+  BBox(/* args */);
 
-        BBox(double aMinX, double aMaxX, double aMinY, double aMaxY);
+  BBox(double aMinX, double aMaxX, double aMinY, double aMaxY);
 
-        ~BBox();
+  ~BBox();
 
-        /* endregion */
+  /* endregion */
 
-        /* region General Methods */
-        void reShape(double aMinX, double aMaxX, double aMinY, double aMaxY);
+  /* region General Methods */
+  void reShape(double aMinX, double aMaxX, double aMinY, double aMaxY);
 
-        static int intersectionBBox(const BBox& aBBox1, const BBox& aBBox2,
-                                    BBox& aResult);
+  void merge(const std::vector<BBox> &aBoxes);
+  /* endregion */
 
-        static bool detached(const BBox& aBBox1, const BBox& aBBox2);
+  /* region Getters */
 
-        static bool contains(const BBox& aBBox1, const BBox& aBBox2);
+  double getMinX() const;
 
-        void merge(const std::vector<BBox>& aBoxes);
-        /* endregion */
+  double getMinY() const;
 
-        /* region Getters */
+  double getMaxX() const;
 
-        double getMinX() const;
+  double getMaxY() const;
+  /* endregion */
 
-        double getMinY() const;
+  /* region Setters */
+  void setMinX(double v);
 
-        double getMaxX() const;
+  void setMinY(double v);
 
-        double getMaxY() const;
-        /* endregion */
+  void setMaxX(double v);
 
-        /* region Setters */
-        void setMinX(double v);
+  void setMaxY(double v);
+  /* endregion */
 
-        void setMinY(double v);
-
-        void setMaxX(double v);
-
-        void setMaxY(double v);
-        /* endregion */
-
-    private:
-        double mMinX;
-        double mMaxX;
-        double mMinY;
-        double mMaxY;
-    };
+private:
+  double mMinX;
+  double mMaxX;
+  double mMinY;
+  double mMaxY;
+};
 } // namespace core
 
 #endif // EDA_GL_BBOX_H

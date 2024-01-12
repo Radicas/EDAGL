@@ -21,21 +21,6 @@ namespace core
           mPrev(pp), mNext(np)
     {
     }
-
-    //    LinkedNode::LinkedNode(const std::vector<Point>& points)
-    //        : data(points[0]), tag(false), crossing(false), ee(false),
-    //        pp(nullptr),
-    //          np(nullptr)
-    //    {
-    //        LinkedNode* tail = this;
-    //        for (size_t i = 1; i < points.size(); ++i)
-    //        {
-    //            LinkedNode* newNode = new LinkedNode(points[i]);
-    //            tail->np = newNode;
-    //            newNode->pp = tail;
-    //            tail = newNode;
-    //        }
-    //    }
     LinkedNode::LinkedNode(const LinkedNode& rhs)
     {
         mData = rhs.mData;

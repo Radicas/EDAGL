@@ -122,9 +122,16 @@ namespace geometry
      * @param M
      * @return 圆弧的BBox
      */
-    core::BBox bBoxOfArc(const core::Point& A, const core::Point& B,
-                         const core::Point& M);
+    core::BBox bBoxOfArc(const core::Point &A, const core::Point &B,
+                         const core::Point &M);
 
-} // namespace geometry
+    /********************************** BBOx *********************************/
+    bool detached(const core::BBox &aBBox1, const core::BBox &aBBox2);
+
+    bool contains(const core::BBox &aBBox1, const core::BBox &aBBox2);
+
+    int unionBBoxes(const core::BBox &aBBox1, const core::BBox &aBBox2,
+                    core::BBox &aResult);
+    } // namespace geometry
 
 #endif // EDA_GL_GEOMETRY_H
