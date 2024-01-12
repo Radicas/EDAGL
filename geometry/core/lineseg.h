@@ -11,8 +11,5 @@
 #ifndef EDA_GL_LINESEG_H
 #define EDA_GL_LINESEG_H
 
-namespace geometry
-{
-} // namespace geometry
 
 #endif // EDA_GL_LINESEG_H

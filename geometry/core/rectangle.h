@@ -47,6 +47,6 @@ namespace core {
         double angle; // 旋转角度 [0,2PI)
     };
 
-} // namespace geometry
+} // namespace core
 
 #endif // EDA_GL_RECTANGLE_H

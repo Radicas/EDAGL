@@ -60,6 +60,17 @@ namespace core
                  aBBox2.mMinY < aBBox1.mMinY && aBBox1.mMaxY < aBBox2.mMaxY));
     }
 
+    void BBox::merge(const std::vector<BBox>& aBoxes)
+    {
+        for (const auto box : aBoxes)
+        {
+            mMinX = std::min(mMinX, box.mMinX);
+            mMaxX = std::max(mMaxX, box.mMaxX);
+            mMinY = std::min(mMinY, box.mMinY);
+            mMaxY = std::max(mMaxY, box.mMaxY);
+        }
+    }
+
     /* endregion */
 
     /* region Getters */
@@ -86,7 +97,25 @@ namespace core
     /* endregion */
 
     /* region Setters */
+    void BBox::setMinX(double v)
+    {
+        mMinX = v;
+    }
 
+    void BBox::setMinY(double v)
+    {
+        mMinY = v;
+    }
+
+    void BBox::setMaxX(double v)
+    {
+        mMaxX = v;
+    }
+
+    void BBox::setMaxY(double v)
+    {
+        mMaxY = v;
+    }
     /* endregion */
 
 } // namespace core

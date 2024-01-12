@@ -11,6 +11,8 @@
 #ifndef EDA_GL_BBOX_H
 #define EDA_GL_BBOX_H
 
+#include <vector>
+
 namespace core
 {
     class BBox
@@ -35,6 +37,8 @@ namespace core
         static bool detached(const BBox& aBBox1, const BBox& aBBox2);
 
         static bool contains(const BBox& aBBox1, const BBox& aBBox2);
+
+        void merge(const std::vector<BBox>& aBoxes);
         /* endregion */
 
         /* region Getters */
@@ -49,7 +53,13 @@ namespace core
         /* endregion */
 
         /* region Setters */
+        void setMinX(double v);
 
+        void setMinY(double v);
+
+        void setMaxX(double v);
+
+        void setMaxY(double v);
         /* endregion */
 
     private:

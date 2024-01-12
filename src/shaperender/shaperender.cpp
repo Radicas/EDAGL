@@ -3,7 +3,6 @@
 #include <cmath>
 #include "core/rectangle.h"
 #include "core/point.h"
-#include "core/vector.h"
 
 /* region Constructors / Destructor */
 ShapeRender::ShapeRender() = default;

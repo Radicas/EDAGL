@@ -24,6 +24,7 @@ namespace algorithm
          *  获取两个圆弧多边形的包围盒
          *  根据包围盒，计算出有效轴是x还是y
          *  根据包围盒的边界值和有效轴，找出两个圆弧多边形各自的相关边
+         *  这里的相关边，可能是线段，也可能是圆弧
          *  创建两个空序列，用于存放多边形的边
          *  根据相关边，初始化边序列
          *  排序边序列，所有端点存到优先队列Q里
@@ -50,9 +51,20 @@ namespace algorithm
         auto* bBox1 = AP1->getBBox();
         auto* bBox2 = AP2->getBBox();
         BBox newBBox;
-
         BBox::intersectionBBox(*bBox1, *bBox2, newBBox);
 
+        // 有效轴，false为x，true为y
+        bool effectiveAxis = (newBBox.getMaxX() - newBBox.getMinX() >=
+                              newBBox.getMaxY() - newBBox.getMinY());
+        // 有效轴的第一条，如果是x,则是左边；如果是y，则是下边
+        double effectiveAxis1 =
+            effectiveAxis ? newBBox.getMinY() : newBBox.getMinX();
+        // 有效轴的第二条，如果是x,则是右边；如果是y，则是上边
+        double effectiveAxis2 =
+            effectiveAxis ? newBBox.getMaxY() : newBBox.getMaxX();
+
+        std::cout << "effective axis: " << effectiveAxis << std::endl;
+        // TODO: 未完待续
         /**
          * 能进入此函数，说明包围盒是相交的，不相离，不包含
          *

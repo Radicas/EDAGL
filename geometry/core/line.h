@@ -11,7 +11,7 @@
 #ifndef EDA_GL_LINE_H
 #define EDA_GL_LINE_H
 
-namespace geometry
+namespace core
 {
     struct Line
     {
@@ -20,6 +20,6 @@ namespace geometry
         double c;
     };
 
-} // namespace geometry
+} // namespace core
 
 #endif // EDA_GL_LINE_H

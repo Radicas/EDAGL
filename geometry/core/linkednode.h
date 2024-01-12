@@ -13,34 +13,42 @@
 
 #include "point.h"
 
-namespace core {
-    class LinkedNode {
+namespace core
+{
+    class LinkedNode
+    {
     public:
-        Point data;      ///< 坐标
-        bool tag;        ///< 是否附加点
-        bool crossing;   ///< 是否交点
-        bool ee;         ///< 是否进入点
-        LinkedNode *pp;  ///< 前一个点
-        LinkedNode *np;  ///< 后一点
+        Point mData;       ///< 坐标
+        bool mIsAppendix;  ///< 是否附加点
+        bool mIsCrossing;  ///< 是否交点
+        bool mEE;          ///< 是否进入点
+        LinkedNode* mPrev; ///< 前一个点
+        LinkedNode* mNext; ///< 后一点
 
         /* region Constructors / Destructor */
         LinkedNode();
 
-        LinkedNode(const Point &data, bool tag, bool crossing, bool ee, LinkedNode *pp, LinkedNode *np);
+        explicit LinkedNode(const Point& data);
 
-        LinkedNode(const LinkedNode &rhs);
+        LinkedNode(const Point& data, bool tag, bool crossing, bool ee,
+                   LinkedNode* pp, LinkedNode* np);
 
-        LinkedNode &operator=(const LinkedNode &rhs) = default;
+        LinkedNode(const LinkedNode& rhs);
 
-        LinkedNode(LinkedNode &&rhs) noexcept;
+        LinkedNode& operator=(const LinkedNode& rhs) = default;
 
-        LinkedNode &operator=(LinkedNode &&rhs) noexcept;
+        LinkedNode(LinkedNode&& rhs) noexcept;
+
+        LinkedNode& operator=(LinkedNode&& rhs) noexcept;
         /* endregion */
 
         /* region General Methods */
-        bool operator==(const LinkedNode &rhs) const;
+        bool operator==(const LinkedNode& rhs) const;
+
+        static LinkedNode*
+        constructLinkedNodes(const std::vector<Point>& points);
         /* endregion */
     };
-} // namespace geometry
+} // namespace core
 
 #endif // EDA_GL_LINKEDNODE_H

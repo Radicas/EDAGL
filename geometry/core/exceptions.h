@@ -11,9 +11,5 @@
 #ifndef EDA_GL_EXCEPTIONS_H
 #define EDA_GL_EXCEPTIONS_H
 
-namespace geometry
-{
-
-} // namespace geometry
 
 #endif // EDA_GL_EXCEPTIONS_H
