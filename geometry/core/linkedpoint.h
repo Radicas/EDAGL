@@ -13,10 +13,8 @@
 
 #include "point.h"
 
-namespace geometry
-{
-    struct LinkedPoint
-    {
+namespace core {
+    struct LinkedPoint {
         Point data;      ///< 坐标
         bool tag;        ///< 是否附加点
         bool crossing;   ///< 是否交点

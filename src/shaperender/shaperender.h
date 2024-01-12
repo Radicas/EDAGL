@@ -1,15 +1,20 @@
 /**
  * @file shaperender.h
  * @author your name (you@domain.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-01-03
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 #ifndef EDA_GL_SHAPERENDER_H
 #define EDA_GL_SHAPERENDER_H
+
+namespace core
+{
+    struct Rectangle;
+}
 
 class ShapeRender
 {
@@ -26,7 +31,7 @@ public:
     /* endregion */
 
     /* region General Methods */
-    static void drawRectangle();
+    static void drawRectangle(const core::Rectangle& rect);
 
     static void drawArc(double cx, double cy,
                         double radius,

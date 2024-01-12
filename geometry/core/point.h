@@ -13,76 +13,39 @@
 
 #include <iostream>
 
-namespace core
-{
-    struct Point
-    {
+namespace core {
+    class Point {
+    public:
         double x{};
         double y{};
 
         Point() = default;
 
-        Point(double x, double y) : x(x), y(y)
-        {
-        }
+        Point(double x, double y);
 
-        Point(const Point &rhs)
-        {
-            x = rhs.x;
-            y = rhs.y;
-        }
+        Point(const Point &rhs);
 
         Point &operator=(const Point &rhs) = default;
 
-        Point &operator+(const Point &rhs)
-        {
-            x += rhs.x;
-            y += rhs.y;
-            return *this;
-        }
+        Point &operator+(const Point &rhs);
 
-        Point &operator+=(const Point &rhs)
-        {
-            x += rhs.x;
-            y += rhs.y;
-            return *this;
-        }
+        Point &operator+=(const Point &rhs);
 
-        Point &operator*(double val)
-        {
-            x *= val;
-            y *= val;
-            return *this;
-        }
+        Point &operator*(double val);
 
-        Point &operator*=(double val)
-        {
-            x *= val;
-            y *= val;
-            return *this;
-        }
+        Point &operator*=(double val);
 
-        bool operator==(const Point &rhs) const
-        {
-            return x == rhs.x && y == rhs.y;
-        }
+        bool operator==(const Point &rhs) const;
 
-        bool operator!=(const Point &rhs) const
-        {
-            return !(*this == rhs);
-        }
+        bool operator!=(const Point &rhs) const;
 
-        friend std::ostream &operator<<(std::ostream &os, const Point &point)
-        {
+        // 声明为友元，可以访问私有属性
+        friend std::ostream &operator<<(std::ostream &os, const Point &point) {
             os << point.x << "," << point.y;
             return os;
         }
 
-        inline void Negate()
-        {
-            x = -x;
-            y = -y;
-        }
+        inline void Negate();
     };
 } // namespace geometry
 

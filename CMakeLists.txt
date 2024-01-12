@@ -1,9 +1,14 @@
+# 最小版本
 cmake_minimum_required(VERSION 3.5)
 
+# 项目名称
 project(EDA_GL)
 
 # 设置C++标准
 set(CMAKE_CXX_STANDARD 11)
+
+# 设置安装目录
+set(INSTALL_DIR ${CMAKE_SOURCE_DIR}/install)
 
 # 查找 OpenGL 库
 find_package(OpenGL REQUIRED)
@@ -18,6 +23,8 @@ find_package(benchmark REQUIRED)
 find_package(GTest REQUIRED)
 
 # 添加子目录
-add_subdirectory(src)
-add_subdirectory(test)
-add_subdirectory(bench_mark)
+add_subdirectory(geometry) # 几何库
+add_subdirectory(src)      # 源文件
+
+#add_subdirectory(test)
+#add_subdirectory(bench_mark)
