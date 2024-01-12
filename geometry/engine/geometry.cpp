@@ -1,5 +1,7 @@
 #include "geometry.h"
 #include "core/point.h"
+#include <math.h>
+#include <algorithm>
 
 using namespace core;
 namespace geometry
@@ -37,7 +39,7 @@ namespace geometry
 
     double pointsDistance(const core::Point& aP1, const core::Point& aP2)
     {
-        return sqrt((aP1.x - aP2.x) * (aP1.x - aP2.x) +
+        return std::sqrt((aP1.x - aP2.x) * (aP1.x - aP2.x) +
                     (aP1.y - aP2.y) * (aP1.y - aP2.y));
     }
     /****************************** Circle / Arc ******************************/

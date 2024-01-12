@@ -1,6 +1,9 @@
 #include "rectangle.h"
 
 #include "point.h"
+
+#include <algorithm>
+#include <cmath>
 namespace core
 {
     /* region Constructors / Destructor */
@@ -49,7 +52,7 @@ namespace core
 
     Point Rectangle::topRight() const
     {
-        double topRightX = x + w * cos(angle);
+        double topRightX = x + w * std::cos(angle);
         double topRightY = y + w * sin(angle);
         return Point(topRightX, topRightY);
     }

@@ -3,6 +3,8 @@
 #include "engine/geometry.h"
 #include "linkednode.h"
 
+#include <limits>
+
 namespace core
 {
     /* region Constructors / Destructor */

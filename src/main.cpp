@@ -1,22 +1,24 @@
 #include "shaperender/shaperender.h"
 
-#ifdef WIN32
-#include <GL/glut.h>
-#elif __linux__
-#elif __APPLE__
-
-#include <GLUT/glut.h>
-
-#endif
-
 #include "algorithm/boolean.h"
 #include "core/arcpolygon.h"
 #include "core/edge.h"
 #include "core/linkednode.h"
 #include "core/rectangle.h"
+
+#ifdef WIN32
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#elif __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
+#include <OpenGL/glut.h>
+#elif __linux__
+#endif 
+
 #include <iostream>
+#include <math.h>
 
 int DISPLAY_STATE = -1;
 
@@ -71,12 +73,12 @@ void display()
 
 void reshape(int width, int height)
 {
-    glViewport(0, 0, width, height); // 设置视口大小，与窗口大小一致
-    glMatrixMode(GL_PROJECTION);     // 设置矩阵模式为投影矩阵
-    glLoadIdentity();                // 重置当前矩阵为单位矩阵
-    gluOrtho2D(-1.0, 1.0, -1.0,
-               1.0); // 设置正交投影矩阵，定义世界坐标系到视口坐标系的映射关系
-    glMatrixMode(GL_MODELVIEW); // 设置矩阵模式为模型视图矩阵
+    // glViewport(0, 0, width, height); // 设置视口大小，与窗口大小一致
+    // glMatrixMode(GL_PROJECTION);     // 设置矩阵模式为投影矩阵
+    // glLoadIdentity();                // 重置当前矩阵为单位矩阵
+    // gluOrtho2D(-1.0, 1.0, -1.0,
+    //            1.0); // 设置正交投影矩阵，定义世界坐标系到视口坐标系的映射关系
+    // glMatrixMode(GL_MODELVIEW); // 设置矩阵模式为模型视图矩阵
 }
 
 // 按钮回调函数

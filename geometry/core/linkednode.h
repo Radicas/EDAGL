@@ -12,6 +12,7 @@
 #define EDA_GL_LINKEDNODE_H
 
 #include "point.h"
+#include <vector>
 
 namespace core
 {

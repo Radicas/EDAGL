@@ -1,5 +1,12 @@
 #include "shaperender.h"
+
+#ifdef WIN32
+#include <GL/gl.h>
+#elif __APPLE__
 #include <OpenGL/gl.h>
+#elif __linux__
+#endif 
+
 #include <cmath>
 #include "core/rectangle.h"
 #include "core/point.h"

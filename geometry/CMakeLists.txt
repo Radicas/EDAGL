@@ -11,8 +11,11 @@ add_library(${LIB_NAME}
 # 目标查找头文件
 target_include_directories(${LIB_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
-        )
+)
+
+message("lib dir: " ${INSTALL_DIR})
 
 # 安装库
 install(TARGETS ${LIB_NAME}
-        LIBRARY DESTINATION ${INSTALL_DIR})
+        DESTINATION ${INSTALL_DIR}
+)
