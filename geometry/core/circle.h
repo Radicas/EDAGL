@@ -11,5 +11,4 @@
 #ifndef EDA_GL_CIRCLE_H
 #define EDA_GL_CIRCLE_H
 
-
-#endif // EDA_GL_CIRCLE_H
+#endif  // EDA_GL_CIRCLE_H

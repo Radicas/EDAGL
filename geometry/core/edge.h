@@ -13,20 +13,17 @@
 
 #include <vector>
 
-namespace core
-{
-    class Edge
-    {
-    public:
-    };
+namespace core {
+class Edge {
+   public:
+};
 
-    class EdgeDomain
-    {
-    public:
-        Edge relatedEdge;
-        std::vector<float> location;
-        short int arcMark;
-    };
-} // namespace core
+class EdgeDomain {
+   public:
+    Edge relatedEdge;
+    std::vector<float> location;
+    short int arcMark;
+};
+}  // namespace core
 
-#endif // EDA_GL_EDGE_H
+#endif  // EDA_GL_EDGE_H

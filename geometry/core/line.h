@@ -11,15 +11,13 @@
 #ifndef EDA_GL_LINE_H
 #define EDA_GL_LINE_H
 
-namespace core
-{
-    struct Line
-    {
-        double a;
-        double b;
-        double c;
-    };
+namespace core {
+struct Line {
+    double a;
+    double b;
+    double c;
+};
 
-} // namespace core
+}  // namespace core
 
-#endif // EDA_GL_LINE_H
+#endif  // EDA_GL_LINE_H

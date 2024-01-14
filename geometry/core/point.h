@@ -14,41 +14,40 @@
 #include <iostream>
 
 namespace core {
-    class Point {
-    public:
-        double x{};
-        double y{};
+class Point {
+   public:
+    double x{};
+    double y{};
 
-        Point() = default;
+    Point() = default;
 
-        Point(double x, double y);
+    Point(double x, double y);
 
-        Point(const Point &rhs);
+    Point(const Point& rhs);
 
-        Point &operator=(const Point &rhs) = default;
+    Point& operator=(const Point& rhs) = default;
 
-        Point &operator+(const Point &rhs);
+    Point& operator+(const Point& rhs);
 
-        Point &operator+=(const Point &rhs);
+    Point& operator+=(const Point& rhs);
 
-        Point &operator*(double val);
+    Point& operator*(double val);
 
-        Point &operator*=(double val);
+    Point& operator*=(double val);
 
-        bool operator==(const Point &rhs) const;
+    bool operator==(const Point& rhs) const;
 
-        bool operator!=(const Point& rhs) const;
+    bool operator!=(const Point& rhs) const;
 
-        // 声明为友元，可以访问私有属性
-        friend std::ostream& operator<<(std::ostream& os, const Point& point)
-        {
-            os << point.x << "," << point.y;
-            return os;
-        }
+    // 声明为友元，可以访问私有属性
+    friend std::ostream& operator<<(std::ostream& os, const Point& point) {
+        os << point.x << "," << point.y;
+        return os;
+    }
 
-        inline void Negate();
-    };
-    typedef Point Vector2D;
-} // namespace core
+    inline void Negate();
+};
+typedef Point Vector2D;
+}  // namespace core
 
-#endif // EDA_GL_POINT_H
+#endif  // EDA_GL_POINT_H

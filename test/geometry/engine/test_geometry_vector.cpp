@@ -1,16 +1,13 @@
-#include "engine/geometry.h"
 #include <gtest/gtest.h>
+#include "engine/geometry.h"
 
 using namespace core;
 using namespace geometry;
 
 // 点积1
-class Geometry_DotProductTest : public testing::Test
-{
-};
+class Geometry_DotProductTest : public testing::Test {};
 
-TEST_F(Geometry_DotProductTest, PositiveValues)
-{
+TEST_F(Geometry_DotProductTest, PositiveValues) {
     // Test with positive values
     core::Point s = {1, 2};
     core::Point e = {3, 4};
@@ -22,8 +19,7 @@ TEST_F(Geometry_DotProductTest, PositiveValues)
     EXPECT_EQ(result, 11);
 }
 
-TEST_F(Geometry_DotProductTest, NegativeValues)
-{
+TEST_F(Geometry_DotProductTest, NegativeValues) {
     // Test with negative values
     core::Point s = {-1, -2};
     core::Point e = {-3, -4};
@@ -35,8 +31,7 @@ TEST_F(Geometry_DotProductTest, NegativeValues)
     EXPECT_EQ(result, 11);
 }
 
-TEST_F(Geometry_DotProductTest, MixedValues)
-{
+TEST_F(Geometry_DotProductTest, MixedValues) {
     // Test with mixed positive and negative values
     core::Point s = {-1, 2};
     core::Point e = {3, -4};
@@ -48,8 +43,7 @@ TEST_F(Geometry_DotProductTest, MixedValues)
     EXPECT_EQ(result, -11);
 }
 
-TEST_F(Geometry_DotProductTest, ZeroValues)
-{
+TEST_F(Geometry_DotProductTest, ZeroValues) {
     // Test with zero values
     core::Point s = {0, 0};
     core::Point e = {0, 0};
@@ -62,12 +56,9 @@ TEST_F(Geometry_DotProductTest, ZeroValues)
 }
 
 // 点积2
-class Geometry_DotProductTest2 : public testing::Test
-{
-};
+class Geometry_DotProductTest2 : public testing::Test {};
 
-TEST_F(Geometry_DotProductTest2, PositiveValues)
-{
+TEST_F(Geometry_DotProductTest2, PositiveValues) {
     // Test with positive values
     core::Vector2D vec1 = {1, 2};
     core::Vector2D vec2 = {3, 4};
@@ -78,8 +69,7 @@ TEST_F(Geometry_DotProductTest2, PositiveValues)
     EXPECT_EQ(result, 11);
 }
 
-TEST_F(Geometry_DotProductTest2, NegativeValues)
-{
+TEST_F(Geometry_DotProductTest2, NegativeValues) {
     // Test with negative values
     core::Vector2D vec1 = {-1, -2};
     core::Vector2D vec2 = {-3, -4};
@@ -90,8 +80,7 @@ TEST_F(Geometry_DotProductTest2, NegativeValues)
     EXPECT_EQ(result, 11);
 }
 
-TEST_F(Geometry_DotProductTest2, MixedValues)
-{
+TEST_F(Geometry_DotProductTest2, MixedValues) {
     // Test with mixed positive and negative values
     core::Vector2D vec1 = {-1, 2};
     core::Vector2D vec2 = {3, -4};
@@ -102,8 +91,7 @@ TEST_F(Geometry_DotProductTest2, MixedValues)
     EXPECT_EQ(result, -11);
 }
 
-TEST_F(Geometry_DotProductTest2, ZeroValues)
-{
+TEST_F(Geometry_DotProductTest2, ZeroValues) {
     // Test with zero values
     core::Vector2D vec1 = {0, 0};
     core::Vector2D vec2 = {0, 0};

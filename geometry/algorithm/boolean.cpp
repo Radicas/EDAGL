@@ -6,21 +6,18 @@
 #include "core/point.h"
 #include "engine/geometry.h"
 
-namespace core
-{
-    class ArcPolygen;
+namespace core {
+class ArcPolygen;
 }
-namespace algorithm
-{
+namespace algorithm {
 
-    using namespace core;
+using namespace core;
 
-    int arcPolyPretreatment(ArcPolygon* AP1, ArcPolygon* AP2,
-                            std::vector<EdgeDomain>& S1,
-                            std::vector<EdgeDomain>& S2, std::vector<Edge>& R1,
-                            std::vector<Edge>& R2)
-    {
-        /**
+int arcPolyPretreatment(ArcPolygon* AP1, ArcPolygon* AP2,
+                        std::vector<EdgeDomain>& S1,
+                        std::vector<EdgeDomain>& S2, std::vector<Edge>& R1,
+                        std::vector<Edge>& R2) {
+    /**
          *  逻辑：
          *  获取两个圆弧多边形的包围盒
          *  根据包围盒，计算出有效轴是x还是y
@@ -48,41 +45,39 @@ namespace algorithm
          *  S1、S2、R1、R2就处理好了
          */
 
-        // 获取包围盒
-        auto* bBox1 = AP1->getBBox();
-        auto* bBox2 = AP2->getBBox();
-        BBox newBBox;
-        geometry::unionBBoxes(*bBox1, *bBox2, newBBox);
+    // 获取包围盒
+    auto* bBox1 = AP1->getBBox();
+    auto* bBox2 = AP2->getBBox();
+    BBox newBBox;
+    geometry::unionBBoxes(*bBox1, *bBox2, newBBox);
 
-        // 有效轴，false为x，true为y
-        bool effectiveAxis = (newBBox.getMaxX() - newBBox.getMinX() >=
-                              newBBox.getMaxY() - newBBox.getMinY());
-        // 有效轴的第一条，如果是x,则是左边；如果是y，则是下边
-        double effectiveAxis1 =
-            effectiveAxis ? newBBox.getMinY() : newBBox.getMinX();
-        // 有效轴的第二条，如果是x,则是右边；如果是y，则是上边
-        double effectiveAxis2 =
-            effectiveAxis ? newBBox.getMaxY() : newBBox.getMaxX();
+    // 有效轴，false为x，true为y
+    bool effectiveAxis = (newBBox.getMaxX() - newBBox.getMinX() >=
+                          newBBox.getMaxY() - newBBox.getMinY());
+    // 有效轴的第一条，如果是x,则是左边；如果是y，则是下边
+    double effectiveAxis1 =
+        effectiveAxis ? newBBox.getMinY() : newBBox.getMinX();
+    // 有效轴的第二条，如果是x,则是右边；如果是y，则是上边
+    double effectiveAxis2 =
+        effectiveAxis ? newBBox.getMaxY() : newBBox.getMaxX();
 
-        std::cout << "effective axis: " << effectiveAxis << std::endl;
-        // TODO: 未完待续
-        /**
+    std::cout << "effective axis: " << effectiveAxis << std::endl;
+    // TODO: 未完待续
+    /**
          * 能进入此函数，说明包围盒是相交的，不相离，不包含
          *
          */
 
-        return 0;
-    }
+    return 0;
+}
 
-    int initializeSequenceList(std::vector<core::EdgeDomain>& S,
-                               std::vector<core::Edge>& R)
-    {
-        return 0;
-    }
+int initializeSequenceList(std::vector<core::EdgeDomain>& S,
+                           std::vector<core::Edge>& R) {
+    return 0;
+}
 
-    int constructNewLinkedLists()
-    {
-        return 0;
-    }
+int constructNewLinkedLists() {
+    return 0;
+}
 
-} // namespace algorithm
+}  // namespace algorithm

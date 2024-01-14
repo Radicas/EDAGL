@@ -13,8 +13,6 @@ target_include_directories(${LIB_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-message("lib dir: " ${INSTALL_DIR})
-
 # 安装库
 install(TARGETS ${LIB_NAME}
         DESTINATION ${INSTALL_DIR}

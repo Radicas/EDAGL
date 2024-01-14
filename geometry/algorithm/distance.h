@@ -5,10 +5,6 @@
 #ifndef EDA_GL_DISTANCE_H
 #define EDA_GL_DISTANCE_H
 
+class distance {};
 
-class distance {
-
-};
-
-
-#endif //EDA_GL_DISTANCE_H
+#endif  //EDA_GL_DISTANCE_H

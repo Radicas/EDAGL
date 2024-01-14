@@ -11,21 +11,19 @@
 #ifndef EDA_GL_SHAPERENDER_H
 #define EDA_GL_SHAPERENDER_H
 
-namespace core
-{
-    struct Rectangle;
+namespace core {
+struct Rectangle;
 }
 
-class ShapeRender
-{
+class ShapeRender {
 
-public:
+   public:
     /* region Constructors */
     ShapeRender();
 
-    ShapeRender(const ShapeRender &other) = delete;
+    ShapeRender(const ShapeRender& other) = delete;
 
-    ShapeRender &operator=(const ShapeRender &rhs) = delete;
+    ShapeRender& operator=(const ShapeRender& rhs) = delete;
 
     ~ShapeRender();
     /* endregion */
@@ -33,18 +31,16 @@ public:
     /* region General Methods */
     static void drawRectangle(const core::Rectangle& rect);
 
-    static void drawArc(double cx, double cy,
-                        double radius,
-                        double startAngle, double endAngle,
-                        int numSegments);
+    static void drawArc(double cx, double cy, double radius, double startAngle,
+                        double endAngle, int numSegments);
 
     static void drawTest();
     /* endregion */
 
-private:
+   private:
     /* region Data Members */
 
     /* endregion */
 };
 
-#endif // EDA_GL_SHAPERENDER_H
+#endif  // EDA_GL_SHAPERENDER_H

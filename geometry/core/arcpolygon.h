@@ -11,45 +11,45 @@
 #ifndef EDA_GL_ARCPOLYGON_H
 #define EDA_GL_ARCPOLYGON_H
 
-namespace core
-{
-    class LinkedNode;
+namespace core {
+class LinkedNode;
 
-    class BBox;
+class BBox;
 
-    class ArcPolygon
-    {
-    public:
-        /* region Constructors / Destructor */
+class ArcPolygon {
+   public:
+    /* region Constructors / Destructor */
 
-        explicit ArcPolygon(LinkedNode* aHeadNode);
+    explicit ArcPolygon(LinkedNode* aHeadNode);
 
-        ~ArcPolygon();
+    ~ArcPolygon();
 
-        /* endregion */
+    /* endregion */
 
-        /* region Getters */
+    /* region Getters */
 
-        BBox* getBBox() const;
+    BBox* getBBox() const;
 
-        LinkedNode* getHeadNode() const;
+    LinkedNode* getHeadNode() const;
 
-        /* endregion */
+    /* endregion */
 
-    private:
-        /* region Private Methods */
+    /* region General Methods */
+    /**
+   * @brief 生成包围盒
+   */
+    void generateBBox() const;
 
-        /**
-         * @brief 生成包围盒
-         */
-        void generateBBox() const;
+    /* endregion */
+   private:
+    /* region Private Methods */
 
-        /* endregion */
+    /* endregion */
 
-        LinkedNode* mHeadNode; ///< 头节点
-        BBox* mBBox;           ///< 包围盒
-    };
+    LinkedNode* mHeadNode;  ///< 头节点
+    BBox* mBBox;            ///< 包围盒
+};
 
-} // namespace core
+}  // namespace core
 
-#endif // EDA_GL_ARCPOLYGON_H
+#endif  // EDA_GL_ARCPOLYGON_H

@@ -16,49 +16,49 @@
 namespace core {
 class BBox {
 
-public:
-  /* region Constructors / Destructor */
-  BBox(/* args */);
+   public:
+    /* region Constructors / Destructor */
+    BBox(/* args */);
 
-  BBox(double aMinX, double aMaxX, double aMinY, double aMaxY);
+    BBox(double aMinX, double aMaxX, double aMinY, double aMaxY);
 
-  ~BBox();
+    ~BBox();
 
-  /* endregion */
+    /* endregion */
 
-  /* region General Methods */
-  void reShape(double aMinX, double aMaxX, double aMinY, double aMaxY);
+    /* region General Methods */
+    void reShape(double aMinX, double aMaxX, double aMinY, double aMaxY);
 
-  void merge(const std::vector<BBox> &aBoxes);
-  /* endregion */
+    void merge(const std::vector<BBox>& aBoxes);
+    /* endregion */
 
-  /* region Getters */
+    /* region Getters */
 
-  double getMinX() const;
+    double getMinX() const;
 
-  double getMinY() const;
+    double getMinY() const;
 
-  double getMaxX() const;
+    double getMaxX() const;
 
-  double getMaxY() const;
-  /* endregion */
+    double getMaxY() const;
+    /* endregion */
 
-  /* region Setters */
-  void setMinX(double v);
+    /* region Setters */
+    void setMinX(double v);
 
-  void setMinY(double v);
+    void setMinY(double v);
 
-  void setMaxX(double v);
+    void setMaxX(double v);
 
-  void setMaxY(double v);
-  /* endregion */
+    void setMaxY(double v);
+    /* endregion */
 
-private:
-  double mMinX;
-  double mMaxX;
-  double mMinY;
-  double mMaxY;
+   private:
+    double mMinX;
+    double mMaxX;
+    double mMinY;
+    double mMaxY;
 };
-} // namespace core
+}  // namespace core
 
-#endif // EDA_GL_BBOX_H
+#endif  // EDA_GL_BBOX_H

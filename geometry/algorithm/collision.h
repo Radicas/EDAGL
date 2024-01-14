@@ -5,10 +5,6 @@
 #ifndef EDA_GL_COLLISION_H
 #define EDA_GL_COLLISION_H
 
+class collision {};
 
-class collision {
-
-};
-
-
-#endif //EDA_GL_COLLISION_H
+#endif  //EDA_GL_COLLISION_H

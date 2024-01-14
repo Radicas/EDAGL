@@ -5,10 +5,6 @@
 #ifndef EDA_GL_SUBDIVISION_H
 #define EDA_GL_SUBDIVISION_H
 
+class subdivision {};
 
-class subdivision {
-
-};
-
-
-#endif //EDA_GL_SUBDIVISION_H
+#endif  //EDA_GL_SUBDIVISION_H

@@ -5,10 +5,6 @@
 #ifndef EDA_GL_DECOMPOSITION_H
 #define EDA_GL_DECOMPOSITION_H
 
+class decomposition {};
 
-class decomposition {
-
-};
-
-
-#endif //EDA_GL_DECOMPOSITION_H
+#endif  //EDA_GL_DECOMPOSITION_H

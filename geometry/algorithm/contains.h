@@ -5,10 +5,6 @@
 #ifndef EDA_GL_CONTAINS_H
 #define EDA_GL_CONTAINS_H
 
+class contains {};
 
-class contains {
-
-};
-
-
-#endif //EDA_GL_CONTAINS_H
+#endif  //EDA_GL_CONTAINS_H

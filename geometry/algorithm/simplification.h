@@ -5,10 +5,6 @@
 #ifndef EDA_GL_SIMPLIFICATION_H
 #define EDA_GL_SIMPLIFICATION_H
 
+class simplification {};
 
-class simplification {
-
-};
-
-
-#endif //EDA_GL_SIMPLIFICATION_H
+#endif  //EDA_GL_SIMPLIFICATION_H

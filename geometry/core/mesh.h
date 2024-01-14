@@ -11,5 +11,4 @@
 #ifndef EDA_GL_MESH_H
 #define EDA_GL_MESH_H
 
-
-#endif // EDA_GL_MESH_H
+#endif  // EDA_GL_MESH_H

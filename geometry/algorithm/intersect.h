@@ -5,10 +5,6 @@
 #ifndef EDA_GL_INTERSECT_H
 #define EDA_GL_INTERSECT_H
 
+class intersect {};
 
-class intersect {
-
-};
-
-
-#endif //EDA_GL_INTERSECT_H
+#endif  //EDA_GL_INTERSECT_H

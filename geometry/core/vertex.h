@@ -3,10 +3,10 @@
 
 namespace core {
 
-    struct Vertex {
-        /* data */
-    };
+struct Vertex {
+    /* data */
+};
 
-} // namespace core
+}  // namespace core
 
-#endif // VERTEX_H
+#endif  // VERTEX_H
