@@ -29,8 +29,8 @@ class LinkedNode {
 
     explicit LinkedNode(const Point& data);
 
-    LinkedNode(const Point& data, bool tag, bool crossing, bool ee,
-               LinkedNode* pp, LinkedNode* np);
+    LinkedNode(const Point& aData, bool aIsAppendix, bool aIsCrossing, bool aEE,
+               LinkedNode* aPrev, LinkedNode* aNext);
 
     LinkedNode(const LinkedNode& rhs);
 
@@ -44,7 +44,24 @@ class LinkedNode {
     /* region General Methods */
     bool operator==(const LinkedNode& rhs) const;
 
-    static LinkedNode* constructLinkedNodes(const std::vector<Point>& points);
+    /**
+     * @brief 根据路径创建链表
+     *
+     * @details
+     *      如果传入的路径首尾是同一个，则会构建成环形双向链
+     *      如果传入的路径首尾不是同一个，则会构建成普通双向链
+     * @param aPath
+     * @return LinkedNode* 环形链表头指针
+     */
+    static LinkedNode* constructLinkedNodes(const std::vector<Point>& aPath);
+
+    friend std::ostream& operator<<(std::ostream& os, const LinkedNode* node) {
+        os << "data: (" << node->mData.x << "," << node->mData.y << ")\n"
+           << "appendix: " << node->mIsAppendix << "\n"
+           << "crossing: " << node->mIsCrossing << "\n"
+           << "ee: " << node->mEE;
+        return os;
+    }
     /* endregion */
 };
 }  // namespace core

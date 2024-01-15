@@ -67,20 +67,34 @@ bool LinkedNode::operator==(const LinkedNode& rhs) const {
            mPrev == rhs.mPrev && mNext == rhs.mNext;
 }
 
-LinkedNode* LinkedNode::constructLinkedNodes(const std::vector<Point>& points) {
-    if (points.empty()) {
+LinkedNode* LinkedNode::constructLinkedNodes(const std::vector<Point>& aPath) {
+    // 空路径直接返回空
+    if (aPath.empty()) {
         return nullptr;
     }
-
-    auto* head = new LinkedNode(points[0]);
-
+    // 路径大小
+    size_t pathSize = aPath.size();
+    // 是否环形
+    bool circular = aPath[0] == aPath[aPath.size() - 1];
+    // 环形的话大小减一，将最后一个节点丢弃
+    if (circular) {
+        --pathSize;
+    }
+    // 构建首尾指针
+    auto* head = new LinkedNode(aPath[0]);
     LinkedNode* tail = head;
 
-    for (size_t i = 1; i < points.size(); ++i) {
-        auto* newNode = new LinkedNode(points[i]);
+    for (size_t i = 1; i < pathSize; ++i) {
+        auto* newNode = new LinkedNode(aPath[i]);
         tail->mNext = newNode;
         newNode->mPrev = tail;
         tail = newNode;
+    }
+
+    // 环形双向链
+    if (circular) {
+        tail->mNext = head;
+        head->mPrev = tail;
     }
 
     return head;

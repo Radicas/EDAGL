@@ -1,10 +1,10 @@
 #include "shaperender/shaperender.h"
 
-#include "algorithm/boolean.h"
 #include "core/arcpolygon.h"
 #include "core/edge.h"
 #include "core/linkednode.h"
 #include "core/rectangle.h"
+#include "engine/boolean.h"
 
 #ifdef WIN32
 #include <GL/gl.h>
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);  // 初始化GLUT库
     glutInitDisplayMode(GLUT_SINGLE |
                         GLUT_RGB);  // 设置显示模式为单缓冲和RGB颜色模式
-    glutInitWindowSize(100, 100);                   // 设置窗口大小
+    glutInitWindowSize(800, 800);                   // 设置窗口大小
     glutCreateWindow("EDA Geometry Library Test");  // 创建窗口并设置窗口标题
     glutDisplayFunc(display);                       // 设置绘制回调函数
     glutReshapeFunc(reshape);  // 设置窗口大小改变回调函数

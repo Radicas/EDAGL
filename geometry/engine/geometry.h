@@ -15,6 +15,9 @@
 #include "core/point.h"
 
 namespace geometry {
+
+static double EPSILON = 1E-10;
+
 /********************************* Vector *********************************/
 
 /**

@@ -11,6 +11,7 @@
 #ifndef EDA_GL_BBOX_H
 #define EDA_GL_BBOX_H
 
+#include <ostream>
 #include <vector>
 
 namespace core {
@@ -52,6 +53,14 @@ class BBox {
 
     void setMaxY(double v);
     /* endregion */
+
+    friend std::ostream& operator<<(std::ostream& os, const BBox& box) {
+        os << "minX: " << box.getMinX() << "\n"
+           << "maxX: " << box.getMaxX() << "\n"
+           << "minY: " << box.getMinY() << "\n"
+           << "maxY: " << box.getMaxY();
+        return os;
+    }
 
    private:
     double mMinX;
