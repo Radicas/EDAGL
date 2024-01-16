@@ -74,12 +74,6 @@ void circleFrom3Points(const Point& aP1, const Point& aP2, const Point& aP3,
 }
 
 BBox bBoxOfArc(const Point& A, const Point& B, const Point& M) {
-    Point t;
-    double r;
-    circleFrom3Points(A, B, M, t, r);
-    if (r == 0.0) {
-        return {};
-    }
     BBox result;
     // 求圆心和半径
     Point center{};
@@ -151,8 +145,8 @@ bool contains(const BBox& aBBox1, const BBox& aBBox2) {
              aBBox1.getMaxY() < aBBox2.getMaxY()));
 }
 
-int unionBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
-                core::BBox& aResult) {
+int intersectsBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
+                     core::BBox& aResult) {
     // 检查两个BBox是否相离或包含
     if (detached(aBBox1, aBBox2) || contains(aBBox1, aBBox2)) {
         return 1;  // 返回状态1

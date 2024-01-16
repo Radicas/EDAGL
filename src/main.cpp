@@ -1,10 +1,10 @@
 #include "shaperender/shaperender.h"
 
+#include "algorithm/boolean.h"
 #include "core/arcpolygon.h"
 #include "core/edge.h"
 #include "core/linkednode.h"
 #include "core/rectangle.h"
-#include "engine/boolean.h"
 
 #ifdef WIN32
 #include <GL/gl.h>
@@ -15,7 +15,7 @@
 #elif __linux__
 #endif
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 int DISPLAY_STATE = -1;
@@ -39,35 +39,34 @@ void display() {
             break;
         }
         case 2: {
-            // 绘制测试
-            ShapeRender::drawTest();
+            // 绘制简单多边形
+            ShapeRender::drawSimpleArcPolygon();
             break;
         }
         case 3: {
-            // TODO: 求交集
+            // 绘制复杂多边形
+            ShapeRender::drawComplexArcPolygon();
             break;
         }
         case 4: {
-            // TODO: 求并集
+            // TODO: 求交集
             break;
         }
         case 5: {
+            // TODO: 求并集
+            break;
+        }
+        case 6: {
             // TODO: 求差集
             break;
         }
-        default:
+        default: {
+            // 绘制简单多边形
+            ShapeRender::drawSimpleArcPolygon();
             break;
+        }
     }
     glFlush();  // 刷新缓冲区，将绘制命令发送到OpenGL进行处理
-}
-
-void reshape(int width, int height) {
-    // glViewport(0, 0, width, height); // 设置视口大小，与窗口大小一致
-    // glMatrixMode(GL_PROJECTION);     // 设置矩阵模式为投影矩阵
-    // glLoadIdentity();                // 重置当前矩阵为单位矩阵
-    // gluOrtho2D(-1.0, 1.0, -1.0,
-    //            1.0); // 设置正交投影矩阵，定义世界坐标系到视口坐标系的映射关系
-    // glMatrixMode(GL_MODELVIEW); // 设置矩阵模式为模型视图矩阵
 }
 
 // 按钮回调函数
@@ -78,20 +77,43 @@ void buttonCallback(int buttonId) {
 
 void geometryTest() {
     using namespace core;
-    std::vector<Point> poly1Points = {
-        {1.0, 3.0}, {1.0, -1.0}, {5.0, -1.0}, {5.0, 3.0}};
-    std::vector<Point> poly2Points = {
-        {2.0, 5.0}, {2.0, 1.0}, {6.0, 1.0}, {6.0, 5.0}};
+    // 初始图形坐标点
+    std::vector<Point> poly1Points = {{0.0, 0.2},  {0.0, 0.4},  {-0.4, 0.4},
+                                      {-0.4, 0.0}, {-0.2, 0.0}, {0.0, -0.2},
+                                      {0.0, 0.2}};
+    std::vector<Point> poly2Points = {{0.5, 0.0}, {0.7, 0.0}, {0.7, 0.4},
+                                      {0.3, 0.4}, {0.3, 0.2}, {0.3, -0.2},
+                                      {0.5, 0.0}};
 
+    // 构建环形双向链表
     auto* linkedNode1 = LinkedNode::constructLinkedNodes(poly1Points);
     auto* linkedNode2 = LinkedNode::constructLinkedNodes(poly2Points);
 
+    // 初始化附加点
+    int count = 0;
+    auto lnTail1 = linkedNode1;
+    auto lnTail2 = linkedNode2;
+    while (true) {
+        count++;
+        if (count == 6) {
+            lnTail1->mIsAppendix = true;
+            lnTail2->mIsAppendix = true;
+        }
+        lnTail1 = lnTail1->mNext;
+        lnTail2 = lnTail2->mNext;
+        if (lnTail1 == linkedNode1 || lnTail2 == linkedNode2) {
+            break;
+        }
+    }
+    // 构造圆弧多边形
     auto poly1 = new ArcPolygon(linkedNode1);
     auto poly2 = new ArcPolygon(linkedNode2);
 
+    // 声明相关边域
     std::vector<EdgeDomain> edgeDomain1;
     std::vector<EdgeDomain> edgeDomain2;
 
+    // 声明相关边
     std::vector<Edge> edge1;
     std::vector<Edge> edge2;
 
@@ -99,28 +121,36 @@ void geometryTest() {
                                    edge1, edge2);
 }
 
-int main(int argc, char** argv) {
-    // 用于测试几何库
-    geometryTest();
-
-    glutInit(&argc, argv);  // 初始化GLUT库
-    glutInitDisplayMode(GLUT_SINGLE |
-                        GLUT_RGB);  // 设置显示模式为单缓冲和RGB颜色模式
-    glutInitWindowSize(800, 800);                   // 设置窗口大小
-    glutCreateWindow("EDA Geometry Library Test");  // 创建窗口并设置窗口标题
-    glutDisplayFunc(display);                       // 设置绘制回调函数
-    glutReshapeFunc(reshape);  // 设置窗口大小改变回调函数
-
+void createActions() {
     // 创建菜单
     glutCreateMenu(buttonCallback);
     glutAddMenuEntry("Draw Rect Demo", 0);
     glutAddMenuEntry("Draw Arc Demo", 1);
-    glutAddMenuEntry("Draw PolyArc Demo", 2);
-    glutAddMenuEntry("Intersection", 3);
-    glutAddMenuEntry("Union", 4);
-    glutAddMenuEntry("Difference", 5);
+    glutAddMenuEntry("Draw Simple ArcPolygon Demo", 2);
+    glutAddMenuEntry("Draw Complex ArcPolygon Demo", 3);
+    glutAddMenuEntry("Intersection", 4);
+    glutAddMenuEntry("Union", 5);
+    glutAddMenuEntry("Difference", 6);
     glutAttachMenu(GLUT_RIGHT_BUTTON);  // 将菜单绑定到鼠标右键
-    glutMainLoop();  // 进入GLUT主循环，等待事件发生
+}
+
+int main(int argc, char** argv) {
+    // 用于几何库快速验证
+    geometryTest();
+    // 初始化GLUT库
+    glutInit(&argc, argv);
+    // 设置显示模式为单缓冲和RGB颜色模式
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    // 设置窗口大小
+    glutInitWindowSize(600, 600);
+    // 创建窗口并设置窗口标题
+    glutCreateWindow("EDA Geometry Library Test");
+    // 设置绘制回调函数
+    glutDisplayFunc(display);
+    // 创建右键菜单
+    createActions();
+    // 进入GLUT主循环
+    glutMainLoop();
 
     return 0;
 }

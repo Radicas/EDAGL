@@ -62,7 +62,7 @@ TEST_F(Geometry_UnionBBox, IntersectsBBoxes) {
     BBox aBBox1(0, 5, 0, 5);
     BBox aBBox2(3, 7, -1, 6);
     BBox aBBox3;
-    unionBBoxes(aBBox1, aBBox2, aBBox3);
+    intersectsBBoxes(aBBox1, aBBox2, aBBox3);
     EXPECT_DOUBLE_EQ(aBBox3.getMinX(), 3.0);
     EXPECT_DOUBLE_EQ(aBBox3.getMaxX(), 5.0);
     EXPECT_DOUBLE_EQ(aBBox3.getMinY(), 0.0);
@@ -73,7 +73,7 @@ TEST_F(Geometry_UnionBBox, NonIntersectsBBoxes) {
     BBox aBBox1(0, 5, 0, 5);
     BBox aBBox2(6, 9, 0, 6);
     BBox aBBox3;
-    unionBBoxes(aBBox1, aBBox2, aBBox3);
+    intersectsBBoxes(aBBox1, aBBox2, aBBox3);
     EXPECT_DOUBLE_EQ(aBBox3.getMinX(), 0.0);
     EXPECT_DOUBLE_EQ(aBBox3.getMaxX(), 0.0);
     EXPECT_DOUBLE_EQ(aBBox3.getMinY(), 0.0);

@@ -34,7 +34,9 @@ class ShapeRender {
     static void drawArc(double cx, double cy, double radius, double startAngle,
                         double endAngle, int numSegments);
 
-    static void drawTest();
+    static void drawSimpleArcPolygon();
+
+    static void drawComplexArcPolygon();
     /* endregion */
 
    private:

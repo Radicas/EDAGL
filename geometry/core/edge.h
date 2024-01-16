@@ -12,10 +12,48 @@
 #define EDA_GL_EDGE_H
 
 #include <vector>
+#include "core/point.h"
 
 namespace core {
 class Edge {
    public:
+    /* region Constructors / Destructor */
+    Edge();
+
+    Edge(const Point& aStart, const Point& aEnd,
+         const Point& aAppendix = {0.0, 0.0}, bool aIsArc = false);
+
+    Edge(const Edge& aRhs);
+
+    Edge& operator=(const Edge& aRhs);
+
+    ~Edge();
+
+    /* endregion */
+
+    /* region Getters */
+    Point getStart();
+
+    Point getEnd();
+
+    Point getAppendix();
+
+    bool isArc() const;
+    /* endregion */
+
+    /* region Setters */
+
+    /* endregion */
+
+    /* region General Methods */
+
+    /* endregion */
+
+   private:
+    Point mStart;
+    Point mEnd;
+    Point mAppendix;
+    bool mIsArc;
 };
 
 class EdgeDomain {

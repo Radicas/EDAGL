@@ -131,8 +131,8 @@ bool detached(const core::BBox& aBBox1, const core::BBox& aBBox2);
 
 bool contains(const core::BBox& aBBox1, const core::BBox& aBBox2);
 
-int unionBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
-                core::BBox& aResult);
+int intersectsBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
+                     core::BBox& aResult);
 }  // namespace geometry
 
 #endif  // EDA_GL_GEOMETRY_H

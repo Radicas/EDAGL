@@ -55,7 +55,8 @@ class BBox {
     /* endregion */
 
     friend std::ostream& operator<<(std::ostream& os, const BBox& box) {
-        os << "minX: " << box.getMinX() << "\n"
+        os << "***** bbox *****\n"
+           << "minX: " << box.getMinX() << "\n"
            << "maxX: " << box.getMaxX() << "\n"
            << "minY: " << box.getMinY() << "\n"
            << "maxY: " << box.getMaxY();
