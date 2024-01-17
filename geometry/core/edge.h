@@ -85,12 +85,6 @@ class Edge {
     bool mIsCW;          ///< true表示顺时针；false逆时针
 };
 
-class EdgeDomain {
-   public:
-    Edge mRelatedEdge;             ///< 相关边
-    std::vector<float> mLocation;  ///< 交点位置信息
-    short int aArcMark;            ///< 三值开关
-};
 }  // namespace core
 
 #endif  // EDA_GL_EDGE_H

@@ -3,6 +3,7 @@
 #include "core/arcpolygon.h"
 #include "core/bbox.h"
 #include "core/edge.h"
+#include "core/edgedomain.h"
 #include "core/linkednode.h"
 #include "engine/geometry.h"
 
@@ -146,8 +147,8 @@ int initSequencedEdge(std::vector<core::EdgeDomain>& aSequencedEdge,
             // 非X单调
             // TODO: 分解非X单调弧
         } else {
-            // X单调
-            // TODO: 完善Edge Domain结构
+            EdgeDomain edgeDomain(rEdge, {}, 0);
+            aSequencedEdge.emplace_back(edgeDomain);
         }
     }
     return 0;
@@ -159,10 +160,11 @@ int constructProcessedArcPolygon() {
 
 std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
     /**
-     * 逻辑：
-     * 观察一：
-     *
+     * 定理：一个非x单调圆弧，一定可以分解成两到三个x单调圆弧
+     * 圆形是特殊圆弧
      */
+
+
     return {};
 }
 

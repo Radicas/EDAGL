@@ -3,6 +3,7 @@
 #include "algorithm/boolean.h"
 #include "core/arcpolygon.h"
 #include "core/edge.h"
+#include "core/edgedomain.h"
 #include "core/linkednode.h"
 #include "core/rectangle.h"
 
@@ -110,8 +111,8 @@ void geometryTest() {
     auto poly2 = new ArcPolygon(linkedNode2);
 
     // 声明相关边域
-    std::vector<EdgeDomain> edgeDomain1;
-    std::vector<EdgeDomain> edgeDomain2;
+    std::vector<core::EdgeDomain> edgeDomain1;
+    std::vector<core::EdgeDomain> edgeDomain2;
 
     // 声明相关边
     std::vector<Edge> edge1;

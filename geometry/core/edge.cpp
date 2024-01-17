@@ -42,6 +42,7 @@ Edge::Edge(const Edge& aRhs) = default;
 Edge& Edge::operator=(const Edge& aRhs) = default;
 
 Edge::~Edge() = default;
+
 /* endregion */
 
 /* region General Methods */
@@ -76,15 +77,19 @@ bool Edge::isCW() const {
 Point Edge::getCenter() {
     return mCenter;
 }
+
 double Edge::getRadius() const {
     return mRadius;
 }
+
 double Edge::getStartAngle() const {
     return mStartAngle;
 }
+
 double Edge::getEndAngle() const {
     return mEndAngle;
 }
+
 double Edge::getSweepAngle() const {
     return mSweepAngle;
 }
