@@ -61,11 +61,11 @@ int arcPolyPretreatment(core::ArcPolygon* aArcPoly1,
 /**
  * @brief 初始化边域
  *
- * @param aSequencedEdgeDomain 边域引用
+ * @param aSequencedEdge 边域引用
  * @param aRelatedEdge 相关边
- * @return
+ * @return 0 正常
  */
-int initializeSequenceNode(std::vector<core::EdgeDomain>& aSequencedEdgeDomain,
+int initSequencedEdge(std::vector<core::EdgeDomain>& aSequencedEdge,
                            const std::vector<core::Edge>& aRelatedEdge);
 
 /**

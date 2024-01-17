@@ -21,7 +21,8 @@ class Edge {
     Edge();
 
     Edge(const Point& aStart, const Point& aEnd,
-         const Point& aAppendix = {0.0, 0.0}, bool aIsArc = false);
+         const Point& aAppendix = {0.0, 0.0}, bool aIsArc = false,
+         bool aIsNonXMonotone = false, bool aIsCW = false);
 
     Edge(const Edge& aRhs);
 
@@ -38,7 +39,21 @@ class Edge {
 
     Point getAppendix();
 
+    Point getCenter();
+
+    double getRadius() const;
+
+    double getStartAngle() const;
+
+    double getEndAngle() const;
+
+    double getSweepAngle() const;
+
     bool isArc() const;
+
+    bool isXMonotone() const;
+
+    bool isCW() const;
     /* endregion */
 
     /* region Setters */
@@ -50,17 +65,31 @@ class Edge {
     /* endregion */
 
    private:
-    Point mStart;
-    Point mEnd;
-    Point mAppendix;
-    bool mIsArc;
+    /* region Private Methods */
+    /**
+     * @brief 初始化圆弧属性
+     */
+    void initArcValues();
+    /* endregion */
+
+    Point mStart;        ///< 起点
+    Point mEnd;          ///< 终点
+    Point mAppendix;     ///< 附加点
+    bool mIsArc;         ///< 是否圆弧
+    bool mIsXMonotone;   ///< 是否X单调
+    Point mCenter;       ///< 圆心
+    double mRadius;      ///< 半径
+    double mStartAngle;  ///< 起始角度，(0, 2π]
+    double mEndAngle;    ///< 终止角度，(0, 2π]
+    double mSweepAngle;  ///< 扫过的角度，(0, 2π]
+    bool mIsCW;          ///< true表示顺时针；false逆时针
 };
 
 class EdgeDomain {
    public:
-    Edge relatedEdge;
-    std::vector<float> location;
-    short int arcMark;
+    Edge mRelatedEdge;             ///< 相关边
+    std::vector<float> mLocation;  ///< 交点位置信息
+    short int aArcMark;            ///< 三值开关
 };
 }  // namespace core
 

@@ -129,3 +129,43 @@ TEST_F(Geometry_BBoxOfArcTest, SamePoints) {
     //    EXPECT_DOUBLE_EQ(result.getMinY(), 0.0);
     //    EXPECT_DOUBLE_EQ(result.getMaxY(), 0.0);
 }
+
+class Geometry_XMonotoneArcTest : public testing::Test {};
+
+TEST_F(Geometry_XMonotoneArcTest, xMonotone) {
+    Point center1(0.0, 0.0);
+    Point start1(-2.0, 0.0);
+    Point end1(2.0, 0.0);
+    double sweepAngle1 = M_PI;
+
+    auto res1 = geometry::isXMonotoneArc(start1, end1, center1, sweepAngle1);
+    EXPECT_TRUE(res1);
+
+    Point center2(0.0, 0.0);
+    Point start2(-4.0, -1.0);
+    Point end2(1.0, -4.0);
+    double sweepAngle2 = M_PI * 0.5;
+    auto res2 = geometry::isXMonotoneArc(start2, end2, center2, sweepAngle2);
+    EXPECT_TRUE(res2);
+
+    Point center3(0.0, 0.0);
+    Point start3(-4.0, -1.0);
+    Point end3(4.0, 1.0);
+    double sweepAngle3 = M_PI * 0.5;
+    auto res3 = geometry::isXMonotoneArc(start3, end3, center3, sweepAngle3);
+    EXPECT_FALSE(res3);
+
+    Point center4(0.0, 0.0);
+    Point start4(-4.0, 0.0);
+    Point end4(0.0, 4.0);
+    double sweepAngle4 = M_PI * 1.5;
+    auto res4 = geometry::isXMonotoneArc(start4, end4, center4, sweepAngle4);
+    EXPECT_FALSE(res4);
+
+    Point center5(0.0, 0.0);
+    Point start5(-4.0, 0.0);
+    Point end5(-4.0, 0.0);
+    double sweepAngle5 = M_PI * 2;
+    auto res5 = geometry::isXMonotoneArc(start5, end5, center5, sweepAngle5);
+    EXPECT_FALSE(res5);
+}

@@ -38,6 +38,34 @@ double pointsDistance(const core::Point& aP1, const core::Point& aP2) {
 }
 /****************************** Circle / Arc ******************************/
 
+bool isXMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
+                    const core::Point& aCenter, double aSweepAngle) {
+    /**
+     * 观察一：
+     *      如果起点和终点的y轴，分布在圆心y轴的上下两侧，则一定是非x单调
+     * 观察二：
+     *      如果起点和终点的y轴，分布在圆心同侧时，如果圆弧是劣弧，则是x单调；如果是优弧，则是非x单调
+     * 观察三：
+     *      优弧一定是非X单调圆弧
+     * 基于上述观察可以作以下实现
+     */
+    if (aStart.y < aCenter.y && aEnd.y > aCenter.y ||
+        aStart.y > aCenter.y && aEnd.y < aCenter.y) {
+        return false;
+    }
+    if (aSweepAngle <= M_PI &&
+        ((aStart.y <= aCenter.y && aEnd.y <= aCenter.y) ||
+         (aStart.y >= aCenter.y && aEnd.y >= aCenter.y))) {
+        return true;
+    }
+    return false;
+}
+bool isYMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
+                    const core::Point& aCenter) {
+    // TODO: 暂未开发
+    return false;
+}
+
 void circleFrom3Points(const Point& aP1, const Point& aP2, const Point& aP3,
                        Point& aCenter, double& aRadius) {
     if (isCollinear(aP1, aP2, aP3)) {
@@ -150,6 +178,7 @@ int intersectsBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
     // 检查两个BBox是否相离或包含
     if (detached(aBBox1, aBBox2) || contains(aBBox1, aBBox2)) {
         return 1;  // 返回状态1
+        // TODO: 定义异常
     }
     // 得到新的相交的BBox
     aResult.setMinX(std::max(aBBox1.getMinX(), aBBox2.getMinX()));

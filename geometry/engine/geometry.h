@@ -101,6 +101,29 @@ bool isCollinear(const core::Point& aP1, const core::Point& aP2,
                  const core::Point& aP3);
 
 /****************************** Circle / Arc ******************************/
+
+/**
+ * @brief 判断是否X单调圆弧
+ *
+ * @param aStart
+ * @param aEnd
+ * @param aCenter
+ * @param aSweepAngle
+ * @return
+ */
+bool isXMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
+                    const core::Point& aCenter, double aSweepAngle);
+
+/**
+ * @brief 判断是否Y单调圆弧
+ *
+ * @param aStart
+ * @param aEnd
+ * @param aCenter
+ * @return
+ */
+bool isYMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
+                    const core::Point& aCenter);
 /**
  * @brief 根据圆上三点计算出圆心和半径
  *
