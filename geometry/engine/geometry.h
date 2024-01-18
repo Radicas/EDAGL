@@ -12,6 +12,7 @@
 #define EDA_GL_GEOMETRY_H
 
 #include "core/bbox.h"
+#include "core/edge.h"
 #include "core/point.h"
 
 namespace geometry {
@@ -102,6 +103,42 @@ bool isCollinear(const core::Point& aP1, const core::Point& aP2,
 
 /****************************** Circle / Arc ******************************/
 
+double getStartAngle(const core::Point& aStart, const core::Point& aCenter);
+
+double getEndAngle(const core::Point& aEnd, const core::Point& aCenter);
+
+double getSweepAngle(double aStartAngle, double endAngle, bool aIsCW);
+
+core::Point getMidOfArc(const core::Point& aStart, const core::Point& aEnd,
+                        const core::Point& aCenter, bool aIsCW);
+
+/**
+ * @brief 获取圆弧中点
+ *
+ * @param aStartAngle
+ * @param aEndAngle
+ * @param aRadius
+ * @param aCenter
+ * @param aIsCW
+ * @return
+ */
+core::Point getMidOfArc(double aStartAngle, double aEndAngle, double aRadius,
+                        const core::Point& aCenter, bool aIsCW);
+
+/**
+ * @brief 判断点是否在圆弧射线范围内
+ *
+ * @param aStart
+ * @param aCenter
+ * @param aStartAngle
+ * @param aSweepAngle
+ * @param aIsCW
+ * @return
+ */
+bool isPointInArcRange(const core::Point& aCenter, double aStartAngle,
+                       double aSweepAngle, bool aIsCW,
+                       const core::Point& aTarget);
+
 /**
  * @brief 判断是否X单调圆弧
  *
@@ -115,7 +152,7 @@ bool isXMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
                     const core::Point& aCenter, double aSweepAngle);
 
 /**
- * @brief 判断是否Y单调圆弧
+ * @brief 判断是否Y单调圆弧(未开发)
  *
  * @param aStart
  * @param aEnd
@@ -124,6 +161,7 @@ bool isXMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
  */
 bool isYMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
                     const core::Point& aCenter);
+
 /**
  * @brief 根据圆上三点计算出圆心和半径
  *
@@ -150,10 +188,33 @@ core::BBox bBoxOfArc(const core::Point& A, const core::Point& B,
                      const core::Point& M);
 
 /********************************** BBOx **********************************/
+
+/**
+ * @brief 两个包围盒相离
+ *
+ * @param aBBox1
+ * @param aBBox2
+ * @return
+ */
 bool detached(const core::BBox& aBBox1, const core::BBox& aBBox2);
 
+/**
+ * @brief 两个包围盒有包含关系
+ *
+ * @param aBBox1
+ * @param aBBox2
+ * @return
+ */
 bool contains(const core::BBox& aBBox1, const core::BBox& aBBox2);
 
+/**
+ * @brief 求出两个包围盒相交部分的包围盒
+ *
+ * @param aBBox1
+ * @param aBBox2
+ * @param aResult
+ * @return
+ */
 int intersectsBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
                      core::BBox& aResult);
 }  // namespace geometry

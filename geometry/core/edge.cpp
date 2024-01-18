@@ -21,12 +21,12 @@ Edge::Edge()
 }
 
 Edge::Edge(const Point& aStart, const Point& aEnd, const Point& aAppendix,
-           bool aIsArc, bool aIsNonXMonotone, bool aIsCW)
+           bool aIsArc, bool aIsXMonotone, bool aIsCW)
     : mStart(aStart),
       mEnd(aEnd),
       mAppendix(aAppendix),
       mIsArc(aIsArc),
-      mIsXMonotone(aIsNonXMonotone),
+      mIsXMonotone(aIsXMonotone),
       mCenter(),
       mRadius(),
       mStartAngle(),
@@ -50,16 +50,20 @@ Edge::~Edge() = default;
 /* endregion */
 
 /* region Getters */
-Point Edge::getStart() {
+const Point& Edge::getStart() const {
     return mStart;
 }
 
-Point Edge::getEnd() {
+const Point& Edge::getEnd() const {
     return mEnd;
 }
 
-Point Edge::getAppendix() {
+const Point& Edge::getAppendix() const {
     return mAppendix;
+}
+
+const Point& Edge::getCenter() const {
+    return mCenter;
 }
 
 bool Edge::isArc() const {
@@ -72,10 +76,6 @@ bool Edge::isXMonotone() const {
 
 bool Edge::isCW() const {
     return mIsCW;
-}
-
-Point Edge::getCenter() {
-    return mCenter;
 }
 
 double Edge::getRadius() const {
@@ -111,28 +111,12 @@ void Edge::initArcValues() {
         exit(-1);
     }
     geometry::circleFrom3Points(mStart, mEnd, mAppendix, mCenter, mRadius);
-    // 计算起始角度和终止角度
-    mStartAngle = std::atan2(mStart.y - mCenter.y, mStart.x - mCenter.x);
-    mEndAngle = std::atan2(mEnd.y - mCenter.y, mEnd.x - mCenter.x);
-    // 调整角度范围为 (0, 2π]
-    if (mStartAngle <= 0) {
-        mStartAngle += 2 * M_PI;
-    }
-    if (mEndAngle <= 0) {
-        mEndAngle += 2 * M_PI;
-    }
-
-    // 计算扫过的角度
-    if (mIsCW) {
-        mSweepAngle = (mStartAngle < mEndAngle)
-                          ? mStartAngle + 2 * M_PI - mEndAngle
-                          : mStartAngle - mEndAngle;
-    } else {
-        mSweepAngle = (mEndAngle < mStartAngle)
-                          ? mEndAngle + 2 * M_PI - mStartAngle
-                          : mEndAngle - mStartAngle;
-    }
-
+    // 计算起始角度，范围为 [0, 2π)
+    mStartAngle = geometry::getStartAngle(mStart, mCenter);
+    // 计算终止角度，范围为 [0, 2π)
+    mEndAngle = geometry::getEndAngle(mEnd, mCenter);
+    // 计算扫过的角度，范围为 [0, 2π)
+    mSweepAngle = geometry::getSweepAngle(mStartAngle, mEndAngle, mIsCW);
     // 判断圆弧X单调性
     mIsXMonotone = geometry::isXMonotoneArc(mStart, mEnd, mCenter, mSweepAngle);
 }

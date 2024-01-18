@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "core/edge.h"
 #include "engine/geometry.h"
 
 using namespace core;
@@ -130,9 +131,9 @@ TEST_F(Geometry_BBoxOfArcTest, SamePoints) {
     //    EXPECT_DOUBLE_EQ(result.getMaxY(), 0.0);
 }
 
-class Geometry_XMonotoneArcTest : public testing::Test {};
+class Geometry_IsXMonotoneArc : public testing::Test {};
 
-TEST_F(Geometry_XMonotoneArcTest, xMonotone) {
+TEST_F(Geometry_IsXMonotoneArc, test1) {
     Point center1(0.0, 0.0);
     Point start1(-2.0, 0.0);
     Point end1(2.0, 0.0);
@@ -168,4 +169,85 @@ TEST_F(Geometry_XMonotoneArcTest, xMonotone) {
     double sweepAngle5 = M_PI * 2;
     auto res5 = geometry::isXMonotoneArc(start5, end5, center5, sweepAngle5);
     EXPECT_FALSE(res5);
+}
+
+class Geometry_IsPointInArcRange : public testing::Test {};
+
+TEST_F(Geometry_IsPointInArcRange, test1) {
+    Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, -200.0}, true, true, false);
+    Point p1(-200.0, 0.0);
+    Point p2(-1.0, 1.0);
+    Point p3(1.0, -1.0);
+    Point p4(0.0, -200.0);
+    bool res1 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p1);
+    bool res2 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p2);
+    bool res3 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p3);
+    bool res4 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p4);
+    EXPECT_TRUE(res1);
+    EXPECT_FALSE(res2);
+    EXPECT_TRUE(res3);
+    EXPECT_TRUE(res4);
+}
+
+class Geometry_GetMidOfArc : public testing::Test {};
+
+TEST_F(Geometry_GetMidOfArc, test1) {
+    core::Point center(0.0, 0.0);
+    double radius = 5.0;
+    double startAngle = 0.0;
+    double endAngle = M_PI_2;
+    bool isCW = false;
+
+    core::Point midPoint =
+        getMidOfArc(startAngle, endAngle, radius, center, isCW);
+
+    EXPECT_TRUE(std::abs(midPoint.x - 3.5355339059327) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.y - 3.5355339059327) < geometry::EPSILON);
+}
+
+TEST_F(Geometry_GetMidOfArc, test2) {
+    core::Point center(0.0, 0.0);
+    double radius = 2.0;
+    double startAngle = 1.5 * M_PI;
+    double endAngle = M_PI_2;
+    bool isCW = false;
+
+    core::Point midPoint =
+        getMidOfArc(startAngle, endAngle, radius, center, isCW);
+
+    EXPECT_TRUE(std::abs(midPoint.x - 2.0) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.y - 0.0) < geometry::EPSILON);
+}
+
+TEST_F(Geometry_GetMidOfArc, test3) {
+    core::Point center(0.0, 0.0);
+    double radius = 2.0;
+    double startAngle = M_PI_2;
+    double endAngle = 1.5 * M_PI;
+    bool isCW = false;
+
+    core::Point midPoint =
+        getMidOfArc(startAngle, endAngle, radius, center, isCW);
+
+    EXPECT_TRUE(std::abs(midPoint.x - (-2.0)) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.y - 0.0) < geometry::EPSILON);
+}
+
+TEST_F(Geometry_GetMidOfArc, test4) {
+    core::Point center(0.0, 0.0);
+    double radius = 2.8284271247462;
+    double startAngle = M_PI + M_PI_4;
+    double endAngle = M_PI + M_PI_2 + M_PI_4;
+    bool isCW = true;
+
+    core::Point midPoint =
+        getMidOfArc(startAngle, endAngle, radius, center, isCW);
+
+    // (0,2.8284271247462)
+    EXPECT_TRUE(std::abs(midPoint.x - 0.0) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.y - 2.8284271247462) < geometry::EPSILON);
 }

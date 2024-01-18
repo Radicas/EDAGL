@@ -16,9 +16,8 @@
 
 namespace core {
 class LinkedNode;
-
+class Point;
 class Edge;
-
 class EdgeDomain;
 
 class ArcPolygon;
@@ -42,6 +41,7 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
 
 /**
  * @brief 圆弧多边形链表前处理
+ *
  * @note 此接口只处理圆弧多边形相交的情况
  * @param aArcPoly1 圆弧多边形1
  * @param aArcPoly2 圆弧多边形2
@@ -66,7 +66,7 @@ int arcPolyPretreatment(core::ArcPolygon* aArcPoly1,
  * @return 0 正常
  */
 int initSequencedEdge(std::vector<core::EdgeDomain>& aSequencedEdge,
-                           const std::vector<core::Edge>& aRelatedEdge);
+                      const std::vector<core::Edge>& aRelatedEdge);
 
 /**
  * @brief 将x单调圆弧分解为2-3个非x单调圆弧
@@ -75,6 +75,28 @@ int initSequencedEdge(std::vector<core::EdgeDomain>& aSequencedEdge,
  * @return 分解后的圆弧边
  */
 std::vector<core::Edge> decomposeArc(const core::Edge& aEdge);
+
+/**
+ * @brief 将x单调圆弧分解为3个非x单调圆弧
+ *
+ * @param aEdge
+ * @param aEast
+ * @param aWest
+ * @return
+ */
+std::vector<core::Edge> decomposeArcToThree(const core::Edge& aEdge,
+                                            const core::Point& aEast,
+                                            const core::Point& aWest);
+
+/**
+ * @brief 将x单调圆弧分解为2个非x单调圆弧
+ *
+ * @param aEdge
+ * @param aBreakPoint
+ * @return
+ */
+std::vector<core::Edge> decomposeArcToTwo(const core::Edge& aEdge,
+                                          const core::Point& aBreakPoint);
 
 /**
  * @brief 构建处理过的圆弧多边形

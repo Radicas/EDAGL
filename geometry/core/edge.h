@@ -22,7 +22,7 @@ class Edge {
 
     Edge(const Point& aStart, const Point& aEnd,
          const Point& aAppendix = {0.0, 0.0}, bool aIsArc = false,
-         bool aIsNonXMonotone = false, bool aIsCW = false);
+         bool aIsXMonotone = false, bool aIsCW = false);
 
     Edge(const Edge& aRhs);
 
@@ -33,13 +33,13 @@ class Edge {
     /* endregion */
 
     /* region Getters */
-    Point getStart();
+    const Point& getStart() const;
 
-    Point getEnd();
+    const Point& getEnd() const;
 
-    Point getAppendix();
+    const Point& getAppendix() const;
 
-    Point getCenter();
+    const Point& getCenter() const;
 
     double getRadius() const;
 

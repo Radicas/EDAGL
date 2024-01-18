@@ -17,7 +17,7 @@ TEST_F(Core_EdgeTest, construct) {
     EXPECT_DOUBLE_EQ(edge2.getEnd().x, 2.2);
 
     // 拷贝构造
-    Edge edge3(edge2);
+    const Edge& edge3(edge2);
     EXPECT_FALSE(edge3.isArc());
     EXPECT_DOUBLE_EQ(edge3.getAppendix().x, 3.3);
 

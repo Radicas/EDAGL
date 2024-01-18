@@ -8,38 +8,114 @@ namespace geometry {
 
 /********************************* Vector *********************************/
 
-double dotProduct(const core::Point& aS, const core::Point& aE,
-                  const core::Point& aO) {
+double dotProduct(const Point& aS, const Point& aE, const Point& aO) {
     return (aS.x - aO.x) * (aE.x - aO.x) + (aS.y - aO.y) * (aE.y - aO.y);
 }
 
-double dotProduct(const core::Vector2D& aVec1, const core::Vector2D& aVec2) {
+double dotProduct(const Vector2D& aVec1, const Vector2D& aVec2) {
     return aVec1.x * aVec2.x + aVec1.y * aVec2.y;
 }
 
-double crossProduct(const core::Point& aS, const core::Point& aE,
-                    const core::Point& aO) {
+double crossProduct(const Point& aS, const Point& aE, const Point& aO) {
     return (aS.x - aO.x) * (aE.y - aO.y) - (aE.x - aO.x) * (aS.y - aO.y);
 }
 
-double crossProduct(const core::Vector2D& aVec1, const core::Vector2D& aVec2) {
+double crossProduct(const Vector2D& aVec1, const Vector2D& aVec2) {
     return aVec1.x * aVec2.y - aVec1.y * aVec2.x;
 }
 /********************************** Point *********************************/
 
-bool isCollinear(const core::Point& aP1, const core::Point& aP2,
-                 const core::Point& aP3) {
+bool isCollinear(const Point& aP1, const Point& aP2, const Point& aP3) {
     return std::abs(crossProduct(aP1, aP2, aP3) - 0.0) < EPSILON;
 }
 
-double pointsDistance(const core::Point& aP1, const core::Point& aP2) {
+double pointsDistance(const Point& aP1, const Point& aP2) {
     return std::sqrt((aP1.x - aP2.x) * (aP1.x - aP2.x) +
                      (aP1.y - aP2.y) * (aP1.y - aP2.y));
 }
 /****************************** Circle / Arc ******************************/
 
-bool isXMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
-                    const core::Point& aCenter, double aSweepAngle) {
+double getStartAngle(const core::Point& aStart, const core::Point& aCenter) {
+    // 角度范围为 [0, 2π)
+    double startAngle = std::atan2(aStart.y - aCenter.y, aStart.x - aCenter.x);
+    if (startAngle < 0) {
+        startAngle += 2 * M_PI;
+    }
+    return startAngle;
+}
+
+double getEndAngle(const core::Point& aEnd, const core::Point& aCenter) {
+    // 角度范围为 [0, 2π)
+    double endAngle = std::atan2(aEnd.y - aCenter.y, aEnd.x - aCenter.x);
+    if (endAngle <= 0) {
+        endAngle += 2 * M_PI;
+    }
+    return endAngle;
+}
+
+double getSweepAngle(double aStartAngle, double endAngle, bool aIsCW) {
+    double sweepAngle{};
+    if (aIsCW) {
+        sweepAngle = (aStartAngle < endAngle)
+                         ? aStartAngle + 2 * M_PI - endAngle
+                         : aStartAngle - endAngle;
+    } else {
+        sweepAngle = (endAngle < aStartAngle)
+                         ? endAngle + 2 * M_PI - aStartAngle
+                         : endAngle - aStartAngle;
+    }
+    return sweepAngle;
+}
+
+core::Point getMidOfArc(const core::Point& aStart, const core::Point& aEnd,
+                        const core::Point& aCenter, bool aIsCW) {
+    double startAngle = getStartAngle(aStart, aCenter);
+    double endAngle = getEndAngle(aEnd, aCenter);
+    double radius = pointsDistance(aStart, aCenter);
+    return getMidOfArc(startAngle, endAngle, radius, aCenter, aIsCW);
+}
+
+Point getMidOfArc(double aStartAngle, double aEndAngle, double aRadius,
+                  const Point& aCenter, bool aIsCW) {
+
+    double midAngle{};
+
+    if (((aEndAngle > aStartAngle) && aIsCW) ||
+        ((aEndAngle < aStartAngle) && !aIsCW)) {
+        midAngle = (aStartAngle + aEndAngle) * 0.5 + M_PI;
+    } else if (((aEndAngle > aStartAngle) && !aIsCW) ||
+               ((aEndAngle < aStartAngle) && aIsCW)) {
+        midAngle = (aStartAngle + aEndAngle) * 0.5;
+    } else {
+        std::cerr << "getMidOfArc error " << __FILE_NAME__ << __LINE__
+                  << std::endl;
+        throw;
+    }
+
+    return {aCenter.x + aRadius * std::cos(midAngle),
+            aCenter.y + aRadius * std::sin(midAngle)};
+}
+
+bool isPointInArcRange(const Point& aCenter, double aStartAngle,
+                       double aSweepAngle, bool aIsCW, const Point& aTarget) {
+    Point vector = aTarget - aCenter;
+    // [-PI,PI)
+    double pointAngle = std::atan2(vector.y, vector.x);
+    // [0,2PI)
+    if (pointAngle < 0) {
+        pointAngle += 2 * M_PI;
+    }
+    double endAngle{};
+    if (aIsCW) {
+        endAngle = aStartAngle - aSweepAngle;
+    } else {
+        endAngle = aStartAngle + aSweepAngle;
+    }
+    return (pointAngle >= aStartAngle && pointAngle <= endAngle);
+}
+
+bool isXMonotoneArc(const Point& aStart, const Point& aEnd,
+                    const Point& aCenter, double aSweepAngle) {
     /**
      * 观察一：
      *      如果起点和终点的y轴，分布在圆心y轴的上下两侧，则一定是非x单调
@@ -60,9 +136,10 @@ bool isXMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
     }
     return false;
 }
-bool isYMonotoneArc(const core::Point& aStart, const core::Point& aEnd,
-                    const core::Point& aCenter) {
-    // TODO: 暂未开发
+
+bool isYMonotoneArc(const Point& aStart, const Point& aEnd,
+                    const Point& aCenter) {
+    // 暂未开发
     return false;
 }
 
@@ -173,8 +250,7 @@ bool contains(const BBox& aBBox1, const BBox& aBBox2) {
              aBBox1.getMaxY() < aBBox2.getMaxY()));
 }
 
-int intersectsBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
-                     core::BBox& aResult) {
+int intersectsBBoxes(const BBox& aBBox1, const BBox& aBBox2, BBox& aResult) {
     // 检查两个BBox是否相离或包含
     if (detached(aBBox1, aBBox2) || contains(aBBox1, aBBox2)) {
         return 1;  // 返回状态1

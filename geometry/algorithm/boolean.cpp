@@ -5,6 +5,7 @@
 #include "core/edge.h"
 #include "core/edgedomain.h"
 #include "core/linkednode.h"
+#include "core/point.h"
 #include "engine/geometry.h"
 
 namespace core {
@@ -143,9 +144,11 @@ int initSequencedEdge(std::vector<core::EdgeDomain>& aSequencedEdge,
      *     将其放入边域中，且三值开关设为0
      */
     for (const auto& rEdge : aRelatedEdge) {
+        short int mark = 1;
         if (!rEdge.isXMonotone()) {
             // 非X单调
             // TODO: 分解非X单调弧
+
         } else {
             EdgeDomain edgeDomain(rEdge, {}, 0);
             aSequencedEdge.emplace_back(edgeDomain);
@@ -163,9 +166,117 @@ std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
      * 定理：一个非x单调圆弧，一定可以分解成两到三个x单调圆弧
      * 圆形是特殊圆弧
      */
+    const auto& edgeStart = aEdge.getStart();
+    const auto& edgeEnd = aEdge.getEnd();
+    const auto& edgeCenter = aEdge.getCenter();
+    bool isCW = aEdge.isCW();
 
+    Point west(edgeCenter.x - aEdge.getRadius(), edgeCenter.y);
+    Point east(edgeCenter.x + aEdge.getRadius(), edgeCenter.y);
+    bool westIn = geometry::isPointInArcRange(
+        edgeCenter, aEdge.getStartAngle(), aEdge.getSweepAngle(), isCW, west);
+    bool eastIn = geometry::isPointInArcRange(
+        edgeCenter, aEdge.getStartAngle(), aEdge.getSweepAngle(), isCW, east);
 
+    // TODO: NOTE: 可能圆形要特殊处理
+    if (westIn && eastIn) {
+        return decomposeArcToThree(aEdge, east, west);
+    }
+    if (westIn && !eastIn) {
+        return decomposeArcToTwo(aEdge, west);
+    }
+    if (!westIn && eastIn) {
+        return decomposeArcToTwo(aEdge, east);
+    }
+    std::cerr << "decomposeArc error " << __FILE_NAME__ << __LINE__
+              << std::endl;
+    throw;
     return {};
+}
+
+std::vector<core::Edge> decomposeArcToTwo(const Edge& aEdge,
+                                          const Point& aBreakPoint) {
+    /**
+    * 分析：
+    * 分解为两段圆弧
+    * 为真的顶点一定是第二个圆弧的起点
+    */
+    // 第一个圆弧的附加点
+    Point firstEdgeMidAppendix = geometry::getMidOfArc(
+        aEdge.getStart(), aBreakPoint, aEdge.getCenter(), aEdge.isCW());
+    // 第一个圆弧
+    Edge firstEdge(aEdge.getStart(), aEdge.getEnd(), firstEdgeMidAppendix, true,
+                   true, aEdge.isCW());
+    // 第二个圆弧的附加点
+    Point secondEdgeMidAppendix = geometry::getMidOfArc(
+        aBreakPoint, aEdge.getEnd(), aEdge.getCenter(), aEdge.isCW());
+    Edge secondEdge(aBreakPoint, aEdge.getEnd(), secondEdgeMidAppendix, true,
+                    true, aEdge.isCW());
+
+    std::vector<Edge> res;
+    res.emplace_back(firstEdge);
+    res.emplace_back(secondEdge);
+    return res;
+}
+
+std::vector<core::Edge> decomposeArcToThree(const Edge& aEdge,
+                                            const Point& aEast,
+                                            const Point& aWest) {
+    /**
+    * 分析：
+    * 分解为三段圆弧
+    * 原始圆弧的两个端点一定在圆心y轴的同侧
+    * 第一段圆弧的起始角一定是原始圆弧的起始角
+    * 第三段圆弧的终止角一定是原始圆弧的终止角
+    * 三段圆弧的方向不变
+    * 目标就是确定第一段圆弧的终点、第三段圆弧的起点
+    * 只要确定Edge的起点、终点、附加点即可
+    * 如果顺时针，且起点y坐标在圆心y轴下方，则左边的是第二条弧的起点
+    * 如果顺时针，且起点y坐标在圆心y轴上方，则右边的是第二条弧的起点
+    * 如果逆时针，且起点y坐标在圆心y轴下方，则右边的是第二条弧的起点
+    * 如果逆时针，且起点y坐标在圆心y轴上方，则左边的是第二条弧的起点
+    */
+
+    const auto& edgeStart = aEdge.getStart();
+    const auto& edgeEnd = aEdge.getEnd();
+    const auto& edgeCenter = aEdge.getCenter();
+    bool isCW = aEdge.isCW();
+
+    Point secondStart{}, secondEnd{};
+    if ((isCW && edgeStart.y < edgeCenter.y) ||
+        (!isCW && edgeStart.y > edgeCenter.y)) {
+        secondStart = aWest;
+        secondEnd = aEast;
+    } else if ((isCW && edgeStart.y > edgeCenter.y) ||
+               (!isCW && edgeStart.y < edgeCenter.y)) {
+        secondStart = aEast;
+        secondEnd = aWest;
+    } else {
+        std::cerr << "decomposeArcToThree error " << __FILE_NAME__ << __LINE__
+                  << std::endl;
+        throw;
+    }
+
+    // 第一个圆弧的附加点
+    Point firstEdgeMidAppendix =
+        geometry::getMidOfArc(edgeStart, secondStart, edgeCenter, isCW);
+    // 第一个圆弧
+    Edge firstEdge(edgeStart, edgeEnd, firstEdgeMidAppendix, true, true, isCW);
+    // 第二个圆弧的附加点
+    Point secondEdgeMidAppendix =
+        geometry::getMidOfArc(secondStart, secondEnd, edgeCenter, isCW);
+    Edge secondEdge(secondStart, secondEnd, secondEdgeMidAppendix, true, true,
+                    isCW);
+    // 第三个圆弧的附加点
+    Point thirdEdgeMidAppendix =
+        geometry::getMidOfArc(secondEnd, edgeEnd, edgeCenter, isCW);
+    Edge thirdEdge(secondEnd, edgeEnd, thirdEdgeMidAppendix, true, true, isCW);
+
+    std::vector<Edge> res;
+    res.emplace_back(firstEdge);
+    res.emplace_back(secondEdge);
+    res.emplace_back(thirdEdge);
+    return res;
 }
 
 }  // namespace algorithm

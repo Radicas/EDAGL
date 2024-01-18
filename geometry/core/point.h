@@ -27,11 +27,15 @@ class Point {
 
     Point& operator=(const Point& rhs) = default;
 
-    Point& operator+(const Point& rhs);
+    Point operator+(const Point& rhs) const;
 
     Point& operator+=(const Point& rhs);
 
-    Point& operator*(double val);
+    Point operator-(const Point& rhs) const;
+
+    Point& operator-=(const Point& rhs);
+
+    Point operator*(double val) const;
 
     Point& operator*=(double val);
 

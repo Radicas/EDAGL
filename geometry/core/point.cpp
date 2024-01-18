@@ -8,10 +8,8 @@ Point::Point(const Point& rhs) {
     y = rhs.y;
 }
 
-Point& Point::operator+(const Point& rhs) {
-    x += rhs.x;
-    y += rhs.y;
-    return *this;
+Point Point::operator+(const Point& rhs) const {
+    return {x + rhs.x, y + rhs.y};
 }
 
 Point& Point::operator+=(const Point& rhs) {
@@ -20,10 +18,18 @@ Point& Point::operator+=(const Point& rhs) {
     return *this;
 }
 
-Point& Point::operator*(double val) {
-    x *= val;
-    y *= val;
+Point Point::operator-(const Point& rhs) const {
+    return {x - rhs.x, y - rhs.y};
+}
+
+Point& Point::operator-=(const Point& rhs) {
+    x -= rhs.x;
+    y -= rhs.y;
     return *this;
+}
+
+Point Point::operator*(double val) const {
+    return {x * val, y * val};
 }
 
 Point& Point::operator*=(double val) {
