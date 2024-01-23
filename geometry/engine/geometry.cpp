@@ -105,13 +105,51 @@ bool isPointInArcRange(const Point& aCenter, double aStartAngle,
     if (pointAngle < 0) {
         pointAngle += 2 * M_PI;
     }
-    double endAngle{};
-    if (aIsCW) {
-        endAngle = aStartAngle - aSweepAngle;
+
+    double endAngle =
+        aIsCW ? aStartAngle - aSweepAngle : aStartAngle + aSweepAngle;
+
+    if (endAngle >= 2 * M_PI) {
+        endAngle -= 2 * M_PI;
+        return ((pointAngle >= aStartAngle) && (pointAngle <= 2 * M_PI) ||
+                (pointAngle >= 0.0) && (pointAngle <= endAngle));
+    } else if (endAngle < 0.0) {
+        endAngle += 2 * M_PI;
+        return ((pointAngle >= 0.0) && (pointAngle <= aStartAngle) ||
+                (pointAngle <= 2 * M_PI) && (pointAngle >= endAngle));
     } else {
-        endAngle = aStartAngle + aSweepAngle;
+        return pointAngle >= aStartAngle && pointAngle <= endAngle;
     }
-    return (pointAngle >= aStartAngle && pointAngle <= endAngle);
+}
+
+bool isPointInArcRangeExceptEdge(const core::Point& aCenter, double aStartAngle,
+                                 double aSweepAngle, bool aIsCW,
+                                 const core::Point& aTarget) {
+    if (aTarget == aCenter) {
+        return false;
+    }
+    Point vector = aTarget - aCenter;
+    // [-PI,PI)
+    double pointAngle = std::atan2(vector.y, vector.x);
+    // [0,2PI)
+    if (pointAngle < 0) {
+        pointAngle += 2 * M_PI;
+    }
+
+    double endAngle =
+        aIsCW ? aStartAngle - aSweepAngle : aStartAngle + aSweepAngle;
+
+    if (endAngle >= 2 * M_PI) {
+        endAngle -= 2 * M_PI;
+        return ((pointAngle > aStartAngle) && (pointAngle < 2 * M_PI) ||
+                (pointAngle >= 0.0) && (pointAngle < endAngle));
+    } else if (endAngle < 0.0) {
+        endAngle += 2 * M_PI;
+        return ((pointAngle >= 0.0) && (pointAngle < aStartAngle) ||
+                (pointAngle < 2 * M_PI) && (pointAngle > endAngle));
+    } else {
+        return pointAngle > aStartAngle && pointAngle < endAngle;
+    }
 }
 
 bool isXMonotoneArc(const Point& aStart, const Point& aEnd,

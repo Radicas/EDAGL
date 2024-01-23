@@ -126,7 +126,7 @@ core::Point getMidOfArc(double aStartAngle, double aEndAngle, double aRadius,
                         const core::Point& aCenter, bool aIsCW);
 
 /**
- * @brief 判断点是否在圆弧射线范围内
+ * @brief 判断点是否在圆弧射线范围内(包含边)
  *
  * @param aStart
  * @param aCenter
@@ -136,6 +136,20 @@ core::Point getMidOfArc(double aStartAngle, double aEndAngle, double aRadius,
  * @return
  */
 bool isPointInArcRange(const core::Point& aCenter, double aStartAngle,
+                       double aSweepAngle, bool aIsCW,
+                       const core::Point& aTarget);
+
+/**
+ * @brief 判断点是否在圆弧射线范围内(不包含边)
+ *
+ * @param aStart
+ * @param aCenter
+ * @param aStartAngle
+ * @param aSweepAngle
+ * @param aIsCW
+ * @return
+ */
+bool isPointInArcRangeExceptEdge(const core::Point& aCenter, double aStartAngle,
                        double aSweepAngle, bool aIsCW,
                        const core::Point& aTarget);
 

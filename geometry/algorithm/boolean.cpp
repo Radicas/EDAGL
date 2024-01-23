@@ -173,9 +173,9 @@ std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
 
     Point west(edgeCenter.x - aEdge.getRadius(), edgeCenter.y);
     Point east(edgeCenter.x + aEdge.getRadius(), edgeCenter.y);
-    bool westIn = geometry::isPointInArcRange(
+    bool westIn = geometry::isPointInArcRangeExceptEdge(
         edgeCenter, aEdge.getStartAngle(), aEdge.getSweepAngle(), isCW, west);
-    bool eastIn = geometry::isPointInArcRange(
+    bool eastIn = geometry::isPointInArcRangeExceptEdge(
         edgeCenter, aEdge.getStartAngle(), aEdge.getSweepAngle(), isCW, east);
 
     // TODO: NOTE: 可能圆形要特殊处理

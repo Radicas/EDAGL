@@ -71,3 +71,9 @@ TEST_F(Algorithm_Boolean, relatedEdgesBetweenAxis2) {
     EXPECT_EQ(relatedEdges.size(), 4);
 }
 
+class Algorithm_Boolean_DecomposeArc : public testing::Test {};
+
+TEST_F(Algorithm_Boolean_DecomposeArc, test1) {
+//    Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, -200.0}, true, true, false);
+//    auto res = algorithm::decomposeArc(edge);
+}

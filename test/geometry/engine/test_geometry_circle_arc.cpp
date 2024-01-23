@@ -5,6 +5,7 @@
 using namespace core;
 using namespace geometry;
 
+// 三点确定圆
 class Geometry_CircleFrom3PointsTest : public testing::Test {};
 
 TEST_F(Geometry_CircleFrom3PointsTest, ValidPoints) {
@@ -51,6 +52,7 @@ TEST_F(Geometry_CircleFrom3PointsTest, SamePoints) {
     //    EXPECT_DOUBLE_EQ(aRadius, 0.0);
 }
 
+// 获取圆弧的包围盒
 class Geometry_BBoxOfArcTest : public testing::Test {};
 
 TEST_F(Geometry_BBoxOfArcTest, ValidArc) {
@@ -131,6 +133,7 @@ TEST_F(Geometry_BBoxOfArcTest, SamePoints) {
     //    EXPECT_DOUBLE_EQ(result.getMaxY(), 0.0);
 }
 
+// 判读圆弧是否X单调
 class Geometry_IsXMonotoneArc : public testing::Test {};
 
 TEST_F(Geometry_IsXMonotoneArc, test1) {
@@ -171,14 +174,29 @@ TEST_F(Geometry_IsXMonotoneArc, test1) {
     EXPECT_FALSE(res5);
 }
 
+// 点是否在圆弧范围内(包括边)
 class Geometry_IsPointInArcRange : public testing::Test {};
 
 TEST_F(Geometry_IsPointInArcRange, test1) {
     Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, -200.0}, true, true, false);
-    Point p1(-200.0, 0.0);
-    Point p2(-1.0, 1.0);
-    Point p3(1.0, -1.0);
-    Point p4(0.0, -200.0);
+    Point p1(-300.0, 0.0);
+    Point p2(-200.0, 0.0);
+    Point p3(-100.0, 0.0);
+    Point p4(-50.0, 50.0);
+    Point p5(-50.0, -50.0);
+    Point p6(0.0, 300.0);
+    Point p7(0.0, 200.0);
+    Point p8(0.0, 100.0);
+    Point p9(0.0, 0.0);
+    Point p10(0.0, -100.0);
+    Point p11(0.0, -200.0);
+    Point p12(0.0, -300.0);
+    Point p13(50.0, 50.0);
+    Point p14(50.0, -50.0);
+    Point p15(100.0, 0.0);
+    Point p16(200.0, 0.0);
+    Point p17(300.0, 0.0);
+
     bool res1 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
                                   edge.getSweepAngle(), edge.isCW(), p1);
     bool res2 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
@@ -187,12 +205,147 @@ TEST_F(Geometry_IsPointInArcRange, test1) {
                                   edge.getSweepAngle(), edge.isCW(), p3);
     bool res4 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
                                   edge.getSweepAngle(), edge.isCW(), p4);
+    bool res5 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p5);
+    bool res6 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p6);
+    bool res7 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p7);
+    bool res8 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p8);
+    bool res9 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                  edge.getSweepAngle(), edge.isCW(), p9);
+    bool res10 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                   edge.getSweepAngle(), edge.isCW(), p10);
+    bool res11 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                   edge.getSweepAngle(), edge.isCW(), p11);
+    bool res12 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                   edge.getSweepAngle(), edge.isCW(), p12);
+    bool res13 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                   edge.getSweepAngle(), edge.isCW(), p13);
+    bool res14 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                   edge.getSweepAngle(), edge.isCW(), p14);
+    bool res15 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                   edge.getSweepAngle(), edge.isCW(), p15);
+    bool res16 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                   edge.getSweepAngle(), edge.isCW(), p16);
+    bool res17 = isPointInArcRange(edge.getCenter(), edge.getStartAngle(),
+                                   edge.getSweepAngle(), edge.isCW(), p17);
+
     EXPECT_TRUE(res1);
-    EXPECT_FALSE(res2);
+    EXPECT_TRUE(res2);
     EXPECT_TRUE(res3);
-    EXPECT_TRUE(res4);
+    EXPECT_FALSE(res4);
+    EXPECT_TRUE(res5);
+    EXPECT_TRUE(res6);
+    EXPECT_TRUE(res7);
+    EXPECT_TRUE(res8);
+    EXPECT_TRUE(res9);
+    EXPECT_TRUE(res10);
+    EXPECT_TRUE(res11);
+    EXPECT_TRUE(res12);
+    EXPECT_TRUE(res13);
+    EXPECT_TRUE(res14);
+    EXPECT_TRUE(res15);
+    EXPECT_TRUE(res16);
+    EXPECT_TRUE(res17);
 }
 
+// 点是否在圆弧范围内(不包括边)
+class Geometry_IsPointInArcRangeExceptEdge : public testing::Test {};
+
+TEST_F(Geometry_IsPointInArcRangeExceptEdge, test1) {
+    Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, -200.0}, true, true, false);
+    Point p1(-300.0, 0.0);
+    Point p2(-200.0, 0.0);
+    Point p3(-100.0, 0.0);
+    Point p4(-50.0, 50.0);
+    Point p5(-50.0, -50.0);
+    Point p6(0.0, 300.0);
+    Point p7(0.0, 200.0);
+    Point p8(0.0, 100.0);
+    Point p9(0.0, 0.0);
+    Point p10(0.0, -100.0);
+    Point p11(0.0, -200.0);
+    Point p12(0.0, -300.0);
+    Point p13(50.0, 50.0);
+    Point p14(50.0, -50.0);
+    Point p15(100.0, 0.0);
+    Point p16(200.0, 0.0);
+    Point p17(300.0, 0.0);
+
+    bool res1 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p1);
+    bool res2 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p2);
+    bool res3 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p3);
+    bool res4 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p4);
+    bool res5 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p5);
+    bool res6 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p6);
+    bool res7 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p7);
+    bool res8 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p8);
+    bool res9 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p9);
+    bool res10 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p10);
+    bool res11 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p11);
+    bool res12 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p12);
+    bool res13 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p13);
+    bool res14 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p14);
+    bool res15 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p15);
+    bool res16 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p16);
+    bool res17 =
+        isPointInArcRangeExceptEdge(edge.getCenter(), edge.getStartAngle(),
+                                    edge.getSweepAngle(), edge.isCW(), p17);
+
+    EXPECT_FALSE(res1);
+    EXPECT_FALSE(res2);
+    EXPECT_FALSE(res3);
+    EXPECT_FALSE(res4);
+    EXPECT_TRUE(res5);
+    EXPECT_FALSE(res6);
+    EXPECT_FALSE(res7);
+    EXPECT_FALSE(res8);
+    EXPECT_FALSE(res9);
+    EXPECT_TRUE(res10);
+    EXPECT_TRUE(res11);
+    EXPECT_TRUE(res12);
+    EXPECT_TRUE(res13);
+    EXPECT_TRUE(res14);
+    EXPECT_TRUE(res15);
+    EXPECT_TRUE(res16);
+    EXPECT_TRUE(res17);
+}
+
+// 获取圆弧的中点
 class Geometry_GetMidOfArc : public testing::Test {};
 
 TEST_F(Geometry_GetMidOfArc, test1) {
