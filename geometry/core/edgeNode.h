@@ -1,22 +1,22 @@
-#ifndef EDA_GL_EDGEDOMAIN_H
-#define EDA_GL_EDGEDOMAIN_H
+#ifndef EDA_GL_EDGENODE_H
+#define EDA_GL_EDGENODE_H
 
 #include "core/edge.h"
 
 namespace core {
-class EdgeDomain {
+class EdgeNode {
    public:
     /* region Constructors / Destructor */
-    EdgeDomain();
+    EdgeNode();
 
-    EdgeDomain(const Edge& aEdge, const std::pair<double, double>& aLocation,
-               short int aArcMark);
+    EdgeNode(const Edge& aEdge, const std::pair<double, double>& aLocation,
+             short int aArcMark);
 
-    EdgeDomain(const EdgeDomain& aRhs);
+    EdgeNode(const EdgeNode& aRhs);
 
-    EdgeDomain& operator=(const EdgeDomain& aRhs);
+    EdgeNode& operator=(const EdgeNode& aRhs);
 
-    ~EdgeDomain();
+    ~EdgeNode();
 
     /* endregion */
 
@@ -36,4 +36,4 @@ class EdgeDomain {
 
 }  // namespace core
 
-#endif  //EDA_GL_EDGEDOMAIN_H
+#endif  //EDA_GL_EDGENODE_H

@@ -3,7 +3,7 @@
 #include "core/arcpolygon.h"
 #include "core/bbox.h"
 #include "core/edge.h"
-#include "core/edgedomain.h"
+#include "core/edgeNode.h"
 #include "core/linkednode.h"
 #include "core/point.h"
 #include "engine/geometry.h"
@@ -39,18 +39,24 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
             tail = next;
         }
         if (next && next->mIsAppendix) {
-            // 圆弧
+            // 下一个是圆弧的附加点，要产生圆弧
             auto appendixPoint = next->mData;
             auto arcEndPoint = next->mNext->mData;
+            // 计算包围盒
             auto arcBBox =
                 geometry::bBoxOfArc(currPoint, arcEndPoint, appendixPoint);
+            Point center{};
+            double r;
+            // 计算圆心、半径
+            geometry::circleFrom3Points(currPoint, arcEndPoint, appendixPoint,
+                                        center, r);
             double startValue = aXAxis ? arcBBox.getMinX() : arcBBox.getMinY();
             double endValue = aXAxis ? arcBBox.getMaxX() : arcBBox.getMaxY();
+            // 根据有效轴判断是否是相关边
             if ((startValue >= aAxisSmall && startValue <= aAxisBig) ||
                 (endValue >= aAxisSmall && endValue <= aAxisBig) ||
                 (startValue <= aAxisSmall && endValue >= aAxisBig)) {
-                aRelatedEdge.emplace_back(currPoint, arcEndPoint, appendixPoint,
-                                          true);
+                aRelatedEdge.emplace_back(currPoint, arcEndPoint, center, true);
             }
             // 尾指针移动到圆弧终点
             tail = next->mNext;
@@ -92,8 +98,8 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
 *  S1、S2、R1、R2就处理好了
 */
 int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
-                        std::vector<EdgeDomain>& aEdgeDomain1,
-                        std::vector<EdgeDomain>& aEdgeDomain2,
+                        std::vector<EdgeNode>& aEdgeDomain1,
+                        std::vector<EdgeNode>& aEdgeDomain2,
                         std::vector<Edge>& aRelatedEdge1,
                         std::vector<Edge>& aRelatedEdge2) {
     // 获取包围盒
@@ -131,7 +137,7 @@ int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
     return 0;
 }
 
-int initSequencedEdge(std::vector<core::EdgeDomain>& aSequencedEdge,
+int initSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge,
                       const std::vector<core::Edge>& aRelatedEdge) {
     /**
      * 逻辑:
@@ -143,15 +149,21 @@ int initSequencedEdge(std::vector<core::EdgeDomain>& aSequencedEdge,
      * 如果不是非x单调圆弧
      *     将其放入边域中，且三值开关设为0
      */
+    short int mark = 1;
     for (const auto& rEdge : aRelatedEdge) {
-        short int mark = 1;
         if (!rEdge.isXMonotone()) {
-            // 非X单调
-            // TODO: 分解非X单调弧
-
+            // 非X单调弧
+            auto decomposedArcs = decomposeArc(rEdge);
+            for (const auto& dArc : decomposedArcs) {
+                EdgeNode ed(dArc, {}, mark);
+                aSequencedEdge.emplace_back(std::move(ed));
+            }
+            // 切换开关
+            mark = mark == 1 ? 2 : 1;
         } else {
-            EdgeDomain edgeDomain(rEdge, {}, 0);
-            aSequencedEdge.emplace_back(edgeDomain);
+            // 线段或者单调圆弧
+            EdgeNode ed(rEdge, {}, 0);
+            aSequencedEdge.emplace_back(std::move(ed));
         }
     }
     return 0;

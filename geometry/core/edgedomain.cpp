@@ -1,30 +1,30 @@
-#include "edgedomain.h"
+#include "edgeNode.h"
 namespace core {
 /* region Constructors / Destructor */
-EdgeDomain::EdgeDomain() : mRelatedEdge(), mLocation(), mArcMark(0) {}
+EdgeNode::EdgeNode() : mRelatedEdge(), mLocation(), mArcMark(0) {}
 
-EdgeDomain::EdgeDomain(const Edge& aEdge,
-                       const std::pair<double, double>& aLocation,
-                       short int aArcMark)
+EdgeNode::EdgeNode(const Edge& aEdge,
+                   const std::pair<double, double>& aLocation,
+                   short int aArcMark)
     : mRelatedEdge(aEdge), mLocation(aLocation), mArcMark(aArcMark) {}
 
-EdgeDomain::EdgeDomain(const EdgeDomain& aRhs) = default;
+EdgeNode::EdgeNode(const EdgeNode& aRhs) = default;
 
-EdgeDomain& EdgeDomain::operator=(const EdgeDomain& aRhs) = default;
+EdgeNode& EdgeNode::operator=(const EdgeNode& aRhs) = default;
 
-EdgeDomain::~EdgeDomain() = default;
+EdgeNode::~EdgeNode() = default;
 /* endregion */
 
 /* region Getters */
-Edge& EdgeDomain::getRelatedEdge() {
+Edge& EdgeNode::getRelatedEdge() {
     return mRelatedEdge;
 }
 
-std::pair<double, double>& EdgeDomain::getLocation() {
+std::pair<double, double>& EdgeNode::getLocation() {
     return mLocation;
 }
 
-short int EdgeDomain::getArcMark() const {
+short int EdgeNode::getArcMark() const {
     return mArcMark;
 }
 /* endregion */

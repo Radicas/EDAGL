@@ -231,6 +231,8 @@ void circleFrom3Points(const Point& aP1, const Point& aP2, const Point& aP3,
 }
 
 BBox bBoxOfArc(const Point& A, const Point& B, const Point& M) {
+    // TODO: 这里用的是附加点计算的。用圆心可能会快一些。
+
     BBox result;
     // 求圆心和半径
     Point center{};

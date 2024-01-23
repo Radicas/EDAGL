@@ -18,7 +18,7 @@ namespace core {
 class LinkedNode;
 class Point;
 class Edge;
-class EdgeDomain;
+class EdgeNode;
 
 class ArcPolygon;
 }  // namespace core
@@ -53,8 +53,8 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
  */
 int arcPolyPretreatment(core::ArcPolygon* aArcPoly1,
                         core::ArcPolygon* aArcPoly2,
-                        std::vector<core::EdgeDomain>& aEdgeDomain1,
-                        std::vector<core::EdgeDomain>& aEdgeDomain2,
+                        std::vector<core::EdgeNode>& aEdgeDomain1,
+                        std::vector<core::EdgeNode>& aEdgeDomain2,
                         std::vector<core::Edge>& aRelatedEdge1,
                         std::vector<core::Edge>& aRelatedEdge2);
 
@@ -65,7 +65,7 @@ int arcPolyPretreatment(core::ArcPolygon* aArcPoly1,
  * @param aRelatedEdge 相关边
  * @return 0 正常
  */
-int initSequencedEdge(std::vector<core::EdgeDomain>& aSequencedEdge,
+int initSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge,
                       const std::vector<core::Edge>& aRelatedEdge);
 
 /**

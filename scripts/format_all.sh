@@ -3,7 +3,7 @@
 # 根目录路径
 ROOT_DIR=$(dirname "$(pwd)")
 pattern="build"
-# 递归格式化函数
+# 递归格式化
 format_files() {
     local dir=$1
     if [[ $dir =~ $pattern ]]; then
