@@ -20,14 +20,14 @@ Edge::Edge()
     initArcValues();
 }
 
-Edge::Edge(const Point& aStart, const Point& aEnd, const Point& aAppendix,
-           bool aIsArc, bool aIsXMonotone, bool aIsCW)
+Edge::Edge(const Point& aStart, const Point& aEnd, const Point& aCenter,
+           bool aIsArc, bool aIsCW)
     : mStart(aStart),
       mEnd(aEnd),
-      mAppendix(aAppendix),
+      mAppendix(),
       mIsArc(aIsArc),
-      mIsXMonotone(aIsXMonotone),
-      mCenter(),
+      mIsXMonotone(),
+      mCenter(aCenter),
       mRadius(),
       mStartAngle(),
       mEndAngle(),
@@ -105,20 +105,23 @@ void Edge::initArcValues() {
     if (!mIsArc) {
         return;
     }
-    if (geometry::isCollinear(mStart, mEnd, mAppendix)) {
-        std::cerr << "error: three points in a line -> " << __FILE_NAME__
-                  << __LINE__ << std::endl;
-        exit(-1);
-    }
-    geometry::circleFrom3Points(mStart, mEnd, mAppendix, mCenter, mRadius);
+    //    if (geometry::isCollinear(mStart, mEnd, mAppendix)) {
+    //        std::cerr << "error: three points in a line -> " << __FILE_NAME__
+    //                  << __LINE__ << std::endl;
+    //        exit(-1);
+    //    }
+    //    geometry::circleFrom3Points(mStart, mEnd, mAppendix, mCenter, mRadius);
+    mRadius = geometry::getRadius(mStart, mCenter);
     // 计算起始角度，范围为 [0, 2π)
     mStartAngle = geometry::getStartAngle(mStart, mCenter);
     // 计算终止角度，范围为 [0, 2π)
     mEndAngle = geometry::getEndAngle(mEnd, mCenter);
     // 计算扫过的角度，范围为 [0, 2π)
     mSweepAngle = geometry::getSweepAngle(mStartAngle, mEndAngle, mIsCW);
-    // 判断圆弧X单调性
+    // 计算圆弧X单调性
     mIsXMonotone = geometry::isXMonotoneArc(mStart, mEnd, mCenter, mSweepAngle);
+    // 计算圆弧的附加点
+    mAppendix = geometry::getMidOfArc(mStart, mEnd, mCenter, mIsCW);
 }
 
 /* endregion */

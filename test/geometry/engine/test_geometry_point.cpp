@@ -4,6 +4,7 @@
 using namespace core;
 using namespace geometry;
 
+// 点距离
 class Geometry_PointsDistanceTest : public testing::Test {};
 
 TEST_F(Geometry_PointsDistanceTest, DistanceBetweenPositivePoints) {
@@ -72,6 +73,7 @@ TEST_F(Geometry_PointsDistanceTest, DistanceBetweenVerticalPoints) {
     EXPECT_DOUBLE_EQ(result, 4.0);
 }
 
+// 共线判定
 class Geometry_CollinearTest : public testing::Test {};
 
 TEST_F(Geometry_CollinearTest, CollinearPoints) {

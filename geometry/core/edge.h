@@ -21,8 +21,8 @@ class Edge {
     Edge();
 
     Edge(const Point& aStart, const Point& aEnd,
-         const Point& aAppendix = {0.0, 0.0}, bool aIsArc = false,
-         bool aIsXMonotone = false, bool aIsCW = false);
+         const Point& aCenter = {0.0, 0.0}, bool aIsArc = false,
+         bool aIsCW = false);
 
     Edge(const Edge& aRhs);
 
@@ -61,6 +61,21 @@ class Edge {
     /* endregion */
 
     /* region General Methods */
+
+    friend std::ostream& operator<<(std::ostream& os, const Edge& edge) {
+        os << "********** edge info **********\n"
+           << "is Arc: " << edge.isArc() << "\n"
+           << "is X Monotone: " << edge.isXMonotone() << "\n"
+           << "is CW: " << edge.isCW() << "\n"
+           << "start: " << edge.getStart() << "\n"
+           << "end: " << edge.getEnd() << "\n"
+           << "center: " << edge.getCenter() << "\n"
+           << "radius: " << edge.getRadius() << "\n"
+           << "startAngle: " << edge.getStartAngle() << "\n"
+           << "endAngle: " << edge.getEndAngle() << "\n"
+           << "sweepAngle: " << edge.getSweepAngle() << "\n";
+        return os;
+    }
 
     /* endregion */
 

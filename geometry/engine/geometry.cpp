@@ -35,6 +35,10 @@ double pointsDistance(const Point& aP1, const Point& aP2) {
 }
 /****************************** Circle / Arc ******************************/
 
+double getRadius(const Point& aEndPoint, const Point& aCenterPoint) {
+    return pointsDistance(aEndPoint, aCenterPoint);
+}
+
 double getStartAngle(const core::Point& aStart, const core::Point& aCenter) {
     // 角度范围为 [0, 2π)
     double startAngle = std::atan2(aStart.y - aCenter.y, aStart.x - aCenter.x);
@@ -47,7 +51,7 @@ double getStartAngle(const core::Point& aStart, const core::Point& aCenter) {
 double getEndAngle(const core::Point& aEnd, const core::Point& aCenter) {
     // 角度范围为 [0, 2π)
     double endAngle = std::atan2(aEnd.y - aCenter.y, aEnd.x - aCenter.x);
-    if (endAngle <= 0) {
+    if (endAngle < 0) {
         endAngle += 2 * M_PI;
     }
     return endAngle;
@@ -156,23 +160,33 @@ bool isXMonotoneArc(const Point& aStart, const Point& aEnd,
                     const Point& aCenter, double aSweepAngle) {
     /**
      * 观察一：
-     *      如果起点和终点的y轴，分布在圆心y轴的上下两侧，则一定是非x单调
-     * 观察二：
-     *      如果起点和终点的y轴，分布在圆心同侧时，如果圆弧是劣弧，则是x单调；如果是优弧，则是非x单调
-     * 观察三：
      *      优弧一定是非X单调圆弧
+     * 观察二：
+     *      如果起点和终点的y轴，分布在圆心y轴的上下两侧，则一定是非x单调
+     *
      * 基于上述观察可以作以下实现
      */
-    if (aStart.y < aCenter.y && aEnd.y > aCenter.y ||
-        aStart.y > aCenter.y && aEnd.y < aCenter.y) {
+    // 优弧
+    if (aSweepAngle > (M_PI + geometry::EPSILON)) {
         return false;
     }
-    if (aSweepAngle <= M_PI &&
-        ((aStart.y <= aCenter.y && aEnd.y <= aCenter.y) ||
-         (aStart.y >= aCenter.y && aEnd.y >= aCenter.y))) {
+    double impreciseStartY = aStart.y, impreciseEndY = aEnd.y;
+    if (std::abs(aStart.y - aCenter.y) < geometry::EPSILON) {
+        impreciseStartY = aCenter.y;
+    }
+    if (std::abs(aEnd.y - aCenter.y) < geometry::EPSILON) {
+        impreciseEndY = aCenter.y;
+    }
+    // 180度
+    if (impreciseStartY == aCenter.y && impreciseEndY == aCenter.y) {
         return true;
     }
-    return false;
+    // 一上一下，上面已排除了等于圆心y的情况
+    if ((impreciseStartY > aCenter.y && impreciseEndY < aCenter.y) ||
+        (impreciseStartY < aCenter.y && impreciseEndY > aCenter.y)) {
+        return false;
+    }
+    return true;
 }
 
 bool isYMonotoneArc(const Point& aStart, const Point& aEnd,

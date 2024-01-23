@@ -178,7 +178,7 @@ TEST_F(Geometry_IsXMonotoneArc, test1) {
 class Geometry_IsPointInArcRange : public testing::Test {};
 
 TEST_F(Geometry_IsPointInArcRange, test1) {
-    Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, -200.0}, true, true, false);
+    Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, 0.0}, true, false);
     Point p1(-300.0, 0.0);
     Point p2(-200.0, 0.0);
     Point p3(-100.0, 0.0);
@@ -255,7 +255,7 @@ TEST_F(Geometry_IsPointInArcRange, test1) {
 class Geometry_IsPointInArcRangeExceptEdge : public testing::Test {};
 
 TEST_F(Geometry_IsPointInArcRangeExceptEdge, test1) {
-    Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, -200.0}, true, true, false);
+    Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, 0.0}, true, false);
     Point p1(-300.0, 0.0);
     Point p2(-200.0, 0.0);
     Point p3(-100.0, 0.0);

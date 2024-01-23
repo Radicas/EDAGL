@@ -2,11 +2,13 @@
 
 # 根目录路径
 ROOT_DIR=$(dirname "$(pwd)")
-
+pattern="build"
 # 递归格式化函数
 format_files() {
     local dir=$1
-
+    if [[ $dir =~ $pattern ]]; then
+       return
+    fi
     # 遍历目录下的文件和子目录
     for file in "$dir"/*; do
         if [ -d "$file" ]; then

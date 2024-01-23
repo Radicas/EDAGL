@@ -166,8 +166,6 @@ std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
      * 定理：一个非x单调圆弧，一定可以分解成两到三个x单调圆弧
      * 圆形是特殊圆弧
      */
-    const auto& edgeStart = aEdge.getStart();
-    const auto& edgeEnd = aEdge.getEnd();
     const auto& edgeCenter = aEdge.getCenter();
     bool isCW = aEdge.isCW();
 
@@ -178,7 +176,7 @@ std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
     bool eastIn = geometry::isPointInArcRangeExceptEdge(
         edgeCenter, aEdge.getStartAngle(), aEdge.getSweepAngle(), isCW, east);
 
-    // TODO: NOTE: 可能圆形要特殊处理
+    // TODO: NOTE: 圆形要特殊处理
     if (westIn && eastIn) {
         return decomposeArcToThree(aEdge, east, west);
     }
@@ -201,17 +199,12 @@ std::vector<core::Edge> decomposeArcToTwo(const Edge& aEdge,
     * 分解为两段圆弧
     * 为真的顶点一定是第二个圆弧的起点
     */
-    // 第一个圆弧的附加点
-    Point firstEdgeMidAppendix = geometry::getMidOfArc(
-        aEdge.getStart(), aBreakPoint, aEdge.getCenter(), aEdge.isCW());
     // 第一个圆弧
-    Edge firstEdge(aEdge.getStart(), aEdge.getEnd(), firstEdgeMidAppendix, true,
-                   true, aEdge.isCW());
-    // 第二个圆弧的附加点
-    Point secondEdgeMidAppendix = geometry::getMidOfArc(
-        aBreakPoint, aEdge.getEnd(), aEdge.getCenter(), aEdge.isCW());
-    Edge secondEdge(aBreakPoint, aEdge.getEnd(), secondEdgeMidAppendix, true,
-                    true, aEdge.isCW());
+    Edge firstEdge(aEdge.getStart(), aBreakPoint, aEdge.getCenter(), true,
+                   aEdge.isCW());
+    // 第二个圆弧
+    Edge secondEdge(aBreakPoint, aEdge.getEnd(), aEdge.getCenter(), true,
+                    aEdge.isCW());
 
     std::vector<Edge> res;
     res.emplace_back(firstEdge);
@@ -257,25 +250,17 @@ std::vector<core::Edge> decomposeArcToThree(const Edge& aEdge,
         throw;
     }
 
-    // 第一个圆弧的附加点
-    Point firstEdgeMidAppendix =
-        geometry::getMidOfArc(edgeStart, secondStart, edgeCenter, isCW);
     // 第一个圆弧
-    Edge firstEdge(edgeStart, edgeEnd, firstEdgeMidAppendix, true, true, isCW);
-    // 第二个圆弧的附加点
-    Point secondEdgeMidAppendix =
-        geometry::getMidOfArc(secondStart, secondEnd, edgeCenter, isCW);
-    Edge secondEdge(secondStart, secondEnd, secondEdgeMidAppendix, true, true,
-                    isCW);
-    // 第三个圆弧的附加点
-    Point thirdEdgeMidAppendix =
-        geometry::getMidOfArc(secondEnd, edgeEnd, edgeCenter, isCW);
-    Edge thirdEdge(secondEnd, edgeEnd, thirdEdgeMidAppendix, true, true, isCW);
+    Edge firstEdge(edgeStart, secondStart, aEdge.getCenter(), true, isCW);
+    // 第二个圆弧
+    Edge secondEdge(secondStart, secondEnd, aEdge.getCenter(), true, isCW);
+    // 第三个圆弧
+    Edge thirdEdge(secondEnd, edgeEnd, aEdge.getCenter(), true, isCW);
 
     std::vector<Edge> res;
-    res.emplace_back(firstEdge);
-    res.emplace_back(secondEdge);
-    res.emplace_back(thirdEdge);
+    res.emplace_back(std::move(firstEdge));
+    res.emplace_back(std::move(secondEdge));
+    res.emplace_back(std::move(thirdEdge));
     return res;
 }
 

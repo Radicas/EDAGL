@@ -103,6 +103,8 @@ bool isCollinear(const core::Point& aP1, const core::Point& aP2,
 
 /****************************** Circle / Arc ******************************/
 
+double getRadius(const core::Point& aEndPoint, const core::Point& aCenterPoint);
+
 double getStartAngle(const core::Point& aStart, const core::Point& aCenter);
 
 double getEndAngle(const core::Point& aEnd, const core::Point& aCenter);
@@ -150,8 +152,8 @@ bool isPointInArcRange(const core::Point& aCenter, double aStartAngle,
  * @return
  */
 bool isPointInArcRangeExceptEdge(const core::Point& aCenter, double aStartAngle,
-                       double aSweepAngle, bool aIsCW,
-                       const core::Point& aTarget);
+                                 double aSweepAngle, bool aIsCW,
+                                 const core::Point& aTarget);
 
 /**
  * @brief 判断是否X单调圆弧
