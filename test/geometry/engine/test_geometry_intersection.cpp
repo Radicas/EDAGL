@@ -6,6 +6,7 @@
 using namespace core;
 using namespace geometry;
 
+// 线段和线段是否相交
 class Geometry_IsSegSegIntersect : public testing::Test {};
 
 TEST_F(Geometry_IsSegSegIntersect, test1) {
@@ -41,6 +42,7 @@ TEST_F(Geometry_IsSegSegIntersect, test1) {
     EXPECT_TRUE(res7);
 }
 
+// 线段和圆是否相交
 class Geometry_IsSegCircleIntersect : public testing::Test {
    public:
     Point center;
@@ -97,6 +99,7 @@ TEST_F(Geometry_IsSegCircleIntersect, test5) {
     EXPECT_TRUE(result);
 }
 
+// 线段和线段求交点
 class Geometry_SegSegIntersectPoint : public testing::Test {};
 
 TEST_F(Geometry_SegSegIntersectPoint, test1) {
@@ -140,6 +143,7 @@ TEST_F(Geometry_SegSegIntersectPoint, test1) {
     EXPECT_FALSE(res6);
 }
 
+// 线段和圆求交点
 class Geometry_SegCircleIntersectPoints : public testing::Test {
    public:
     Point center;
@@ -182,5 +186,81 @@ TEST_F(Geometry_SegCircleIntersectPoints, test3) {
     Point p1(6.0, 4.0);
     Point p2(8.0, 0.0);
     segCircleIntersectPoints(p1, p2, center, radius, result);
+    EXPECT_EQ(result.size(), 0);
+}
+
+// 线段和圆弧求交点
+class Geometry_SegArcIntersectPoints : public testing::Test {
+   public:
+    Point center;
+    double radius;
+    double startAngle;
+    double sweepAngle;
+    bool isCW;
+    std::vector<Point> result;
+    Geometry_SegArcIntersectPoints()
+        : center(0.0, 0.0),
+          radius(4.0),
+          startAngle(0.0),
+          sweepAngle(M_PI + M_PI_2),
+          isCW(false),
+          result() {}
+
+    void printResult() {
+        for (const auto& r : result) {
+            std::cout << "(" << r.x << "," << r.y << ")\n";
+        }
+    }
+};
+
+TEST_F(Geometry_SegArcIntersectPoints, test1) {
+    Point p1(4.0, 0.0);
+    Point p2(8.0, 1.0);
+    segArcIntersectPoints(p1, p2, center, radius, startAngle, sweepAngle, false,
+                          result);
+    EXPECT_EQ(result.size(), 1);
+    EXPECT_DOUBLE_EQ(result[0].x, 4.0);
+    EXPECT_DOUBLE_EQ(result[0].y, 0.0);
+}
+
+TEST_F(Geometry_SegArcIntersectPoints, test2) {
+    Point p1(-1.0, -2.0);
+    Point p2(4.0, -2.0);
+    segArcIntersectPoints(p1, p2, center, radius, startAngle, sweepAngle, false,
+                          result);
+    EXPECT_EQ(result.size(), 0);
+}
+
+TEST_F(Geometry_SegArcIntersectPoints, test3) {
+    Point p1(-4.0, 0.0);
+    Point p2(4.0, 0.0);
+    segArcIntersectPoints(p1, p2, center, radius, startAngle, sweepAngle, false,
+                          result);
+    EXPECT_EQ(result.size(), 2);
+    EXPECT_TRUE((result[0].x - 4) < geometry::EPSILON ||
+                (result[0].x) < geometry::EPSILON);
+    EXPECT_TRUE((result[0].y + 4) < geometry::EPSILON ||
+                (result[0].y) < geometry::EPSILON);
+    EXPECT_TRUE((result[1].x - 4) < geometry::EPSILON ||
+                (result[1].x) < geometry::EPSILON);
+    EXPECT_TRUE((result[1].y + 4) < geometry::EPSILON ||
+                (result[1].y) < geometry::EPSILON);
+}
+
+TEST_F(Geometry_SegArcIntersectPoints, test4) {
+    Point p1(3.0, 1.0);
+    Point p2(-2.0, 5.0);
+    segArcIntersectPoints(p1, p2, center, radius, startAngle, sweepAngle, false,
+                          result);
+    EXPECT_EQ(result.size(), 1);
+    EXPECT_TRUE(std::abs(result[0].x + 0.6777126903254) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].y - 3.9421701522603) < geometry::EPSILON);
+}
+
+TEST_F(Geometry_SegArcIntersectPoints, test5) {
+    Point p1(-6.0, -2.0);
+    Point p2(-4.0, -5.0);
+    segArcIntersectPoints(p1, p2, center, radius, startAngle, sweepAngle, false,
+                          result);
     EXPECT_EQ(result.size(), 0);
 }

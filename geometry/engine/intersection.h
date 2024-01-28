@@ -53,13 +53,23 @@ bool segSegIntersectPoint(const core::Point& aSegStart1,
 
 /********************************** Arc **********************************/
 
+/**
+ * @brief 求线段和圆弧交点(包括端点)
+ * 
+ * @param aSegStart
+ * @param aSegEnd
+ * @param aArcCenter
+ * @param aRadius
+ * @param aStartAngle
+ * @param aSweepAngle
+ * @param aIsCW
+ * @param aResult
+ * @return
+ */
 bool segArcIntersectPoints(const core::Point& aSegStart,
                            const core::Point& aSegEnd,
-                           const core::Point& aArcStart,
-                           const core::Point& aArcEnd,
                            const core::Point& aArcCenter, double aRadius,
-                           double aStartAngle, double aEndAngle,
-                           double aSweepAngle, bool aIsCW,
+                           double aStartAngle, double aSweepAngle, bool aIsCW,
                            std::vector<core::Point>& aResult);
 
 /********************************** Circle **********************************/

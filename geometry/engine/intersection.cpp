@@ -77,11 +77,10 @@ bool segSegIntersectPoint(const Point& aSegStart1, const Point& aSegEnd1,
 }
 
 /********************************** Arc **********************************/
+
 bool segArcIntersectPoints(const Point& aSegStart, const Point& aSegEnd,
-                           const Point& aArcStart, const Point& aArcEnd,
                            const Point& aArcCenter, double aRadius,
-                           double aStartAngle, double aEndAngle,
-                           double aSweepAngle, bool aIsCW,
+                           double aStartAngle, double aSweepAngle, bool aIsCW,
                            std::vector<Point>& aResult) {
     std::vector<Point> result;
     segCircleIntersectPoints(aSegStart, aSegEnd, aArcCenter, aRadius, result);

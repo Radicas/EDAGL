@@ -166,9 +166,9 @@ Point midPointOfArc(double aStartAngle, double aEndAngle, double aRadius,
 
 bool isPointInArcRange(const Point& aCenter, double aStartAngle,
                        double aSweepAngle, bool aIsCW, const Point& aTarget) {
-    Point vector = aTarget - aCenter;
+    Point CT = aTarget - aCenter;
     // [-PI,PI)
-    double pointAngle = std::atan2(vector.y, vector.x);
+    double pointAngle = std::atan2(CT.y, CT.x);
     // [0,2PI)
     if (pointAngle < 0) {
         pointAngle += 2 * M_PI;
