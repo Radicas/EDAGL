@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "engine/geometry.h"
+#include "engine/intersection.h"
 
 using namespace core;
 using namespace geometry;

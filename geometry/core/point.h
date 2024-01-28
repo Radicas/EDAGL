@@ -31,6 +31,8 @@ class Point {
 
     Point& operator+=(const Point& rhs);
 
+    Point& operator-();
+
     Point operator-(const Point& rhs) const;
 
     Point& operator-=(const Point& rhs);
@@ -50,6 +52,8 @@ class Point {
     }
 
     inline void Negate();
+
+    double length() const;
 };
 typedef Point Vector2D;
 }  // namespace core

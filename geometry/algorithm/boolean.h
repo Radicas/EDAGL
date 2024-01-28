@@ -40,21 +40,20 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
                             std::vector<core::Edge>& aRelatedEdge);
 
 /**
- * @brief 圆弧多边形链表前处理
+ * @brief 圆弧多边形预处理
  *
- * @note 此接口只处理圆弧多边形相交的情况
- * @param aArcPoly1 圆弧多边形1
- * @param aArcPoly2 圆弧多边形2
- * @param aEdgeDomain1 相关边域1
- * @param aEdgeDomain2 相关边域2
+ * @param aArcPoly1 圆弧多边形链表1
+ * @param aArcPoly2 圆弧多边形链表2
+ * @param aSequencedEdge1 序列边1
+ * @param aSequencedEdge2 序列边2
  * @param aRelatedEdge1 相关边1
- * @param aRelatedEdge2 相关边1
- * @return 0 处理正常
+ * @param aRelatedEdge2 相关边2
+ * @return 0
  */
 int arcPolyPretreatment(core::ArcPolygon* aArcPoly1,
                         core::ArcPolygon* aArcPoly2,
-                        std::vector<core::EdgeNode>& aEdgeDomain1,
-                        std::vector<core::EdgeNode>& aEdgeDomain2,
+                        std::vector<core::EdgeNode>& aSequencedEdge1,
+                        std::vector<core::EdgeNode>& aSequencedEdge2,
                         std::vector<core::Edge>& aRelatedEdge1,
                         std::vector<core::Edge>& aRelatedEdge2);
 

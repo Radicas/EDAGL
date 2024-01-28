@@ -7,10 +7,9 @@
 #include "core/linkednode.h"
 #include "core/point.h"
 #include "engine/geometry.h"
+#include "engine/intersection.h"
 
-namespace core {
-class ArcPolygen;
-}
+namespace core {}
 namespace algorithm {
 
 using namespace core;
@@ -98,8 +97,8 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
 *  S1、S2、R1、R2就处理好了
 */
 int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
-                        std::vector<EdgeNode>& aEdgeDomain1,
-                        std::vector<EdgeNode>& aEdgeDomain2,
+                        std::vector<EdgeNode>& aSequencedEdge1,
+                        std::vector<EdgeNode>& aSequencedEdge2,
                         std::vector<Edge>& aRelatedEdge1,
                         std::vector<Edge>& aRelatedEdge2) {
     // 获取包围盒
@@ -130,8 +129,8 @@ int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
     relatedEdgesBetweenAxis(aArcPoly2, axisSmall, axisBig, effectiveX,
                             aRelatedEdge2);
     // 根据相关边初始化序列边，插入额外信息
-    initSequencedEdge(aEdgeDomain1, aRelatedEdge1);
-    initSequencedEdge(aEdgeDomain2, aRelatedEdge2);
+    initSequencedEdge(aSequencedEdge1, aRelatedEdge1);
+    initSequencedEdge(aSequencedEdge2, aRelatedEdge2);
 
     // TODO: 未完待续
     return 0;

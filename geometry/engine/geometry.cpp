@@ -23,23 +23,87 @@ double crossProduct(const Point& aS, const Point& aE, const Point& aO) {
 double crossProduct(const Vector2D& aVec1, const Vector2D& aVec2) {
     return aVec1.x * aVec2.y - aVec1.y * aVec2.x;
 }
+
+core::Vector2D normalized(const core::Vector2D& aVector) {
+    double l = aVector.length();
+    return {aVector.x / l, aVector.y / l};
+}
+
+core::Vector2D normalized(const core::Point& aStart, const core::Point& aEnd) {
+    return normalized(aEnd - aStart);
+}
+
 /********************************** Point *********************************/
 
 bool isCollinear(const Point& aP1, const Point& aP2, const Point& aP3) {
     return std::abs(crossProduct(aP1, aP2, aP3) - 0.0) < EPSILON;
 }
 
-double pointsDistance(const Point& aP1, const Point& aP2) {
+double relationPointAndSeg(const Point& aPoint, const Point& aSegStart,
+                           const Point& aSegEnd) {
+    return dotProduct(aPoint, aSegEnd, aSegStart) /
+           (distancePoint2Point(aSegStart, aSegEnd) *
+            distancePoint2Point(aSegStart, aSegEnd));
+}
+
+Point perpendicular(const Point& aPoint, const Point& aSegStart,
+                    const Point& aSegEnd) {
+    double r = relationPointAndSeg(aPoint, aSegStart, aSegEnd);
+    Point p;
+    p.x = aSegStart.x + r * (aSegEnd.x - aSegStart.x);
+    p.y = aSegStart.y + r * (aSegEnd.y - aSegStart.y);
+    return p;
+}
+
+double distancePoint2Point(const Point& aP1, const Point& aP2) {
     return std::sqrt((aP1.x - aP2.x) * (aP1.x - aP2.x) +
                      (aP1.y - aP2.y) * (aP1.y - aP2.y));
 }
-/****************************** Circle / Arc ******************************/
 
-double getRadius(const Point& aEndPoint, const Point& aCenterPoint) {
-    return pointsDistance(aEndPoint, aCenterPoint);
+double distancePoint2Line(const Point& aPoint, const Point& aSegStart,
+                          const Point& aSegEnd) {
+    auto p = geometry::perpendicular(aPoint, aSegStart, aSegEnd);
+    return distancePoint2Point(aPoint, p);
 }
 
-double getStartAngle(const core::Point& aStart, const core::Point& aCenter) {
+double distancePoint2Seg(const Point& aPoint, const Point& aSegStart,
+                         const Point& aSegEnd) {
+    double r = relationPointAndSeg(aPoint, aSegStart, aSegEnd);
+    if (r >= 1) {
+        return distancePoint2Point(aPoint, aSegEnd);
+    }
+    if (r <= 0) {
+        return distancePoint2Point(aPoint, aSegStart);
+    }
+    return distancePoint2Line(aPoint, aSegStart, aSegEnd);
+}
+
+bool isPointOnSegment(const core::Point& aPoint, const core::Point& aSegStart,
+                      const core::Point& aSegEnd) {
+    auto SE = aSegEnd - aSegStart;
+    auto SP = aPoint - aSegStart;
+    auto EP = aPoint - aSegEnd;
+
+    double dotSP_SE = dotProduct(SP, SE);
+    double dotEP_SE = dotProduct(EP, -SE);
+    double crossSP_SE = crossProduct(SP, SE);
+
+    // 点积排除延长线，差积排除非共线
+    if (std::abs(crossSP_SE) > geometry::EPSILON || dotSP_SE < 0 ||
+        dotEP_SE < 0) {
+        return false;
+    }
+
+    return true;
+}
+
+/****************************** Circle / Arc ******************************/
+
+double arcRadius(const Point& aEndPoint, const Point& aCenterPoint) {
+    return distancePoint2Point(aEndPoint, aCenterPoint);
+}
+
+double arcStartAngle(const Point& aStart, const Point& aCenter) {
     // 角度范围为 [0, 2π)
     double startAngle = std::atan2(aStart.y - aCenter.y, aStart.x - aCenter.x);
     if (startAngle < 0) {
@@ -48,7 +112,7 @@ double getStartAngle(const core::Point& aStart, const core::Point& aCenter) {
     return startAngle;
 }
 
-double getEndAngle(const core::Point& aEnd, const core::Point& aCenter) {
+double arcEndAngle(const Point& aEnd, const Point& aCenter) {
     // 角度范围为 [0, 2π)
     double endAngle = std::atan2(aEnd.y - aCenter.y, aEnd.x - aCenter.x);
     if (endAngle < 0) {
@@ -57,7 +121,7 @@ double getEndAngle(const core::Point& aEnd, const core::Point& aCenter) {
     return endAngle;
 }
 
-double getSweepAngle(double aStartAngle, double endAngle, bool aIsCW) {
+double arcSweepAngle(double aStartAngle, double endAngle, bool aIsCW) {
     double sweepAngle{};
     if (aIsCW) {
         sweepAngle = (aStartAngle < endAngle)
@@ -71,16 +135,16 @@ double getSweepAngle(double aStartAngle, double endAngle, bool aIsCW) {
     return sweepAngle;
 }
 
-core::Point getMidOfArc(const core::Point& aStart, const core::Point& aEnd,
-                        const core::Point& aCenter, bool aIsCW) {
-    double startAngle = getStartAngle(aStart, aCenter);
-    double endAngle = getEndAngle(aEnd, aCenter);
-    double radius = pointsDistance(aStart, aCenter);
-    return getMidOfArc(startAngle, endAngle, radius, aCenter, aIsCW);
+Point midPointOfArc(const Point& aStart, const Point& aEnd,
+                    const Point& aCenter, bool aIsCW) {
+    double startAngle = arcStartAngle(aStart, aCenter);
+    double endAngle = arcEndAngle(aEnd, aCenter);
+    double radius = distancePoint2Point(aStart, aCenter);
+    return midPointOfArc(startAngle, endAngle, radius, aCenter, aIsCW);
 }
 
-Point getMidOfArc(double aStartAngle, double aEndAngle, double aRadius,
-                  const Point& aCenter, bool aIsCW) {
+Point midPointOfArc(double aStartAngle, double aEndAngle, double aRadius,
+                    const Point& aCenter, bool aIsCW) {
 
     double midAngle{};
 
@@ -91,7 +155,7 @@ Point getMidOfArc(double aStartAngle, double aEndAngle, double aRadius,
                ((aEndAngle < aStartAngle) && aIsCW)) {
         midAngle = (aStartAngle + aEndAngle) * 0.5;
     } else {
-        std::cerr << "getMidOfArc error " << __FILE_NAME__ << __LINE__
+        std::cerr << "midPointOfArc error " << __FILE_NAME__ << __LINE__
                   << std::endl;
         throw;
     }
@@ -126,9 +190,9 @@ bool isPointInArcRange(const Point& aCenter, double aStartAngle,
     }
 }
 
-bool isPointInArcRangeExceptEdge(const core::Point& aCenter, double aStartAngle,
+bool isPointInArcRangeExceptEdge(const Point& aCenter, double aStartAngle,
                                  double aSweepAngle, bool aIsCW,
-                                 const core::Point& aTarget) {
+                                 const Point& aTarget) {
     if (aTarget == aCenter) {
         return false;
     }
@@ -302,20 +366,6 @@ bool contains(const BBox& aBBox1, const BBox& aBBox2) {
              aBBox1.getMaxX() < aBBox2.getMaxX() &&
              aBBox2.getMinY() < aBBox1.getMinY() &&
              aBBox1.getMaxY() < aBBox2.getMaxY()));
-}
-
-int intersectsBBoxes(const BBox& aBBox1, const BBox& aBBox2, BBox& aResult) {
-    // 检查两个BBox是否相离或包含
-    if (detached(aBBox1, aBBox2) || contains(aBBox1, aBBox2)) {
-        return 1;  // 返回状态1
-        // TODO: 定义异常
-    }
-    // 得到新的相交的BBox
-    aResult.setMinX(std::max(aBBox1.getMinX(), aBBox2.getMinX()));
-    aResult.setMinY(std::max(aBBox1.getMinY(), aBBox2.getMinY()));
-    aResult.setMaxX(std::min(aBBox1.getMaxX(), aBBox2.getMaxX()));
-    aResult.setMaxY(std::min(aBBox1.getMaxY(), aBBox2.getMaxY()));
-    return 0;  // 返回状态0
 }
 
 }  // namespace geometry

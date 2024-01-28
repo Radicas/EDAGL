@@ -356,7 +356,7 @@ TEST_F(Geometry_GetMidOfArc, test1) {
     bool isCW = false;
 
     core::Point midPoint =
-        getMidOfArc(startAngle, endAngle, radius, center, isCW);
+        midPointOfArc(startAngle, endAngle, radius, center, isCW);
 
     EXPECT_TRUE(std::abs(midPoint.x - 3.5355339059327) < geometry::EPSILON);
     EXPECT_TRUE(std::abs(midPoint.y - 3.5355339059327) < geometry::EPSILON);
@@ -370,7 +370,7 @@ TEST_F(Geometry_GetMidOfArc, test2) {
     bool isCW = false;
 
     core::Point midPoint =
-        getMidOfArc(startAngle, endAngle, radius, center, isCW);
+        midPointOfArc(startAngle, endAngle, radius, center, isCW);
 
     EXPECT_TRUE(std::abs(midPoint.x - 2.0) < geometry::EPSILON);
     EXPECT_TRUE(std::abs(midPoint.y - 0.0) < geometry::EPSILON);
@@ -384,7 +384,7 @@ TEST_F(Geometry_GetMidOfArc, test3) {
     bool isCW = false;
 
     core::Point midPoint =
-        getMidOfArc(startAngle, endAngle, radius, center, isCW);
+        midPointOfArc(startAngle, endAngle, radius, center, isCW);
 
     EXPECT_TRUE(std::abs(midPoint.x - (-2.0)) < geometry::EPSILON);
     EXPECT_TRUE(std::abs(midPoint.y - 0.0) < geometry::EPSILON);
@@ -398,7 +398,7 @@ TEST_F(Geometry_GetMidOfArc, test4) {
     bool isCW = true;
 
     core::Point midPoint =
-        getMidOfArc(startAngle, endAngle, radius, center, isCW);
+        midPointOfArc(startAngle, endAngle, radius, center, isCW);
 
     // (0,2.8284271247462)
     EXPECT_TRUE(std::abs(midPoint.x - 0.0) < geometry::EPSILON);

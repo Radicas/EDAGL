@@ -18,6 +18,12 @@ Point& Point::operator+=(const Point& rhs) {
     return *this;
 }
 
+Point& Point::operator-() {
+    x = -x;
+    y = -y;
+    return *this;
+}
+
 Point Point::operator-(const Point& rhs) const {
     return {x - rhs.x, y - rhs.y};
 }
@@ -49,6 +55,10 @@ bool Point::operator!=(const Point& rhs) const {
 inline void Point::Negate() {
     x = -x;
     y = -y;
+}
+
+double Point::length() const {
+    return std::sqrt(x * x + y * y);
 }
 
 }  // namespace core

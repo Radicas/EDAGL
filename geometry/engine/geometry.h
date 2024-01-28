@@ -14,10 +14,9 @@
 #include "core/bbox.h"
 #include "core/edge.h"
 #include "core/point.h"
+#include "global.h"
 
 namespace geometry {
-
-static double EPSILON = 1E-10;
 
 /********************************* Vector *********************************/
 
@@ -78,16 +77,24 @@ double crossProduct(const core::Point& aS, const core::Point& aE,
  */
 double crossProduct(const core::Vector2D& aVec1, const core::Vector2D& aVec2);
 
-/********************************** Point *********************************/
+/**
+ * @brief 向量归一化
+ *
+ * @param aVector
+ * @return
+ */
+core::Vector2D normalized(const core::Vector2D& aVector);
 
 /**
- * @brief 返回两点之间欧氏距离
- *        d = √((x2 - x1)² + (y2 - y1)²)
- * @param aP1 点1
- * @param aP2 点2
- * @return double 两点之间欧氏距离
+ * @brief 向量归一化
+ *
+ * @param aStart
+ * @param aEnd
+ * @return
  */
-double pointsDistance(const core::Point& aP1, const core::Point& aP2);
+core::Vector2D normalized(const core::Point& aStart, const core::Point& aEnd);
+
+/******************************** Point / Seg *******************************/
 
 /**
  * @brief 三点共线判断
@@ -101,18 +108,134 @@ double pointsDistance(const core::Point& aP1, const core::Point& aP2);
 bool isCollinear(const core::Point& aP1, const core::Point& aP2,
                  const core::Point& aP3);
 
+/**
+ * @brief 判断点与线段的关系,用途很广泛
+ *        本函数是根据下面的公式写的，P是点C到线段AB所在直线的垂足
+ *                       AC dot AB
+ *        r =            ---------
+ *                       ||AB||^2
+ *             (Cx-Ax)(Bx-Ax) + (Cy-Ay)(By-Ay)
+ *          = -------------------------------
+ *                          L^2
+ *        r 有下列含义:
+ *          r=0    P = A
+ *          r=1    P = B
+ *          r<0    P 在AB的背面延伸
+ *          r>1    P 在AB的前方延伸
+ *          0<r<1  P 在AB范围内
+ *
+ * @param p
+ * @param l
+ * @return double
+ */
+double relationPointAndSeg(const core::Point& aPoint,
+                           const core::Point& aSegStart,
+                           const core::Point& aSegEnd);
+
+/**
+ * @brief 点到线段所在直线垂足
+ *
+ * @param aPoint
+ * @param aSegStart
+ * @param aSegEnd
+ * @return
+ */
+core::Point perpendicular(const core::Point& aPoint,
+                          const core::Point& aSegStart,
+                          const core::Point& aSegEnd);
+
+/**
+ * @brief 返回两点之间欧氏距离
+ *        d = √((x2 - x1)² + (y2 - y1)²)
+ * @param aP1 点1
+ * @param aP2 点2
+ * @return double 两点之间欧氏距离
+ */
+double distancePoint2Point(const core::Point& aP1, const core::Point& aP2);
+
+/**
+ * @brief 点到线段所在直线最短距离
+ * @param aPoint
+ * @param aSegStart
+ * @param aSegEnd
+ * @return
+ */
+double distancePoint2Line(const core::Point& aPoint,
+                          const core::Point& aSegStart,
+                          const core::Point& aSegEnd);
+
+/**
+ * @brief 点到线段最短距离
+ * @param aPoint
+ * @param aSegStart
+ * @param aSegEnd
+ * @return
+ */
+double distancePoint2Seg(const core::Point& aPoint,
+                         const core::Point& aSegStart,
+                         const core::Point& aSegEnd);
+
+/**
+ * @brief 判断点是否在线段上(包括端点)
+ *
+ * @param aPoint
+ * @param aSegStart
+ * @param aSegEnd
+ * @return
+ */
+bool isPointOnSegment(const core::Point& aPoint, const core::Point& aSegStart,
+                      const core::Point& aSegEnd);
+
 /****************************** Circle / Arc ******************************/
 
-double getRadius(const core::Point& aEndPoint, const core::Point& aCenterPoint);
+/**
+ * @brief 获取圆弧半径
+ *
+ * @param aEndPoint
+ * @param aCenterPoint
+ * @return
+ */
+double arcRadius(const core::Point& aEndPoint, const core::Point& aCenterPoint);
 
-double getStartAngle(const core::Point& aStart, const core::Point& aCenter);
+/**
+ * @brief 获取圆弧起始角度，弧度
+ *
+ * @param aStart
+ * @param aCenter
+ * @return
+ */
+double arcStartAngle(const core::Point& aStart, const core::Point& aCenter);
 
-double getEndAngle(const core::Point& aEnd, const core::Point& aCenter);
+/**
+ * @brief 获取圆弧终止角度，弧度
+ *
+ * @param aEnd
+ * @param aCenter
+ * @return
+ */
+double arcEndAngle(const core::Point& aEnd, const core::Point& aCenter);
 
-double getSweepAngle(double aStartAngle, double endAngle, bool aIsCW);
+/**
+ * @brief 获取圆弧偏转角度，弧度
+ *
+ * @param aStartAngle
+ * @param endAngle
+ * @param aIsCW
+ * @return
+ */
+double arcSweepAngle(double aStartAngle, double endAngle, bool aIsCW);
 
-core::Point getMidOfArc(const core::Point& aStart, const core::Point& aEnd,
-                        const core::Point& aCenter, bool aIsCW);
+/**
+ * @brief 获取圆弧中点
+ *
+ * @param aStart
+ * @param aEnd
+ * @param aCenter
+ * @param aIsCW
+ * @return
+ */
+core::Point midPointOfArc(const core::Point& aStart, const core::Point& aEnd,
+                          const core::Point& aCenter, bool aIsCW);
 
 /**
  * @brief 获取圆弧中点
@@ -124,8 +247,8 @@ core::Point getMidOfArc(const core::Point& aStart, const core::Point& aEnd,
  * @param aIsCW
  * @return
  */
-core::Point getMidOfArc(double aStartAngle, double aEndAngle, double aRadius,
-                        const core::Point& aCenter, bool aIsCW);
+core::Point midPointOfArc(double aStartAngle, double aEndAngle, double aRadius,
+                          const core::Point& aCenter, bool aIsCW);
 
 /**
  * @brief 判断点是否在圆弧射线范围内(包含边)
@@ -223,16 +346,6 @@ bool detached(const core::BBox& aBBox1, const core::BBox& aBBox2);
  */
 bool contains(const core::BBox& aBBox1, const core::BBox& aBBox2);
 
-/**
- * @brief 求出两个包围盒相交部分的包围盒
- *
- * @param aBBox1
- * @param aBBox2
- * @param aResult
- * @return
- */
-int intersectsBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
-                     core::BBox& aResult);
 }  // namespace geometry
 
 #endif  // EDA_GL_GEOMETRY_H

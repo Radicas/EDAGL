@@ -111,17 +111,17 @@ void Edge::initArcValues() {
     //        exit(-1);
     //    }
     //    geometry::circleFrom3Points(mStart, mEnd, mAppendix, mCenter, mRadius);
-    mRadius = geometry::getRadius(mStart, mCenter);
+    mRadius = geometry::arcRadius(mStart, mCenter);
     // 计算起始角度，范围为 [0, 2π)
-    mStartAngle = geometry::getStartAngle(mStart, mCenter);
+    mStartAngle = geometry::arcStartAngle(mStart, mCenter);
     // 计算终止角度，范围为 [0, 2π)
-    mEndAngle = geometry::getEndAngle(mEnd, mCenter);
+    mEndAngle = geometry::arcEndAngle(mEnd, mCenter);
     // 计算扫过的角度，范围为 [0, 2π)
-    mSweepAngle = geometry::getSweepAngle(mStartAngle, mEndAngle, mIsCW);
+    mSweepAngle = geometry::arcSweepAngle(mStartAngle, mEndAngle, mIsCW);
     // 计算圆弧X单调性
     mIsXMonotone = geometry::isXMonotoneArc(mStart, mEnd, mCenter, mSweepAngle);
     // 计算圆弧的附加点
-    mAppendix = geometry::getMidOfArc(mStart, mEnd, mCenter, mIsCW);
+    mAppendix = geometry::midPointOfArc(mStart, mEnd, mCenter, mIsCW);
 }
 
 /* endregion */
