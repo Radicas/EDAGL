@@ -12,6 +12,8 @@
 #ifndef EDA_GL_BOOLEAN_H
 #define EDA_GL_BOOLEAN_H
 
+#include <queue>
+#include <set>
 #include <vector>
 
 namespace core {
@@ -19,8 +21,8 @@ class LinkedNode;
 class Point;
 class Edge;
 class EdgeNode;
-
 class ArcPolygon;
+class EventNode;
 }  // namespace core
 namespace algorithm {
 
@@ -68,6 +70,15 @@ int initSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge,
                       const std::vector<core::Edge>& aRelatedEdge);
 
 /**
+ * @brief 利用扫描线算法重建序列边，将交点信息插入
+ *
+ * @param aSequencedEdge1
+ * @param aSequencedEdge2
+ */
+void rebuildSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge1,
+                          std::vector<core::EdgeNode>& aSequencedEdge2);
+
+/**
  * @brief 将x单调圆弧分解为2-3个非x单调圆弧
  *
  * @param aEdge 圆弧边
@@ -96,6 +107,36 @@ std::vector<core::Edge> decomposeArcToThree(const core::Edge& aEdge,
  */
 std::vector<core::Edge> decomposeArcToTwo(const core::Edge& aEdge,
                                           const core::Point& aBreakPoint);
+
+/**
+ * @brief 处理左节点
+ *
+ * @param aRbTree
+ * @param aEventNode
+ */
+void handleLeftNode(std::set<core::EdgeNode*>& aRbTree,
+                    std::priority_queue<core::EventNode>& aPQueue,
+                    core::EventNode& aEventNode);
+
+/**
+ * @brief 处理右节点
+ *
+ * @param aRbTree
+ * @param aEventNode
+ */
+void handleRightNode(std::set<core::EdgeNode*>& aRbTree,
+                     std::priority_queue<core::EventNode>& aPQueue,
+                     core::EventNode& aEventNode);
+
+/**
+ * @brief 处理交点节点
+ *
+ * @param aRbTree
+ * @param aEventNode
+ */
+void handleIntersectNode(std::set<core::EdgeNode*>& aRbTree,
+                         std::priority_queue<core::EventNode>& aPQueue,
+                         core::EventNode& aEventNode);
 
 /**
  * @brief 构建处理过的圆弧多边形

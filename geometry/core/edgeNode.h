@@ -18,6 +18,7 @@ class EdgeNode {
 
     ~EdgeNode();
 
+    bool operator<(const EdgeNode& aRhs) const;
     /* endregion */
 
     /* region Getters */
@@ -26,12 +27,24 @@ class EdgeNode {
     std::pair<double, double>& getLocation();
 
     short int getArcMark() const;
+
+    bool isFromFirst() const;
+
+    int getId() const;
+    /* endregion */
+
+    /* region Setters */
+    void setIsFromFirst(bool aFirst);
+
+    void setId(int aId);
     /* endregion */
 
    private:
     Edge mRelatedEdge;                    ///< 相关边
     std::pair<double, double> mLocation;  ///< 交点位置信息
     short int mArcMark;                   ///< 三值开关
+    bool mIsFromFirst;                    ///< 是否第一个多边形
+    int mId;                              ///< 序号
 };
 
 }  // namespace core

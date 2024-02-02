@@ -11,6 +11,8 @@
 #ifndef EDA_GL_ARCPOLYGON_H
 #define EDA_GL_ARCPOLYGON_H
 
+#include <iostream>
+
 namespace core {
 class LinkedNode;
 
@@ -40,7 +42,16 @@ class ArcPolygon {
    */
     void generateBBox() const;
 
+    /**
+     * @brief 输出顶点信息
+     *
+     * @param os
+     * @param ap
+     * @return
+     */
+    friend std::ostream& operator<<(std::ostream& os, ArcPolygon& ap);
     /* endregion */
+
    private:
     /* region Private Methods */
 

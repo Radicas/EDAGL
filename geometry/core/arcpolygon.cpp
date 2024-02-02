@@ -88,6 +88,24 @@ void ArcPolygon::generateBBox() const {
     mBBox->reShape(minX, maxX, minY, maxY);
     mBBox->merge(arcBBoxes);
 }
+
+std::ostream& operator<<(std::ostream& os, ArcPolygon& ap) {
+    auto* head = ap.getHeadNode();
+    auto* tail = head;
+    while (tail) {
+        bool appendix = tail->mIsAppendix;
+        os << "(" << tail->mData << ")";
+        if (appendix) {
+            os << "\tarc\n";
+        } else {
+            os << "\n";
+        }
+        tail = tail->mNext;
+        if (tail == head)
+            break;
+    }
+    return os;
+}
 /* endregion */
 
 /* region Getter Methods */
@@ -98,6 +116,7 @@ LinkedNode* ArcPolygon::getHeadNode() const {
 BBox* ArcPolygon::getBBox() const {
     return mBBox;
 }
+
 /* endregion */
 
 /* region Setter Methods */

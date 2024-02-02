@@ -1,4 +1,5 @@
 #include "intersection.h"
+#include "core/edge.h"
 #include "engine/geometry.h"
 
 #include <algorithm>
@@ -20,9 +21,8 @@ bool isSegSegIntersect(const Point& aS1, const Point& aE1, const Point& aS2,
             crossProduct(aS1, aE2, aS2) * crossProduct(aE2, aE1, aS2) >= 0);
 }
 
-bool isSegCircleIntersect(const core::Point& aSegStart,
-                          const core::Point& aSegEnd,
-                          const core::Point& aCenter, double aRadius) {
+bool isSegCircleIntersect(const Point& aSegStart, const Point& aSegEnd,
+                          const Point& aCenter, double aRadius) {
     double dist = distancePoint2Seg(aCenter, aSegStart, aSegEnd);
     double distCS = distancePoint2Point(aCenter, aSegStart);
     double distES = distancePoint2Point(aCenter, aSegEnd);
@@ -101,6 +101,89 @@ bool segArcIntersectPoints(const Point& aSegStart, const Point& aSegEnd,
     return true;
 }
 
+bool arcArcIntersectPoints(const Point& aCenter1, double aRadius1,
+                           double aStartAngle1, double aSweepAngle1,
+                           bool aIsCW1, const Point& aCenter2, double aRadius2,
+                           double aStartAngle2, double aSweepAngle2,
+                           bool aIsCW2, std::vector<Point>& aResult) {
+    // 声明临时点
+    std::vector<Point> tmpRes{};
+    // 计算圆弧所在圆的交点
+    if (!circleCircleIntersectPoints(aCenter1, aRadius1, aCenter2, aRadius2,
+                                     tmpRes)) {
+        return false;
+    }
+    if (tmpRes.size() == 1) {
+        // 交点数为1
+        if (isPointInArcRange(aCenter1, aStartAngle1, aSweepAngle1, aIsCW1,
+                              tmpRes[0]) &&
+            isPointInArcRange(aCenter2, aStartAngle2, aSweepAngle2, aIsCW2,
+                              tmpRes[0])) {
+            aResult.emplace_back(std::move(tmpRes[0]));
+            return true;
+        }
+    } else if (tmpRes.size() == 2) {
+        // 交点数为2
+        auto& p1 = tmpRes[0];
+        auto& p2 = tmpRes[1];
+        // 判断交点1同时在两个圆弧范围内
+        if (isPointInArcRange(aCenter1, aStartAngle1, aSweepAngle1, aIsCW1,
+                              p1) &&
+            isPointInArcRange(aCenter2, aStartAngle2, aSweepAngle2, aIsCW2,
+                              p1)) {
+            aResult.emplace_back(std::move(p1));
+        }
+        // 判断交点2同时在两个圆弧范围内
+        if (isPointInArcRange(aCenter1, aStartAngle1, aSweepAngle1, aIsCW1,
+                              p2) &&
+            isPointInArcRange(aCenter2, aStartAngle2, aSweepAngle2, aIsCW2,
+                              p2)) {
+            aResult.emplace_back(std::move(p2));
+        }
+        if (!aResult.empty()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*********************************** Edge ***********************************/
+
+bool edgeEdgeIntersectPoints(const Edge& aEdge1, const Edge& aEdge2,
+                             std::vector<Point>& aResult) {
+    if (aEdge1.isArc()) {
+        if (aEdge2.isArc()) {
+            // arc arc
+            return arcArcIntersectPoints(
+                aEdge1.getCenter(), aEdge1.getRadius(), aEdge1.getStartAngle(),
+                aEdge1.getSweepAngle(), aEdge1.isCW(), aEdge2.getCenter(),
+                aEdge2.getRadius(), aEdge2.getStartAngle(),
+                aEdge2.getSweepAngle(), aEdge2.isCW(), aResult);
+        } else {
+            // arc seg
+            return segArcIntersectPoints(
+                aEdge2.getStart(), aEdge2.getEnd(), aEdge1.getCenter(),
+                aEdge1.getRadius(), aEdge1.getStartAngle(),
+                aEdge1.getSweepAngle(), aEdge1.isCW(), aResult);
+        }
+    } else {
+        if (aEdge2.isArc()) {
+            // seg arc
+            return segArcIntersectPoints(
+                aEdge1.getStart(), aEdge1.getEnd(), aEdge2.getCenter(),
+                aEdge2.getRadius(), aEdge2.getStartAngle(),
+                aEdge2.getSweepAngle(), aEdge2.isCW(), aResult);
+        } else {
+            // seg seg
+            aResult.resize(1);
+            return segSegIntersectPoint(aEdge1.getStart(), aEdge1.getEnd(),
+                                        aEdge2.getStart(), aEdge2.getEnd(),
+                                        aResult[0]);
+        }
+    }
+    return false;
+}
+
 /********************************** Circle **********************************/
 
 bool segCircleIntersectPoints(const Point& aSegStart, const Point& aSegEnd,
@@ -137,6 +220,34 @@ bool segCircleIntersectPoints(const Point& aSegStart, const Point& aSegEnd,
     return true;
 }
 
+bool circleCircleIntersectPoints(const Point& aCenter1, double aRadius1,
+                                 const Point& aCenter2, double aRadius2,
+                                 std::vector<Point>& aResult) {
+    double centerDist = geometry::distancePoint2Point(aCenter1, aCenter2);
+    // 两个圆没有相交
+    if (centerDist > aRadius1 + aRadius2) {
+        return false;
+    }
+    // 一个圆包含在另一个圆内，没有相交点
+    if (centerDist < std::abs(aRadius1 - aRadius2)) {
+        return false;
+    }
+    // 计算相交点
+    double d = centerDist;
+    double a = (aRadius1 * aRadius1 - aRadius2 * aRadius2 + d * d) / (2 * d);
+    double h = std::sqrt(aRadius1 * aRadius1 - a * a);
+    // 相交点的坐标
+    double x2 = aCenter1.x + a * (aCenter2.x - aCenter1.x) / d;
+    double y2 = aCenter1.y + a * (aCenter2.y - aCenter1.y) / d;
+    // 两个相交点
+    Point intersect1(x2 + h * (aCenter2.y - aCenter1.y) / d,
+                     y2 - h * (aCenter2.x - aCenter1.x) / d);
+    Point intersect2(x2 - h * (aCenter2.y - aCenter1.y) / d,
+                     y2 + h * (aCenter2.x - aCenter1.x) / d);
+    aResult.push_back(intersect1);
+    aResult.push_back(intersect2);
+    return true;
+}
 /********************************** BBOx **********************************/
 
 int intersectsBBoxes(const BBox& aBBox1, const BBox& aBBox2, BBox& aResult) {

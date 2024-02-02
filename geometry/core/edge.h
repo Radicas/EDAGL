@@ -30,6 +30,7 @@ class Edge {
 
     ~Edge();
 
+    bool operator<(const Edge& aRhs) const;
     /* endregion */
 
     /* region Getters */

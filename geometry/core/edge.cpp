@@ -43,6 +43,15 @@ Edge& Edge::operator=(const Edge& aRhs) = default;
 
 Edge::~Edge() = default;
 
+bool Edge::operator<(const Edge& aRhs) const {
+    if (mStart.y > aRhs.mStart.y) {
+        return true;
+    } else if (mStart.y == aRhs.mStart.y) {
+        return mEnd.y > aRhs.mEnd.y;
+    }
+    return false;
+}
+
 /* endregion */
 
 /* region General Methods */

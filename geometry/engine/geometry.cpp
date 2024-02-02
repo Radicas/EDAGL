@@ -346,6 +346,7 @@ BBox bBoxOfArc(const Point& A, const Point& B, const Point& M) {
     }
     return result;
 }
+
 /********************************** BBOx *********************************/
 
 bool detached(const BBox& aBBox1, const BBox& aBBox2) {

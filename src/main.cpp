@@ -3,9 +3,10 @@
 #include "algorithm/boolean.h"
 #include "core/arcpolygon.h"
 #include "core/edge.h"
-#include "core/edgeNode.h"
+#include "core/edgenode.h"
 #include "core/linkednode.h"
 #include "core/rectangle.h"
+#include "utils/timer.h"
 
 #ifdef WIN32
 #include <GL/gl.h>
@@ -16,8 +17,12 @@
 #elif __linux__
 #endif
 
+#include <chrono>
 #include <cmath>
 #include <iostream>
+
+//#define GUI_ // 界面开关
+//#define LOG_  // 辅助打印信息
 
 int DISPLAY_STATE = -1;
 
@@ -77,6 +82,7 @@ void buttonCallback(int buttonId) {
 }
 
 void geometryTest() {
+    Timer t("geometry test", true);
     using namespace core;
     // 初始图形坐标点
     std::vector<Point> poly1Points = {{0.0, 0.2},  {0.0, 0.4},  {-0.4, 0.4},
@@ -94,6 +100,7 @@ void geometryTest() {
     int count = 0;
     auto lnTail1 = linkedNode1;
     auto lnTail2 = linkedNode2;
+    // 手动赋上附加点
     while (true) {
         count++;
         if (count == 6) {
@@ -109,16 +116,23 @@ void geometryTest() {
     // 构造圆弧多边形
     auto poly1 = new ArcPolygon(linkedNode1);
     auto poly2 = new ArcPolygon(linkedNode2);
-
-    // 声明相关边域
-    std::vector<core::EdgeNode> edgeDomain1;
-    std::vector<core::EdgeNode> edgeDomain2;
+#ifdef LOG_
+    std::cout << "******** input vertices ********" << std::endl;
+    std::cout << "arc polygon 1: " << std::endl;
+    std::cout << *poly1 << std::endl;
+    std::cout << "arc polygon 2: " << std::endl;
+    std::cout << *poly2 << std::endl;
+    std::cout << "*******input vertices end *******" << std::endl;
+#endif
+    // 声明序列的边节点
+    std::vector<core::EdgeNode> sequencedEdge1;
+    std::vector<core::EdgeNode> sequencedEdge2;
 
     // 声明相关边
     std::vector<Edge> edge1;
     std::vector<Edge> edge2;
 
-    algorithm::arcPolyPretreatment(poly1, poly2, edgeDomain1, edgeDomain2,
+    algorithm::arcPolyPretreatment(poly1, poly2, sequencedEdge1, sequencedEdge2,
                                    edge1, edge2);
 }
 
@@ -138,6 +152,7 @@ void createActions() {
 int main(int argc, char** argv) {
     // 用于几何库快速验证
     geometryTest();
+#ifdef GUI_
     // 初始化GLUT库
     glutInit(&argc, argv);
     // 设置显示模式为单缓冲和RGB颜色模式
@@ -152,6 +167,7 @@ int main(int argc, char** argv) {
     createActions();
     // 进入GLUT主循环
     glutMainLoop();
+#endif
 
     return 0;
 }

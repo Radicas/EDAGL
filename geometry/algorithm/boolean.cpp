@@ -3,13 +3,16 @@
 #include "core/arcpolygon.h"
 #include "core/bbox.h"
 #include "core/edge.h"
-#include "core/edgeNode.h"
+#include "core/edgenode.h"
+#include "core/eventnode.h"
 #include "core/linkednode.h"
 #include "core/point.h"
 #include "engine/geometry.h"
 #include "engine/intersection.h"
+#include "utils/timer.h"
 
-namespace core {}
+#include <algorithm>
+
 namespace algorithm {
 
 using namespace core;
@@ -101,10 +104,17 @@ int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
                         std::vector<EdgeNode>& aSequencedEdge2,
                         std::vector<Edge>& aRelatedEdge1,
                         std::vector<Edge>& aRelatedEdge2) {
+    Timer t("arc poly pretreatment", true);
     // 获取包围盒
     auto* bBox1 = aArcPoly1->getBBox();
     auto* bBox2 = aArcPoly2->getBBox();
-
+#ifdef LOG_
+    std::cout << "******** pre treatment ********" << std::endl;
+    std::cout << "******** bbox1 ********" << std::endl;
+    std::cout << *bBox1 << std::endl;
+    std::cout << "******** bbox2 ********" << std::endl;
+    std::cout << *bBox2 << std::endl;
+#endif
     // 获取相交包围盒
     BBox newBBox;
     geometry::intersectsBBoxes(*bBox1, *bBox2, newBBox);
@@ -131,8 +141,13 @@ int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
     // 根据相关边初始化序列边，插入额外信息
     initSequencedEdge(aSequencedEdge1, aRelatedEdge1);
     initSequencedEdge(aSequencedEdge2, aRelatedEdge2);
-
+    // 重建序列边
+    rebuildSequencedEdge(aSequencedEdge1, aSequencedEdge2);
     // TODO: 未完待续
+#ifdef LOG_
+    std::cout << "***************** pre treatment end ***************"
+              << std::endl;
+#endif
     return 0;
 }
 
@@ -168,8 +183,61 @@ int initSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge,
     return 0;
 }
 
-int constructProcessedArcPolygon() {
-    return 0;
+void appendEventNode(std::priority_queue<EventNode>& aPq,
+                     std::vector<core::EdgeNode>& aSequencedEdge, bool aFirst) {
+    for (auto& en : aSequencedEdge) {
+        // 设置标记，辨别属于那个多边形
+        en.setIsFromFirst(aFirst);
+        // 初始化事件
+        EventNode leftEvent{}, rightEvent{};
+        // 初始化左端点事件
+        leftEvent.mPoint = en.getRelatedEdge().getStart();
+        leftEvent.mPosition = NodePosition::LEFT;
+        leftEvent.mEdgeNode = &en;
+        aPq.push(leftEvent);
+        // 初始化右端点事件
+        rightEvent.mPoint = en.getRelatedEdge().getEnd();
+        rightEvent.mPosition = NodePosition::RIGHT;
+        rightEvent.mEdgeNode = &en;
+        aPq.push(rightEvent);
+    }
+}
+
+void rebuildSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge1,
+                          std::vector<core::EdgeNode>& aSequencedEdge2) {
+    Timer t("rebuild sequenced edge", true);
+    // 声明存储事件节点的优先队列，规则为最小堆
+    std::priority_queue<EventNode> pq;
+    // 初始化事件，并写入优先队列
+    appendEventNode(pq, aSequencedEdge1, true);
+    appendEventNode(pq, aSequencedEdge2, false);
+    // 优化过的宾利-奥特曼算法
+    // 初始化红黑树
+    std::set<EdgeNode*> rbTree{};
+
+    while (!pq.empty()) {
+        auto event = pq.top();
+        pq.pop();
+        switch (event.mPosition) {
+            case NodePosition::LEFT: {
+                // 左节点
+                handleLeftNode(rbTree, pq, event);
+                break;
+            }
+            case NodePosition::RIGHT: {
+                // 右节点
+                handleRightNode(rbTree, pq, event);
+                break;
+            }
+            case NodePosition::INTERSECT: {
+                // 相交节点
+                handleIntersectNode(rbTree, pq, event);
+                break;
+            }
+            default:
+                break;
+        }
+    }
 }
 
 std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
@@ -275,4 +343,69 @@ std::vector<core::Edge> decomposeArcToThree(const Edge& aEdge,
     return res;
 }
 
+void handleLeftNode(std::set<EdgeNode*>& aRbTree,
+                    std::priority_queue<EventNode>& aPQueue,
+                    EventNode& aEventNode) {
+    std::cout << "********************* handleLeftNode *********************"
+              << std::endl;
+    aRbTree.insert(aEventNode.mEdgeNode);
+    // 查找相邻节点
+    EdgeNode *prev = nullptr, *next = nullptr;
+    auto it = aRbTree.find(aEventNode.mEdgeNode);
+    // 拿到前驱后继元素
+    if (it != aRbTree.end()) {
+        prev = *std::prev(it);
+        next = *std::next(it);
+    }
+    // 前节点和当前节点是否在同一个多边形上
+    if (prev && (prev->isFromFirst() == aEventNode.mEdgeNode->isFromFirst())) {
+        // TODO: 计算交点，将交点插入队列中，并且两个线段插入小数
+        // TODO: 增加Edge求交点接口
+    }
+    if (next && (next->isFromFirst() == aEventNode.mEdgeNode->isFromFirst())) {
+        // TODO: 计算交点，将交点插入队列中，并且两个线段插入小数
+    }
+    std::cout << "**********************************************************"
+              << std::endl;
+}
+
+void handleRightNode(std::set<EdgeNode*>& aRbTree,
+                     std::priority_queue<EventNode>& aPQueue,
+                     EventNode& aEventNode) {
+    // 查找相邻节点
+    auto lowIt = aRbTree.lower_bound(aEventNode.mEdgeNode);
+    auto upIt = aRbTree.upper_bound(aEventNode.mEdgeNode);
+    EdgeNode *prev = nullptr, *next = nullptr;
+    if (lowIt != aRbTree.begin()) {
+        prev = *(--lowIt);
+    }
+    if (upIt != aRbTree.end()) {
+        next = *upIt;
+    }
+    if (prev && next && (prev->isFromFirst() == next->isFromFirst())) {
+        // TODO: 检查是否有交点
+        // TODO: 检查交点是否在队列里
+    }
+}
+
+void handleIntersectNode(std::set<core::EdgeNode*>& aRbTree,
+                         std::priority_queue<core::EventNode>& aPQueue,
+                         core::EventNode& aEventNode) {
+    // 查找相邻节点
+    auto lowIt = aRbTree.lower_bound(aEventNode.mEdgeNode);
+    auto upIt = aRbTree.upper_bound(aEventNode.mEdgeNode);
+    EdgeNode *prev = nullptr, *next = nullptr;
+    if (lowIt != aRbTree.begin()) {
+        prev = *(--lowIt);
+    }
+    if (upIt != aRbTree.end()) {
+        next = *upIt;
+    }
+    // TODO: 需要知道 aEventNode 是哪两个线段的交点
+    // TODO: 红黑树交换两个元素
+}
+
+int constructProcessedArcPolygon() {
+    return 0;
+}
 }  // namespace algorithm

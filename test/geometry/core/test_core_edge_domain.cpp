@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "core/edgeNode.h"
+#include "core/edgenode.h"
 
 using namespace core;
 
