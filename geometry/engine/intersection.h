@@ -2,7 +2,7 @@
 #define EDA_GL_INTERSECTION_H
 
 #include "core/point.h"
-
+#include <vector>
 namespace core {
 class Edge;
 class BBox;

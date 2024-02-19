@@ -3,6 +3,8 @@
 #include "engine/geometry.h"
 #include "engine/intersection.h"
 
+#include <cmath>
+
 using namespace core;
 using namespace geometry;
 

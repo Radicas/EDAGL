@@ -1,4 +1,5 @@
 #include "point.h"
+#include <cmath>
 
 namespace core {
 Point::Point(double x, double y) : x(x), y(y) {}

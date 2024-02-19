@@ -2,6 +2,8 @@
 #include "core/edge.h"
 #include "engine/geometry.h"
 
+#include <cmath>
+
 using namespace core;
 using namespace geometry;
 

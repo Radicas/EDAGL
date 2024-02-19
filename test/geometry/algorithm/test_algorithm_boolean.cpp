@@ -4,6 +4,8 @@
 #include "core/edge.h"
 #include "core/linkednode.h"
 
+#include <cmath>
+
 using namespace core;
 using namespace algorithm;
 
