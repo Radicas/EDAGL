@@ -21,8 +21,8 @@ class LinkedNode {
     bool mIsAppendix;   ///< 是否附加点
     bool mIsCrossing;   ///< 是否交点
     bool mEE;           ///< 是否进入点
-    LinkedNode* mPrev;  ///< 前一个点
-    LinkedNode* mNext;  ///< 后一点
+    LinkedNode* mPrev;  ///< 前一个节点
+    LinkedNode* mNext;  ///< 后一个节点
 
     /* region Constructors / Destructor */
     LinkedNode();

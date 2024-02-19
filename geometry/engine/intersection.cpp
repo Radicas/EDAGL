@@ -223,17 +223,16 @@ bool segCircleIntersectPoints(const Point& aSegStart, const Point& aSegEnd,
 bool circleCircleIntersectPoints(const Point& aCenter1, double aRadius1,
                                  const Point& aCenter2, double aRadius2,
                                  std::vector<Point>& aResult) {
-    double centerDist = geometry::distancePoint2Point(aCenter1, aCenter2);
+    double d = geometry::distancePoint2Point(aCenter1, aCenter2);
     // 两个圆没有相交
-    if (centerDist > aRadius1 + aRadius2) {
+    if (d > aRadius1 + aRadius2) {
         return false;
     }
     // 一个圆包含在另一个圆内，没有相交点
-    if (centerDist < std::abs(aRadius1 - aRadius2)) {
+    if (d < std::abs(aRadius1 - aRadius2)) {
         return false;
     }
     // 计算相交点
-    double d = centerDist;
     double a = (aRadius1 * aRadius1 - aRadius2 * aRadius2 + d * d) / (2 * d);
     double h = std::sqrt(aRadius1 * aRadius1 - a * a);
     // 相交点的坐标
@@ -245,7 +244,9 @@ bool circleCircleIntersectPoints(const Point& aCenter1, double aRadius1,
     Point intersect2(x2 - h * (aCenter2.y - aCenter1.y) / d,
                      y2 + h * (aCenter2.x - aCenter1.x) / d);
     aResult.push_back(intersect1);
-    aResult.push_back(intersect2);
+    if (intersect1 != intersect2) {
+        aResult.push_back(intersect2);
+    }
     return true;
 }
 /********************************** BBOx **********************************/

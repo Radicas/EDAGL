@@ -21,7 +21,7 @@
 #include <cmath>
 #include <iostream>
 
-//#define GUI_ // 界面开关
+#define GUI_  // 界面开关
 //#define LOG_  // 辅助打印信息
 
 int DISPLAY_STATE = -1;
@@ -30,7 +30,7 @@ void display() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // 设置清除颜色为黑色
     glClear(GL_COLOR_BUFFER_BIT);          // 清除颜色缓冲区
     glLoadIdentity();                      // 重置当前矩阵为单位矩阵
-    glColor3f(1.0f, 0.0f, 0.0f);           // 设置绘制颜色为红色
+    glColor3f(0.0f, 1.0f, 1.0f);           // 设置绘制颜色为红色
 
     switch (DISPLAY_STATE) {
         case 0: {
@@ -75,6 +75,23 @@ void display() {
     glFlush();  // 刷新缓冲区，将绘制命令发送到OpenGL进行处理
 }
 
+// 定义窗口大小变化回调函数
+void reshape(int width, int height) {
+    //    std::cout << "call reshape" << std::endl;
+    //    // 设置视口大小为窗口大小
+    //    glViewport(0, 0, width, height);
+    //
+    //    // 使用投影矩阵来处理图形的投影变换等
+    //    glMatrixMode(GL_PROJECTION);
+    //    glLoadIdentity();
+    //    // 设置投影方式，这里使用正交投影，可以根据需求选择其他投影方式
+    //    // 这里设置的是以窗口的左下角为原点，窗口大小为单位长度
+    //    glOrtho(0, width, 0, height, -1, 1);
+    //
+    //    // 切换回模型视图矩阵
+    //    glMatrixMode(GL_MODELVIEW);
+}
+
 // 按钮回调函数
 void buttonCallback(int buttonId) {
     DISPLAY_STATE = buttonId;
@@ -96,7 +113,7 @@ void geometryTest() {
     auto* linkedNode1 = LinkedNode::constructLinkedNodes(poly1Points);
     auto* linkedNode2 = LinkedNode::constructLinkedNodes(poly2Points);
 
-    // 初始化附加点
+    // 初始化附加点，即产生圆弧
     int count = 0;
     auto lnTail1 = linkedNode1;
     auto lnTail2 = linkedNode2;
@@ -151,18 +168,20 @@ void createActions() {
 
 int main(int argc, char** argv) {
     // 用于几何库快速验证
-    geometryTest();
+//    geometryTest();
 #ifdef GUI_
     // 初始化GLUT库
     glutInit(&argc, argv);
     // 设置显示模式为单缓冲和RGB颜色模式
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     // 设置窗口大小
-    glutInitWindowSize(600, 600);
+    glutInitWindowSize(800, 800);
     // 创建窗口并设置窗口标题
     glutCreateWindow("EDA Geometry Library Test");
     // 设置绘制回调函数
     glutDisplayFunc(display);
+    // 窗口大小变化回调函数
+    glutReshapeFunc(reshape);
     // 创建右键菜单
     createActions();
     // 进入GLUT主循环

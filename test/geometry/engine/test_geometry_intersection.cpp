@@ -143,52 +143,6 @@ TEST_F(Geometry_SegSegIntersectPoint, test1) {
     EXPECT_FALSE(res6);
 }
 
-// 线段和圆求交点
-class Geometry_SegCircleIntersectPoints : public testing::Test {
-   public:
-    Point center;
-    double radius;
-    std::vector<Point> result;
-    Geometry_SegCircleIntersectPoints()
-        : center(0.0, 0.0), radius(5.0), result() {}
-    void printResult() {
-        for (const auto& r : result) {
-            std::cout << "(" << r.x << "," << r.y << ")\n";
-        }
-    }
-};
-
-TEST_F(Geometry_SegCircleIntersectPoints, test1) {
-    Point p1(4.0, 5.0);
-    Point p2(-5.0, -4.0);
-    segCircleIntersectPoints(p1, p2, center, radius, result);
-    EXPECT_EQ(result.size(), 2);
-    EXPECT_TRUE((result[0].x - 3) < geometry::EPSILON ||
-                (result[0].x + 4) < geometry::EPSILON);
-    EXPECT_TRUE((result[0].y - 4) < geometry::EPSILON ||
-                (result[0].y + 3) < geometry::EPSILON);
-    EXPECT_TRUE((result[1].x - 3) < geometry::EPSILON ||
-                (result[1].x + 4) < geometry::EPSILON);
-    EXPECT_TRUE((result[1].y - 4) < geometry::EPSILON ||
-                (result[1].y + 3) < geometry::EPSILON);
-}
-
-TEST_F(Geometry_SegCircleIntersectPoints, test2) {
-    Point p1(5.0, 0.0);
-    Point p2(6.0, -1.0);
-    segCircleIntersectPoints(p1, p2, center, radius, result);
-    EXPECT_EQ(result.size(), 1);
-    EXPECT_DOUBLE_EQ(result[0].x, 5.0);
-    EXPECT_DOUBLE_EQ(result[0].y, 0.0);
-}
-
-TEST_F(Geometry_SegCircleIntersectPoints, test3) {
-    Point p1(6.0, 4.0);
-    Point p2(8.0, 0.0);
-    segCircleIntersectPoints(p1, p2, center, radius, result);
-    EXPECT_EQ(result.size(), 0);
-}
-
 // 线段和圆弧求交点
 class Geometry_SegArcIntersectPoints : public testing::Test {
    public:
@@ -264,3 +218,146 @@ TEST_F(Geometry_SegArcIntersectPoints, test5) {
                           result);
     EXPECT_EQ(result.size(), 0);
 }
+
+// 圆弧和圆弧求交点
+class Geometry_ArcArcIntersectPoints : public testing::Test {
+   public:
+    Point center;
+    double radius;
+    double sa;
+    double sw;
+    bool cw;
+    std::vector<Point> result;
+    Geometry_ArcArcIntersectPoints()
+        : center(0.0, 0.0),
+          radius(5.0),
+          sa(0.0),
+          sw(M_PI_2),
+          cw(false),
+          result() {}
+};
+
+TEST_F(Geometry_ArcArcIntersectPoints, test1) {
+    Point center2(6.0, 4.0);
+    double radius2 = 3.1622776601684;
+    double sa2 = 161.565051177078 * M_PI / 180.0;
+    double sw2 = 288.434948822922 * M_PI / 180.0;
+    bool cw2 = false;
+    bool ok = arcArcIntersectPoints(center, radius, sa, sw, cw, center2,
+                                    radius2, sa2, sw2, cw2, result);
+    EXPECT_TRUE(ok);
+    EXPECT_EQ(result.size(), 2);
+    EXPECT_TRUE(std::abs(result[0].x - 2.839823721079) < geometry::EPSILON ||
+                std::abs(result[1].x - 2.839823721079) < geometry::EPSILON);
+
+    EXPECT_TRUE(std::abs(result[0].x - 4.8909455096903) < geometry::EPSILON ||
+                std::abs(result[1].x - 4.8909455096903) < geometry::EPSILON);
+
+    EXPECT_TRUE(std::abs(result[0].y - 4.1152644183815) < geometry::EPSILON ||
+                std::abs(result[1].y - 4.1152644183815) < geometry::EPSILON);
+
+    EXPECT_TRUE(std::abs(result[0].y - 1.0385817354646) < geometry::EPSILON ||
+                std::abs(result[1].y - 1.0385817354646) < geometry::EPSILON);
+}
+
+TEST_F(Geometry_ArcArcIntersectPoints, test2) {
+    Point center2(0.0, 7.0);
+    double radius2 = 4.0;
+    double sa2 = M_PI;
+    double sw2 = M_PI;
+    bool cw2 = false;
+    bool ok = arcArcIntersectPoints(center, radius, sa, sw, cw, center2,
+                                    radius2, sa2, sw2, cw2, result);
+    EXPECT_TRUE(ok);
+    EXPECT_EQ(result.size(), 1);
+    // (2.7994168488951,-4.1428571428571)
+    EXPECT_TRUE(std::abs(result[0].x - 2.7994168488951) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].y - 4.1428571428571) < geometry::EPSILON);
+}
+
+TEST_F(Geometry_ArcArcIntersectPoints, test3) {
+    Point center2(10.0, 0.0);
+    double radius2 = 5.0;
+    double sa2 = M_PI;
+    double sw2 = M_PI_2;
+    bool cw2 = false;
+    bool ok = arcArcIntersectPoints(center, radius, sa, sw, cw, center2,
+                                    radius2, sa2, sw2, cw2, result);
+    EXPECT_TRUE(ok);
+    EXPECT_EQ(result.size(), 1);
+    // (2.7994168488951,-4.1428571428571)
+    EXPECT_TRUE(std::abs(result[0].x - 5.0) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].y - 0.0) < geometry::EPSILON);
+}
+
+// 边和边求交点
+class Geometry_EdgeEdgeIntersectPoints : public testing::Test {};
+
+// 线段和圆求交点
+class Geometry_SegCircleIntersectPoints : public testing::Test {
+   public:
+    Point center;
+    double radius;
+    std::vector<Point> result;
+    Geometry_SegCircleIntersectPoints()
+        : center(0.0, 0.0), radius(5.0), result() {}
+    void printResult() {
+        for (const auto& r : result) {
+            std::cout << "(" << r.x << "," << r.y << ")\n";
+        }
+    }
+};
+
+TEST_F(Geometry_SegCircleIntersectPoints, test1) {
+    Point p1(4.0, 5.0);
+    Point p2(-5.0, -4.0);
+    segCircleIntersectPoints(p1, p2, center, radius, result);
+    EXPECT_EQ(result.size(), 2);
+    EXPECT_TRUE((result[0].x - 3) < geometry::EPSILON ||
+                (result[0].x + 4) < geometry::EPSILON);
+    EXPECT_TRUE((result[0].y - 4) < geometry::EPSILON ||
+                (result[0].y + 3) < geometry::EPSILON);
+    EXPECT_TRUE((result[1].x - 3) < geometry::EPSILON ||
+                (result[1].x + 4) < geometry::EPSILON);
+    EXPECT_TRUE((result[1].y - 4) < geometry::EPSILON ||
+                (result[1].y + 3) < geometry::EPSILON);
+}
+
+TEST_F(Geometry_SegCircleIntersectPoints, test2) {
+    Point p1(5.0, 0.0);
+    Point p2(6.0, -1.0);
+    segCircleIntersectPoints(p1, p2, center, radius, result);
+    EXPECT_EQ(result.size(), 1);
+    EXPECT_DOUBLE_EQ(result[0].x, 5.0);
+    EXPECT_DOUBLE_EQ(result[0].y, 0.0);
+}
+
+TEST_F(Geometry_SegCircleIntersectPoints, test3) {
+    Point p1(6.0, 4.0);
+    Point p2(8.0, 0.0);
+    segCircleIntersectPoints(p1, p2, center, radius, result);
+    EXPECT_EQ(result.size(), 0);
+}
+
+// 圆和圆求交点
+class Geometry_CircleCircleIntersectPoints : public testing::Test {
+   public:
+    Point center;
+    double radius;
+    std::vector<Point> result;
+    Geometry_CircleCircleIntersectPoints()
+        : center(0.0, 0.0), radius(5.0), result() {}
+};
+
+TEST_F(Geometry_CircleCircleIntersectPoints, test1) {
+    Point center2(10.0, 0.0);
+    double radius2 = 5.0;
+    bool ok =
+        circleCircleIntersectPoints(center, radius, center2, radius2, result);
+    EXPECT_TRUE(ok);
+    EXPECT_EQ(result.size(), 1);
+    EXPECT_DOUBLE_EQ(result[0].x, 5.0);
+    EXPECT_DOUBLE_EQ(result[0].y, 0.0);
+}
+
+TEST_F(Geometry_CircleCircleIntersectPoints, test2) {}

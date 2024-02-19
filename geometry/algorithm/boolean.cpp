@@ -79,7 +79,7 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
 *  根据包围盒的边界值和有效轴，找出两个圆弧多边形各自的相关边
 *  这里的相关边，可能是线段，也可能是圆弧
 *  创建两个空序列，用于存放多边形的边以及附带信息
-*  根据相关边，初始化边序列，我这里称之为边域
+*  根据相关边，初始化边序列
 *  排序边序列，所有端点存到优先队列Q里
 *  遍历Q
 *      如果点是线段的左端点
@@ -406,6 +406,25 @@ void handleIntersectNode(std::set<core::EdgeNode*>& aRbTree,
 }
 
 int constructProcessedArcPolygon() {
+    /**
+     * 逻辑:
+     * 初始化两个空ArcPolygon
+     * 遍历原始多边形的边
+     *     如果边不属于相关边
+     *         将边放入结果多边形，循环计数+1
+     *     否则是相关边
+     *         如果此边不是分解弧
+     *             如果此边和其他没有交点
+     *                 将此边放入结果多边形，循环计数+1
+     *             否则有交点
+     *                 如果此边是圆弧
+     *                     插入附加点
+     *                 将边放入结果多边形，循环计数+1
+     *         如果是分解弧
+     *             合并分解弧
+     *             将处理后的边放入结果多边形
+     */
+
     return 0;
 }
 }  // namespace algorithm
