@@ -1,5 +1,7 @@
 #include "linkednode.h"
 #include "point.h"
+
+namespace edagl {
 namespace core {
 
 LinkedNode::LinkedNode()
@@ -100,3 +102,4 @@ LinkedNode* LinkedNode::constructLinkedNodes(const std::vector<Point>& aPath) {
     return head;
 }
 }  // namespace core
+}  // namespace edagl

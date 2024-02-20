@@ -9,17 +9,18 @@
 #include "core/point.h"
 #include "engine/geometry.h"
 #include "engine/intersection.h"
-#include "utils/timer.h"
+#include "utils/Timer.h"
 
 #include <algorithm>
 
 namespace algorithm {
 
-using namespace core;
+using namespace edagl::core;
+using namespace edagl::geometry;
 
-int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
+int relatedEdgesBetweenAxis(ArcPolygon* aArcPolygon, double aAxisSmall,
                             double aAxisBig, bool aXAxis,
-                            std::vector<core::Edge>& aRelatedEdge) {
+                            std::vector<Edge>& aRelatedEdge) {
     auto* tail = aArcPolygon->getHeadNode();
     while (tail) {
         // 当前节点
@@ -45,13 +46,11 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
             auto appendixPoint = next->mData;
             auto arcEndPoint = next->mNext->mData;
             // 计算包围盒
-            auto arcBBox =
-                geometry::bBoxOfArc(currPoint, arcEndPoint, appendixPoint);
+            auto arcBBox = bBoxOfArc(currPoint, arcEndPoint, appendixPoint);
             Point center{};
             double r;
             // 计算圆心、半径
-            geometry::circleFrom3Points(currPoint, arcEndPoint, appendixPoint,
-                                        center, r);
+            circleFrom3Points(currPoint, arcEndPoint, appendixPoint, center, r);
             double startValue = aXAxis ? arcBBox.getMinX() : arcBBox.getMinY();
             double endValue = aXAxis ? arcBBox.getMaxX() : arcBBox.getMaxY();
             // 根据有效轴判断是否是相关边
@@ -104,7 +103,7 @@ int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
                         std::vector<EdgeNode>& aSequencedEdge2,
                         std::vector<Edge>& aRelatedEdge1,
                         std::vector<Edge>& aRelatedEdge2) {
-    Timer t("arc poly pretreatment", true);
+    edagl::Timer t("arc poly pretreatment", true);
     // 获取包围盒
     auto* bBox1 = aArcPoly1->getBBox();
     auto* bBox2 = aArcPoly2->getBBox();
@@ -117,7 +116,7 @@ int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
 #endif
     // 获取相交包围盒
     BBox newBBox;
-    geometry::intersectsBBoxes(*bBox1, *bBox2, newBBox);
+    intersectsBBoxes(*bBox1, *bBox2, newBBox);
 
     // 获取有效轴，true为X，false为Y
     bool effectiveX = (newBBox.getMaxX() - newBBox.getMinX()) <=
@@ -151,8 +150,8 @@ int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
     return 0;
 }
 
-int initSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge,
-                      const std::vector<core::Edge>& aRelatedEdge) {
+int initSequencedEdge(std::vector<EdgeNode>& aSequencedEdge,
+                      const std::vector<Edge>& aRelatedEdge) {
     /**
      * 逻辑:
      * 遍历相关边
@@ -184,7 +183,7 @@ int initSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge,
 }
 
 void appendEventNode(std::priority_queue<EventNode>& aPq,
-                     std::vector<core::EdgeNode>& aSequencedEdge, bool aFirst) {
+                     std::vector<EdgeNode>& aSequencedEdge, bool aFirst) {
     for (auto& en : aSequencedEdge) {
         // 设置标记，辨别属于那个多边形
         en.setIsFromFirst(aFirst);
@@ -203,9 +202,9 @@ void appendEventNode(std::priority_queue<EventNode>& aPq,
     }
 }
 
-void rebuildSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge1,
-                          std::vector<core::EdgeNode>& aSequencedEdge2) {
-    Timer t("rebuild sequenced edge", true);
+void rebuildSequencedEdge(std::vector<EdgeNode>& aSequencedEdge1,
+                          std::vector<EdgeNode>& aSequencedEdge2) {
+    edagl::Timer t("rebuild sequenced edge", true);
     // 声明存储事件节点的优先队列，规则为最小堆
     std::priority_queue<EventNode> pq;
     // 初始化事件，并写入优先队列
@@ -240,7 +239,7 @@ void rebuildSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge1,
     }
 }
 
-std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
+std::vector<Edge> decomposeArc(const Edge& aEdge) {
     /**
      * 定理：一个非x单调圆弧，一定可以分解成两到三个x单调圆弧
      * 圆形是特殊圆弧
@@ -250,9 +249,9 @@ std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
 
     Point west(edgeCenter.x - aEdge.getRadius(), edgeCenter.y);
     Point east(edgeCenter.x + aEdge.getRadius(), edgeCenter.y);
-    bool westIn = geometry::isPointInArcRangeExceptEdge(
+    bool westIn = isPointInArcRangeExceptEdge(
         edgeCenter, aEdge.getStartAngle(), aEdge.getSweepAngle(), isCW, west);
-    bool eastIn = geometry::isPointInArcRangeExceptEdge(
+    bool eastIn = isPointInArcRangeExceptEdge(
         edgeCenter, aEdge.getStartAngle(), aEdge.getSweepAngle(), isCW, east);
 
     // TODO: NOTE: 圆形要特殊处理
@@ -271,8 +270,8 @@ std::vector<core::Edge> decomposeArc(const core::Edge& aEdge) {
     return {};
 }
 
-std::vector<core::Edge> decomposeArcToTwo(const Edge& aEdge,
-                                          const Point& aBreakPoint) {
+std::vector<Edge> decomposeArcToTwo(const Edge& aEdge,
+                                    const Point& aBreakPoint) {
     /**
     * 分析：
     * 分解为两段圆弧
@@ -291,9 +290,8 @@ std::vector<core::Edge> decomposeArcToTwo(const Edge& aEdge,
     return res;
 }
 
-std::vector<core::Edge> decomposeArcToThree(const Edge& aEdge,
-                                            const Point& aEast,
-                                            const Point& aWest) {
+std::vector<Edge> decomposeArcToThree(const Edge& aEdge, const Point& aEast,
+                                      const Point& aWest) {
     /**
     * 分析：
     * 分解为三段圆弧
@@ -388,9 +386,9 @@ void handleRightNode(std::set<EdgeNode*>& aRbTree,
     }
 }
 
-void handleIntersectNode(std::set<core::EdgeNode*>& aRbTree,
-                         std::priority_queue<core::EventNode>& aPQueue,
-                         core::EventNode& aEventNode) {
+void handleIntersectNode(std::set<EdgeNode*>& aRbTree,
+                         std::priority_queue<EventNode>& aPQueue,
+                         EventNode& aEventNode) {
     // 查找相邻节点
     auto lowIt = aRbTree.lower_bound(aEventNode.mEdgeNode);
     auto upIt = aRbTree.upper_bound(aEventNode.mEdgeNode);

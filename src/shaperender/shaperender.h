@@ -11,9 +11,11 @@
 #ifndef EDA_GL_SHAPERENDER_H
 #define EDA_GL_SHAPERENDER_H
 
+namespace edagl {
 namespace core {
 struct Rectangle;
 }
+}  // namespace edagl
 
 class ShapeRender {
 
@@ -29,7 +31,7 @@ class ShapeRender {
     /* endregion */
 
     /* region General Methods */
-    static void drawRectangle(const core::Rectangle& rect);
+    static void drawRectangle(const edagl::core::Rectangle& rect);
 
     static void drawArc(double cx, double cy, double radius, double startAngle,
                         double endAngle, int numSegments);

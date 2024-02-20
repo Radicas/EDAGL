@@ -1,9 +1,9 @@
 #ifndef EDA_GL_GLOBAL_H
 #define EDA_GL_GLOBAL_H
 
-namespace geometry {
+namespace edagl {
 
-static double EPSILON = 1E-10;
+static const double EPSILON = 1E-10;
 
 }
 

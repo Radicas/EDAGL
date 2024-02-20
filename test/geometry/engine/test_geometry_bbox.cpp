@@ -2,8 +2,8 @@
 #include "engine/geometry.h"
 #include "engine/intersection.h"
 
-using namespace core;
-using namespace geometry;
+using namespace edagl::core;
+using namespace edagl::geometry;
 
 // 分离检测
 class Geometry_DetachedTest : public testing::Test {};

@@ -13,7 +13,9 @@
 
 #include <iostream>
 
+namespace edagl {
 namespace core {
+
 class Point {
    public:
     double x{};
@@ -57,5 +59,6 @@ class Point {
 };
 typedef Point Vector2D;
 }  // namespace core
+}  // namespace edagl
 
 #endif  // EDA_GL_POINT_H

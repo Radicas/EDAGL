@@ -13,6 +13,7 @@
 
 #include <iostream>
 
+namespace edagl {
 namespace core {
 class LinkedNode;
 
@@ -62,5 +63,6 @@ class ArcPolygon {
 };
 
 }  // namespace core
+}  // namespace edagl
 
 #endif  // EDA_GL_ARCPOLYGON_H

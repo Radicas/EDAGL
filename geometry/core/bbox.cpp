@@ -1,6 +1,7 @@
 #include "bbox.h"
 #include <algorithm>
 
+namespace edagl {
 namespace core {
 /* region Constructors / Destructor */
 BBox::BBox() : mMinX(0.0), mMaxX(0.0), mMinY(0.0), mMaxY(0.0) {}
@@ -69,3 +70,4 @@ void BBox::setMaxY(double v) {
 /* endregion */
 
 }  // namespace core
+}  // namespace edagl

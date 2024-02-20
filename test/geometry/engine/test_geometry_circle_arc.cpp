@@ -4,18 +4,18 @@
 
 #include <cmath>
 
-using namespace core;
-using namespace geometry;
+using namespace edagl::core;
+using namespace edagl::geometry;
 
 // 三点确定圆
 class Geometry_CircleFrom3PointsTest : public testing::Test {};
 
 TEST_F(Geometry_CircleFrom3PointsTest, ValidPoints) {
     // Test with valid points forming a circle
-    core::Point aP1 = {0, 0};
-    core::Point aP2 = {1, 0};
-    core::Point aP3 = {0, 1};
-    core::Point aCenter;
+    Point aP1 = {0, 0};
+    Point aP2 = {1, 0};
+    Point aP3 = {0, 1};
+    Point aCenter;
     double aRadius;
 
     circleFrom3Points(aP1, aP2, aP3, aCenter, aRadius);
@@ -59,10 +59,10 @@ class Geometry_BBoxOfArcTest : public testing::Test {};
 
 TEST_F(Geometry_BBoxOfArcTest, ValidArc) {
     // Test with valid arc
-    core::Point A = {0, 0};
-    core::Point B = {1, 0};
-    core::Point M = {0.5, 0.5};
-    core::BBox result;
+    Point A = {0, 0};
+    Point B = {1, 0};
+    Point M = {0.5, 0.5};
+    BBox result;
 
     result = bBoxOfArc(A, B, M);
 
@@ -75,10 +75,10 @@ TEST_F(Geometry_BBoxOfArcTest, ValidArc) {
 
 TEST_F(Geometry_BBoxOfArcTest, ValidArc2) {
     // Test with valid arc
-    core::Point A = {19.0, 3.0};
-    core::Point B = {18.0, 6.0};
-    core::Point M = {19.0, 5.0};
-    core::BBox result;
+    Point A = {19.0, 3.0};
+    Point B = {18.0, 6.0};
+    Point M = {19.0, 5.0};
+    BBox result;
 
     result = bBoxOfArc(A, B, M);
 
@@ -91,10 +91,10 @@ TEST_F(Geometry_BBoxOfArcTest, ValidArc2) {
 
 TEST_F(Geometry_BBoxOfArcTest, ValidArc3) {
     // Test with valid arc
-    core::Point A = {-2.0, 6.0};
-    core::Point B = {-6.0, 6.0};
-    core::Point M = {-4.0, 8.0};
-    core::BBox result = bBoxOfArc(A, B, M);
+    Point A = {-2.0, 6.0};
+    Point B = {-6.0, 6.0};
+    Point M = {-4.0, 8.0};
+    BBox result = bBoxOfArc(A, B, M);
 
     // Check the calculated bounding box
     EXPECT_DOUBLE_EQ(result.getMinX(), -6.0);
@@ -105,10 +105,10 @@ TEST_F(Geometry_BBoxOfArcTest, ValidArc3) {
 
 TEST_F(Geometry_BBoxOfArcTest, CollinearPoints) {
     //    // Test with collinear points, should return a bounding box with zero area
-    //    core::Point A = {0, 0};
-    //    core::Point B = {1, 1};
-    //    core::Point M = {2, 2};
-    //    core::BBox result;
+    //    Point A = {0, 0};
+    //    Point B = {1, 1};
+    //    Point M = {2, 2};
+    //    BBox result;
     //
     //    result = bBoxOfArc(A, B, M);
     //
@@ -121,10 +121,10 @@ TEST_F(Geometry_BBoxOfArcTest, CollinearPoints) {
 
 TEST_F(Geometry_BBoxOfArcTest, SamePoints) {
     //    // Test with same points, should return a bounding box with zero area
-    //    core::Point A = {0, 0};
-    //    core::Point B = {0, 0};
-    //    core::Point M = {0, 0};
-    //    core::BBox result;
+    //    Point A = {0, 0};
+    //    Point B = {0, 0};
+    //    Point M = {0, 0};
+    //    BBox result;
     //
     //    result = bBoxOfArc(A, B, M);
     //
@@ -144,35 +144,35 @@ TEST_F(Geometry_IsXMonotoneArc, test1) {
     Point end1(2.0, 0.0);
     double sweepAngle1 = M_PI;
 
-    auto res1 = geometry::isXMonotoneArc(start1, end1, center1, sweepAngle1);
+    auto res1 = isXMonotoneArc(start1, end1, center1, sweepAngle1);
     EXPECT_TRUE(res1);
 
     Point center2(0.0, 0.0);
     Point start2(-4.0, -1.0);
     Point end2(1.0, -4.0);
     double sweepAngle2 = M_PI * 0.5;
-    auto res2 = geometry::isXMonotoneArc(start2, end2, center2, sweepAngle2);
+    auto res2 = isXMonotoneArc(start2, end2, center2, sweepAngle2);
     EXPECT_TRUE(res2);
 
     Point center3(0.0, 0.0);
     Point start3(-4.0, -1.0);
     Point end3(4.0, 1.0);
     double sweepAngle3 = M_PI * 0.5;
-    auto res3 = geometry::isXMonotoneArc(start3, end3, center3, sweepAngle3);
+    auto res3 = isXMonotoneArc(start3, end3, center3, sweepAngle3);
     EXPECT_FALSE(res3);
 
     Point center4(0.0, 0.0);
     Point start4(-4.0, 0.0);
     Point end4(0.0, 4.0);
     double sweepAngle4 = M_PI * 1.5;
-    auto res4 = geometry::isXMonotoneArc(start4, end4, center4, sweepAngle4);
+    auto res4 = isXMonotoneArc(start4, end4, center4, sweepAngle4);
     EXPECT_FALSE(res4);
 
     Point center5(0.0, 0.0);
     Point start5(-4.0, 0.0);
     Point end5(-4.0, 0.0);
     double sweepAngle5 = M_PI * 2;
-    auto res5 = geometry::isXMonotoneArc(start5, end5, center5, sweepAngle5);
+    auto res5 = isXMonotoneArc(start5, end5, center5, sweepAngle5);
     EXPECT_FALSE(res5);
 }
 
@@ -351,58 +351,54 @@ TEST_F(Geometry_IsPointInArcRangeExceptEdge, test1) {
 class Geometry_GetMidOfArc : public testing::Test {};
 
 TEST_F(Geometry_GetMidOfArc, test1) {
-    core::Point center(0.0, 0.0);
+    Point center(0.0, 0.0);
     double radius = 5.0;
     double startAngle = 0.0;
     double endAngle = M_PI_2;
     bool isCW = false;
 
-    core::Point midPoint =
-        midPointOfArc(startAngle, endAngle, radius, center, isCW);
+    Point midPoint = midPointOfArc(startAngle, endAngle, radius, center, isCW);
 
-    EXPECT_TRUE(std::abs(midPoint.x - 3.5355339059327) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(midPoint.y - 3.5355339059327) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.x - 3.5355339059327) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.y - 3.5355339059327) < edagl::EPSILON);
 }
 
 TEST_F(Geometry_GetMidOfArc, test2) {
-    core::Point center(0.0, 0.0);
+    Point center(0.0, 0.0);
     double radius = 2.0;
     double startAngle = 1.5 * M_PI;
     double endAngle = M_PI_2;
     bool isCW = false;
 
-    core::Point midPoint =
-        midPointOfArc(startAngle, endAngle, radius, center, isCW);
+    Point midPoint = midPointOfArc(startAngle, endAngle, radius, center, isCW);
 
-    EXPECT_TRUE(std::abs(midPoint.x - 2.0) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(midPoint.y - 0.0) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.x - 2.0) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.y - 0.0) < edagl::EPSILON);
 }
 
 TEST_F(Geometry_GetMidOfArc, test3) {
-    core::Point center(0.0, 0.0);
+    Point center(0.0, 0.0);
     double radius = 2.0;
     double startAngle = M_PI_2;
     double endAngle = 1.5 * M_PI;
     bool isCW = false;
 
-    core::Point midPoint =
-        midPointOfArc(startAngle, endAngle, radius, center, isCW);
+    Point midPoint = midPointOfArc(startAngle, endAngle, radius, center, isCW);
 
-    EXPECT_TRUE(std::abs(midPoint.x - (-2.0)) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(midPoint.y - 0.0) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.x - (-2.0)) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.y - 0.0) < edagl::EPSILON);
 }
 
 TEST_F(Geometry_GetMidOfArc, test4) {
-    core::Point center(0.0, 0.0);
+    Point center(0.0, 0.0);
     double radius = 2.8284271247462;
     double startAngle = M_PI + M_PI_4;
     double endAngle = M_PI + M_PI_2 + M_PI_4;
     bool isCW = true;
 
-    core::Point midPoint =
-        midPointOfArc(startAngle, endAngle, radius, center, isCW);
+    Point midPoint = midPointOfArc(startAngle, endAngle, radius, center, isCW);
 
     // (0,2.8284271247462)
-    EXPECT_TRUE(std::abs(midPoint.x - 0.0) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(midPoint.y - 2.8284271247462) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.x - 0.0) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(midPoint.y - 2.8284271247462) < edagl::EPSILON);
 }

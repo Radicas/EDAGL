@@ -5,8 +5,8 @@
 
 #include <cmath>
 
-using namespace core;
-using namespace geometry;
+using namespace edagl::core;
+using namespace edagl::geometry;
 
 // 线段和线段是否相交
 class Geometry_IsSegSegIntersect : public testing::Test {};
@@ -193,14 +193,14 @@ TEST_F(Geometry_SegArcIntersectPoints, test3) {
     segArcIntersectPoints(p1, p2, center, radius, startAngle, sweepAngle, false,
                           result);
     EXPECT_EQ(result.size(), 2);
-    EXPECT_TRUE((result[0].x - 4) < geometry::EPSILON ||
-                (result[0].x) < geometry::EPSILON);
-    EXPECT_TRUE((result[0].y + 4) < geometry::EPSILON ||
-                (result[0].y) < geometry::EPSILON);
-    EXPECT_TRUE((result[1].x - 4) < geometry::EPSILON ||
-                (result[1].x) < geometry::EPSILON);
-    EXPECT_TRUE((result[1].y + 4) < geometry::EPSILON ||
-                (result[1].y) < geometry::EPSILON);
+    EXPECT_TRUE((result[0].x - 4) < edagl::EPSILON ||
+                (result[0].x) < edagl::EPSILON);
+    EXPECT_TRUE((result[0].y + 4) < edagl::EPSILON ||
+                (result[0].y) < edagl::EPSILON);
+    EXPECT_TRUE((result[1].x - 4) < edagl::EPSILON ||
+                (result[1].x) < edagl::EPSILON);
+    EXPECT_TRUE((result[1].y + 4) < edagl::EPSILON ||
+                (result[1].y) < edagl::EPSILON);
 }
 
 TEST_F(Geometry_SegArcIntersectPoints, test4) {
@@ -209,8 +209,8 @@ TEST_F(Geometry_SegArcIntersectPoints, test4) {
     segArcIntersectPoints(p1, p2, center, radius, startAngle, sweepAngle, false,
                           result);
     EXPECT_EQ(result.size(), 1);
-    EXPECT_TRUE(std::abs(result[0].x + 0.6777126903254) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(result[0].y - 3.9421701522603) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].x + 0.6777126903254) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].y - 3.9421701522603) < edagl::EPSILON);
 }
 
 TEST_F(Geometry_SegArcIntersectPoints, test5) {
@@ -249,17 +249,17 @@ TEST_F(Geometry_ArcArcIntersectPoints, test1) {
                                     radius2, sa2, sw2, cw2, result);
     EXPECT_TRUE(ok);
     EXPECT_EQ(result.size(), 2);
-    EXPECT_TRUE(std::abs(result[0].x - 2.839823721079) < geometry::EPSILON ||
-                std::abs(result[1].x - 2.839823721079) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].x - 2.839823721079) < edagl::EPSILON ||
+                std::abs(result[1].x - 2.839823721079) < edagl::EPSILON);
 
-    EXPECT_TRUE(std::abs(result[0].x - 4.8909455096903) < geometry::EPSILON ||
-                std::abs(result[1].x - 4.8909455096903) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].x - 4.8909455096903) < edagl::EPSILON ||
+                std::abs(result[1].x - 4.8909455096903) < edagl::EPSILON);
 
-    EXPECT_TRUE(std::abs(result[0].y - 4.1152644183815) < geometry::EPSILON ||
-                std::abs(result[1].y - 4.1152644183815) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].y - 4.1152644183815) < edagl::EPSILON ||
+                std::abs(result[1].y - 4.1152644183815) < edagl::EPSILON);
 
-    EXPECT_TRUE(std::abs(result[0].y - 1.0385817354646) < geometry::EPSILON ||
-                std::abs(result[1].y - 1.0385817354646) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].y - 1.0385817354646) < edagl::EPSILON ||
+                std::abs(result[1].y - 1.0385817354646) < edagl::EPSILON);
 }
 
 TEST_F(Geometry_ArcArcIntersectPoints, test2) {
@@ -273,8 +273,8 @@ TEST_F(Geometry_ArcArcIntersectPoints, test2) {
     EXPECT_TRUE(ok);
     EXPECT_EQ(result.size(), 1);
     // (2.7994168488951,-4.1428571428571)
-    EXPECT_TRUE(std::abs(result[0].x - 2.7994168488951) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(result[0].y - 4.1428571428571) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].x - 2.7994168488951) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].y - 4.1428571428571) < edagl::EPSILON);
 }
 
 TEST_F(Geometry_ArcArcIntersectPoints, test3) {
@@ -288,8 +288,8 @@ TEST_F(Geometry_ArcArcIntersectPoints, test3) {
     EXPECT_TRUE(ok);
     EXPECT_EQ(result.size(), 1);
     // (2.7994168488951,-4.1428571428571)
-    EXPECT_TRUE(std::abs(result[0].x - 5.0) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(result[0].y - 0.0) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].x - 5.0) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(result[0].y - 0.0) < edagl::EPSILON);
 }
 
 // 边和边求交点
@@ -315,14 +315,14 @@ TEST_F(Geometry_SegCircleIntersectPoints, test1) {
     Point p2(-5.0, -4.0);
     segCircleIntersectPoints(p1, p2, center, radius, result);
     EXPECT_EQ(result.size(), 2);
-    EXPECT_TRUE((result[0].x - 3) < geometry::EPSILON ||
-                (result[0].x + 4) < geometry::EPSILON);
-    EXPECT_TRUE((result[0].y - 4) < geometry::EPSILON ||
-                (result[0].y + 3) < geometry::EPSILON);
-    EXPECT_TRUE((result[1].x - 3) < geometry::EPSILON ||
-                (result[1].x + 4) < geometry::EPSILON);
-    EXPECT_TRUE((result[1].y - 4) < geometry::EPSILON ||
-                (result[1].y + 3) < geometry::EPSILON);
+    EXPECT_TRUE((result[0].x - 3) < edagl::EPSILON ||
+                (result[0].x + 4) < edagl::EPSILON);
+    EXPECT_TRUE((result[0].y - 4) < edagl::EPSILON ||
+                (result[0].y + 3) < edagl::EPSILON);
+    EXPECT_TRUE((result[1].x - 3) < edagl::EPSILON ||
+                (result[1].x + 4) < edagl::EPSILON);
+    EXPECT_TRUE((result[1].y - 4) < edagl::EPSILON ||
+                (result[1].y + 3) < edagl::EPSILON);
 }
 
 TEST_F(Geometry_SegCircleIntersectPoints, test2) {

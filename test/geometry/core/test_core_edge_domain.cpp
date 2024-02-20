@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "core/edgenode.h"
 
-using namespace core;
+using namespace edagl::core;
 
 class Core_EdgeDomainTest : public testing::Test {};
 

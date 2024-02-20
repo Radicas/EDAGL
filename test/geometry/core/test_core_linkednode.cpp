@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "core/linkednode.h"
 
-using namespace core;
+using namespace edagl::core;
 
 class Core_LinkedNodeTest : public testing::Test {
    public:

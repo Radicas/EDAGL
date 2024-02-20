@@ -3,6 +3,7 @@
 
 #include "core/edgenode.h"
 
+namespace edagl {
 namespace core {
 class Point;
 
@@ -28,5 +29,6 @@ struct EventNode {
     bool operator<(const EventNode& rhs) const;
 };
 }  // namespace core
+}  // namespace edagl
 
 #endif  //EDA_GL_EVENTNODE_H

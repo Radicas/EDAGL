@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-using namespace core;
+using namespace edagl::core;
 using namespace algorithm;
 
 // 根据有效轴获取相关边

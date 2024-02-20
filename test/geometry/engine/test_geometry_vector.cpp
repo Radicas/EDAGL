@@ -1,17 +1,17 @@
 #include <gtest/gtest.h>
 #include "engine/geometry.h"
 
-using namespace core;
-using namespace geometry;
+using namespace edagl::core;
+using namespace edagl::geometry;
 
 // 点积1
 class Geometry_DotProductTest : public testing::Test {};
 
 TEST_F(Geometry_DotProductTest, PositiveValues) {
     // Test with positive values
-    core::Point s = {1, 2};
-    core::Point e = {3, 4};
-    core::Point o = {0, 0};
+    Point s = {1, 2};
+    Point e = {3, 4};
+    Point o = {0, 0};
 
     double result = dotProduct(s, e, o);
 
@@ -21,9 +21,9 @@ TEST_F(Geometry_DotProductTest, PositiveValues) {
 
 TEST_F(Geometry_DotProductTest, NegativeValues) {
     // Test with negative values
-    core::Point s = {-1, -2};
-    core::Point e = {-3, -4};
-    core::Point o = {0, 0};
+    Point s = {-1, -2};
+    Point e = {-3, -4};
+    Point o = {0, 0};
 
     double result = dotProduct(s, e, o);
 
@@ -33,9 +33,9 @@ TEST_F(Geometry_DotProductTest, NegativeValues) {
 
 TEST_F(Geometry_DotProductTest, MixedValues) {
     // Test with mixed positive and negative values
-    core::Point s = {-1, 2};
-    core::Point e = {3, -4};
-    core::Point o = {0, 0};
+    Point s = {-1, 2};
+    Point e = {3, -4};
+    Point o = {0, 0};
 
     double result = dotProduct(s, e, o);
 
@@ -45,9 +45,9 @@ TEST_F(Geometry_DotProductTest, MixedValues) {
 
 TEST_F(Geometry_DotProductTest, ZeroValues) {
     // Test with zero values
-    core::Point s = {0, 0};
-    core::Point e = {0, 0};
-    core::Point o = {0, 0};
+    Point s = {0, 0};
+    Point e = {0, 0};
+    Point o = {0, 0};
 
     double result = dotProduct(s, e, o);
 
@@ -60,8 +60,8 @@ class Geometry_DotProductTest2 : public testing::Test {};
 
 TEST_F(Geometry_DotProductTest2, PositiveValues) {
     // Test with positive values
-    core::Vector2D vec1 = {1, 2};
-    core::Vector2D vec2 = {3, 4};
+    Vector2D vec1 = {1, 2};
+    Vector2D vec2 = {3, 4};
 
     double result = dotProduct(vec1, vec2);
 
@@ -71,8 +71,8 @@ TEST_F(Geometry_DotProductTest2, PositiveValues) {
 
 TEST_F(Geometry_DotProductTest2, NegativeValues) {
     // Test with negative values
-    core::Vector2D vec1 = {-1, -2};
-    core::Vector2D vec2 = {-3, -4};
+    Vector2D vec1 = {-1, -2};
+    Vector2D vec2 = {-3, -4};
 
     double result = dotProduct(vec1, vec2);
 
@@ -82,8 +82,8 @@ TEST_F(Geometry_DotProductTest2, NegativeValues) {
 
 TEST_F(Geometry_DotProductTest2, MixedValues) {
     // Test with mixed positive and negative values
-    core::Vector2D vec1 = {-1, 2};
-    core::Vector2D vec2 = {3, -4};
+    Vector2D vec1 = {-1, 2};
+    Vector2D vec2 = {3, -4};
 
     double result = dotProduct(vec1, vec2);
 
@@ -93,8 +93,8 @@ TEST_F(Geometry_DotProductTest2, MixedValues) {
 
 TEST_F(Geometry_DotProductTest2, ZeroValues) {
     // Test with zero values
-    core::Vector2D vec1 = {0, 0};
-    core::Vector2D vec2 = {0, 0};
+    Vector2D vec1 = {0, 0};
+    Vector2D vec2 = {0, 0};
 
     double result = dotProduct(vec1, vec2);
 
@@ -107,9 +107,9 @@ class Geometry_CrossProductTest : public testing::Test {};
 
 TEST_F(Geometry_CrossProductTest, PositiveValues) {
     // Test with positive values
-    core::Point aS = {1, 2};
-    core::Point aE = {3, 4};
-    core::Point aO = {0, 0};
+    Point aS = {1, 2};
+    Point aE = {3, 4};
+    Point aO = {0, 0};
 
     double result = crossProduct(aS, aE, aO);
 
@@ -119,9 +119,9 @@ TEST_F(Geometry_CrossProductTest, PositiveValues) {
 
 TEST_F(Geometry_CrossProductTest, NegativeValues) {
     // Test with negative values
-    core::Point aS = {-1, -2};
-    core::Point aE = {-3, -4};
-    core::Point aO = {0, 0};
+    Point aS = {-1, -2};
+    Point aE = {-3, -4};
+    Point aO = {0, 0};
 
     double result = crossProduct(aS, aE, aO);
 
@@ -131,9 +131,9 @@ TEST_F(Geometry_CrossProductTest, NegativeValues) {
 
 TEST_F(Geometry_CrossProductTest, MixedValues) {
     // Test with mixed positive and negative values
-    core::Point aS = {-1, 2};
-    core::Point aE = {3, -4};
-    core::Point aO = {0, 0};
+    Point aS = {-1, 2};
+    Point aE = {3, -4};
+    Point aO = {0, 0};
 
     double result = crossProduct(aS, aE, aO);
 
@@ -143,9 +143,9 @@ TEST_F(Geometry_CrossProductTest, MixedValues) {
 
 TEST_F(Geometry_CrossProductTest, ZeroValues) {
     // Test with zero values
-    core::Point aS = {0, 0};
-    core::Point aE = {0, 0};
-    core::Point aO = {0, 0};
+    Point aS = {0, 0};
+    Point aE = {0, 0};
+    Point aO = {0, 0};
 
     double result = crossProduct(aS, aE, aO);
 
@@ -158,8 +158,8 @@ class Geometry_CrossProductTest2 : public testing::Test {};
 
 TEST_F(Geometry_CrossProductTest2, PositiveValues) {
     // Test with positive values
-    core::Vector2D aVec1 = {1, 2};
-    core::Vector2D aVec2 = {3, 4};
+    Vector2D aVec1 = {1, 2};
+    Vector2D aVec2 = {3, 4};
 
     double result = crossProduct(aVec1, aVec2);
 
@@ -169,8 +169,8 @@ TEST_F(Geometry_CrossProductTest2, PositiveValues) {
 
 TEST_F(Geometry_CrossProductTest2, NegativeValues) {
     // Test with negative values
-    core::Vector2D aVec1 = {-1, -2};
-    core::Vector2D aVec2 = {-3, -4};
+    Vector2D aVec1 = {-1, -2};
+    Vector2D aVec2 = {-3, -4};
 
     double result = crossProduct(aVec1, aVec2);
 
@@ -180,8 +180,8 @@ TEST_F(Geometry_CrossProductTest2, NegativeValues) {
 
 TEST_F(Geometry_CrossProductTest2, MixedValues) {
     // Test with mixed positive and negative values
-    core::Vector2D aVec1 = {-1, 2};
-    core::Vector2D aVec2 = {3, -4};
+    Vector2D aVec1 = {-1, 2};
+    Vector2D aVec2 = {3, -4};
 
     double result = crossProduct(aVec1, aVec2);
 
@@ -191,8 +191,8 @@ TEST_F(Geometry_CrossProductTest2, MixedValues) {
 
 TEST_F(Geometry_CrossProductTest2, ZeroValues) {
     // Test with zero values
-    core::Vector2D aVec1 = {0, 0};
-    core::Vector2D aVec2 = {0, 0};
+    Vector2D aVec1 = {0, 0};
+    Vector2D aVec2 = {0, 0};
 
     double result = crossProduct(aVec1, aVec2);
 

@@ -14,6 +14,7 @@
 #include <vector>
 #include "point.h"
 
+namespace edagl {
 namespace core {
 class LinkedNode {
    public:
@@ -65,5 +66,6 @@ class LinkedNode {
     /* endregion */
 };
 }  // namespace core
+}  // namespace edagl
 
 #endif  // EDA_GL_LINKEDNODE_H

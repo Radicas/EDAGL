@@ -5,6 +5,7 @@
 
 #include <limits>
 
+namespace edagl {
 namespace core {
 /* region Constructors / Destructor */
 ArcPolygon::ArcPolygon(LinkedNode* aHeadNode)
@@ -124,3 +125,4 @@ BBox* ArcPolygon::getBBox() const {
 /* endregion */
 
 }  // namespace core
+}  // namespace edagl

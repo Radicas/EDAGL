@@ -14,6 +14,7 @@
 #include <vector>
 #include "core/point.h"
 
+namespace edagl {
 namespace core {
 class Edge {
    public:
@@ -102,5 +103,6 @@ class Edge {
 };
 
 }  // namespace core
+}  // namespace edagl
 
 #endif  // EDA_GL_EDGE_H

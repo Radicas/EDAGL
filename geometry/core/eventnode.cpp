@@ -1,5 +1,6 @@
 #include "eventnode.h"
 
+namespace edagl {
 namespace core {
 
 EventNode::EventNode()
@@ -17,3 +18,4 @@ bool EventNode::operator<(const EventNode& rhs) const {
 }
 
 }  // namespace core
+}  // namespace edagl

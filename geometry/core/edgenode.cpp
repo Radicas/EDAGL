@@ -1,6 +1,7 @@
 #include "edgenode.h"
 #include "edge.h"
 
+namespace edagl {
 namespace core {
 /* region Constructors / Destructor */
 EdgeNode::EdgeNode()
@@ -63,3 +64,4 @@ void EdgeNode::setId(int aId) {
 /* endregion */
 
 }  // namespace core
+}  // namespace edagl

@@ -1,13 +1,16 @@
 #ifndef EDA_GL_INTERSECTION_H
 #define EDA_GL_INTERSECTION_H
 
-#include "core/point.h"
 #include <vector>
+#include "core/point.h"
+namespace edagl {
 namespace core {
 class Edge;
 class BBox;
 }  // namespace core
+}  // namespace edagl
 
+namespace edagl {
 namespace geometry {
 
 /********************************** Segment **********************************/
@@ -153,5 +156,6 @@ int intersectsBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
                      core::BBox& aResult);
 
 }  // namespace geometry
+}  // namespace edagl
 
 #endif  //EDA_GL_INTERSECTION_H

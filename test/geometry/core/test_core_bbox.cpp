@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "engine/geometry.h"
-using namespace core;
-using namespace geometry;
+using namespace edagl::core;
+using namespace edagl::geometry;
 
 class Core_BBoxTest : public testing::Test {};
 

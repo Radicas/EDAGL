@@ -1,6 +1,7 @@
 #include "edge.h"
 #include "engine/geometry.h"
 
+namespace edagl {
 namespace core {
 
 /* region Constructors / Destructor */
@@ -136,3 +137,4 @@ void Edge::initArcValues() {
 /* endregion */
 
 }  // namespace core
+}  // namespace edagl

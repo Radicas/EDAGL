@@ -11,6 +11,8 @@
 #include "core/point.h"
 #include "core/rectangle.h"
 
+using namespace edagl::core;
+
 /* region Constructors / Destructor */
 ShapeRender::ShapeRender() = default;
 
@@ -19,7 +21,7 @@ ShapeRender::~ShapeRender() = default;
 /* endregion */
 
 /* region General Methods */
-void ShapeRender::drawRectangle(const core::Rectangle& rect) {
+void ShapeRender::drawRectangle(const edagl::core::Rectangle& rect) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // 设置绘制模式为线框模式
     glBegin(GL_QUADS);
     glVertex2d(rect.topLeft().x, rect.topLeft().y);

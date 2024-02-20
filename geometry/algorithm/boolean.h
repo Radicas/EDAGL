@@ -16,6 +16,7 @@
 #include <set>
 #include <vector>
 
+namespace edagl {
 namespace core {
 class LinkedNode;
 class Point;
@@ -24,6 +25,7 @@ class EdgeNode;
 class ArcPolygon;
 class EventNode;
 }  // namespace core
+}  // namespace edagl
 namespace algorithm {
 
 /**
@@ -37,9 +39,9 @@ namespace algorithm {
  * @param aRelatedEdge 相关边结果
  * @return 0 执行正常
  */
-int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
-                            double aAxisBig, bool aXAxis,
-                            std::vector<core::Edge>& aRelatedEdge);
+int relatedEdgesBetweenAxis(edagl::core::ArcPolygon* aArcPolygon,
+                            double aAxisSmall, double aAxisBig, bool aXAxis,
+                            std::vector<edagl::core::Edge>& aRelatedEdge);
 
 /**
  * @brief 圆弧多边形预处理
@@ -52,12 +54,12 @@ int relatedEdgesBetweenAxis(core::ArcPolygon* aArcPolygon, double aAxisSmall,
  * @param aRelatedEdge2 相关边2
  * @return 0
  */
-int arcPolyPretreatment(core::ArcPolygon* aArcPoly1,
-                        core::ArcPolygon* aArcPoly2,
-                        std::vector<core::EdgeNode>& aSequencedEdge1,
-                        std::vector<core::EdgeNode>& aSequencedEdge2,
-                        std::vector<core::Edge>& aRelatedEdge1,
-                        std::vector<core::Edge>& aRelatedEdge2);
+int arcPolyPretreatment(edagl::core::ArcPolygon* aArcPoly1,
+                        edagl::core::ArcPolygon* aArcPoly2,
+                        std::vector<edagl::core::EdgeNode>& aSequencedEdge1,
+                        std::vector<edagl::core::EdgeNode>& aSequencedEdge2,
+                        std::vector<edagl::core::Edge>& aRelatedEdge1,
+                        std::vector<edagl::core::Edge>& aRelatedEdge2);
 
 /**
  * @brief 初始化边域
@@ -66,8 +68,8 @@ int arcPolyPretreatment(core::ArcPolygon* aArcPoly1,
  * @param aRelatedEdge 相关边
  * @return 0 正常
  */
-int initSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge,
-                      const std::vector<core::Edge>& aRelatedEdge);
+int initSequencedEdge(std::vector<edagl::core::EdgeNode>& aSequencedEdge,
+                      const std::vector<edagl::core::Edge>& aRelatedEdge);
 
 /**
  * @brief 利用扫描线算法重建序列边，将交点信息插入
@@ -75,8 +77,8 @@ int initSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge,
  * @param aSequencedEdge1
  * @param aSequencedEdge2
  */
-void rebuildSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge1,
-                          std::vector<core::EdgeNode>& aSequencedEdge2);
+void rebuildSequencedEdge(std::vector<edagl::core::EdgeNode>& aSequencedEdge1,
+                          std::vector<edagl::core::EdgeNode>& aSequencedEdge2);
 
 /**
  * @brief 将x单调圆弧分解为2-3个非x单调圆弧
@@ -84,7 +86,7 @@ void rebuildSequencedEdge(std::vector<core::EdgeNode>& aSequencedEdge1,
  * @param aEdge 圆弧边
  * @return 分解后的圆弧边
  */
-std::vector<core::Edge> decomposeArc(const core::Edge& aEdge);
+std::vector<edagl::core::Edge> decomposeArc(const edagl::core::Edge& aEdge);
 
 /**
  * @brief 将x单调圆弧分解为3个非x单调圆弧
@@ -94,9 +96,9 @@ std::vector<core::Edge> decomposeArc(const core::Edge& aEdge);
  * @param aWest
  * @return
  */
-std::vector<core::Edge> decomposeArcToThree(const core::Edge& aEdge,
-                                            const core::Point& aEast,
-                                            const core::Point& aWest);
+std::vector<edagl::core::Edge> decomposeArcToThree(
+    const edagl::core::Edge& aEdge, const edagl::core::Point& aEast,
+    const edagl::core::Point& aWest);
 
 /**
  * @brief 将x单调圆弧分解为2个非x单调圆弧
@@ -105,8 +107,8 @@ std::vector<core::Edge> decomposeArcToThree(const core::Edge& aEdge,
  * @param aBreakPoint
  * @return
  */
-std::vector<core::Edge> decomposeArcToTwo(const core::Edge& aEdge,
-                                          const core::Point& aBreakPoint);
+std::vector<edagl::core::Edge> decomposeArcToTwo(
+    const edagl::core::Edge& aEdge, const edagl::core::Point& aBreakPoint);
 
 /**
  * @brief 处理左节点
@@ -114,9 +116,9 @@ std::vector<core::Edge> decomposeArcToTwo(const core::Edge& aEdge,
  * @param aRbTree
  * @param aEventNode
  */
-void handleLeftNode(std::set<core::EdgeNode*>& aRbTree,
-                    std::priority_queue<core::EventNode>& aPQueue,
-                    core::EventNode& aEventNode);
+void handleLeftNode(std::set<edagl::core::EdgeNode*>& aRbTree,
+                    std::priority_queue<edagl::core::EventNode>& aPQueue,
+                    edagl::core::EventNode& aEventNode);
 
 /**
  * @brief 处理右节点
@@ -124,9 +126,9 @@ void handleLeftNode(std::set<core::EdgeNode*>& aRbTree,
  * @param aRbTree
  * @param aEventNode
  */
-void handleRightNode(std::set<core::EdgeNode*>& aRbTree,
-                     std::priority_queue<core::EventNode>& aPQueue,
-                     core::EventNode& aEventNode);
+void handleRightNode(std::set<edagl::core::EdgeNode*>& aRbTree,
+                     std::priority_queue<edagl::core::EventNode>& aPQueue,
+                     edagl::core::EventNode& aEventNode);
 
 /**
  * @brief 处理交点节点
@@ -134,9 +136,9 @@ void handleRightNode(std::set<core::EdgeNode*>& aRbTree,
  * @param aRbTree
  * @param aEventNode
  */
-void handleIntersectNode(std::set<core::EdgeNode*>& aRbTree,
-                         std::priority_queue<core::EventNode>& aPQueue,
-                         core::EventNode& aEventNode);
+void handleIntersectNode(std::set<edagl::core::EdgeNode*>& aRbTree,
+                         std::priority_queue<edagl::core::EventNode>& aPQueue,
+                         edagl::core::EventNode& aEventNode);
 
 /**
  * @brief 构建处理过的圆弧多边形

@@ -1,9 +1,11 @@
 #include "geometry.h"
-#include <algorithm>
-#include <cmath>
 #include "core/point.h"
 
-using namespace core;
+#include <algorithm>
+#include <cmath>
+
+using namespace edagl::core;
+namespace edagl {
 namespace geometry {
 
 /********************************* Vector *********************************/
@@ -89,8 +91,7 @@ bool isPointOnSegment(const core::Point& aPoint, const core::Point& aSegStart,
     double crossSP_SE = crossProduct(SP, SE);
 
     // 点积排除延长线，差积排除非共线
-    if (std::abs(crossSP_SE) > geometry::EPSILON || dotSP_SE < 0 ||
-        dotEP_SE < 0) {
+    if (std::abs(crossSP_SE) > edagl::EPSILON || dotSP_SE < 0 || dotEP_SE < 0) {
         return false;
     }
 
@@ -231,14 +232,14 @@ bool isXMonotoneArc(const Point& aStart, const Point& aEnd,
      * 基于上述观察可以作以下实现
      */
     // 优弧
-    if (aSweepAngle > (M_PI + geometry::EPSILON)) {
+    if (aSweepAngle > (M_PI + edagl::EPSILON)) {
         return false;
     }
     double impreciseStartY = aStart.y, impreciseEndY = aEnd.y;
-    if (std::abs(aStart.y - aCenter.y) < geometry::EPSILON) {
+    if (std::abs(aStart.y - aCenter.y) < edagl::EPSILON) {
         impreciseStartY = aCenter.y;
     }
-    if (std::abs(aEnd.y - aCenter.y) < geometry::EPSILON) {
+    if (std::abs(aEnd.y - aCenter.y) < edagl::EPSILON) {
         impreciseEndY = aCenter.y;
     }
     // 180度
@@ -370,3 +371,4 @@ bool contains(const BBox& aBBox1, const BBox& aBBox2) {
 }
 
 }  // namespace geometry
+}  // namespace edagl

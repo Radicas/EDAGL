@@ -8,6 +8,7 @@
 #include <chrono>
 #include <iostream>
 
+namespace edagl {
 class Timer {
    public:
     explicit Timer(const char* aEvent, bool aSwitch) {
@@ -32,5 +33,7 @@ class Timer {
     const char* mEvent;
     bool mSwitch;
 };
+
+}  // namespace edagl
 
 #endif  //EDA_GL_TIMER_H

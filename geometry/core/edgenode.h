@@ -3,6 +3,7 @@
 
 #include "core/edge.h"
 
+namespace edagl {
 namespace core {
 class EdgeNode {
    public:
@@ -48,5 +49,6 @@ class EdgeNode {
 };
 
 }  // namespace core
+}  // namespace edagl
 
 #endif  //EDA_GL_EDGENODE_H

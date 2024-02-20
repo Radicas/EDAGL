@@ -5,7 +5,7 @@
 #include "core/point.h"
 #include "engine/geometry.h"
 
-using namespace core;
+using namespace edagl::core;
 
 class Core_ArcPolygonTest : public testing::Test {};
 //
@@ -68,8 +68,8 @@ TEST_F(Core_ArcPolygonTest, getBBox) {
     auto* poly = new ArcPolygon(head);
     auto* bbox = poly->getBBox();
     ASSERT_TRUE(bbox);
-    EXPECT_TRUE(std::abs(bbox->getMinX() - (-9.0)) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(bbox->getMaxX() - 1.0) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(bbox->getMinY() - (-3.0)) < geometry::EPSILON);
-    EXPECT_TRUE(std::abs(bbox->getMaxY() - 8.0) < geometry::EPSILON);
+    EXPECT_TRUE(std::abs(bbox->getMinX() - (-9.0)) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(bbox->getMaxX() - 1.0) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(bbox->getMinY() - (-3.0)) < edagl::EPSILON);
+    EXPECT_TRUE(std::abs(bbox->getMaxY() - 8.0) < edagl::EPSILON);
 }

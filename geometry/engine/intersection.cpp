@@ -5,8 +5,10 @@
 #include <algorithm>
 #include <cmath>
 
+namespace edagl {
 namespace geometry {
-using namespace core;
+
+using namespace edagl::core;
 
 /********************************** Segment **********************************/
 
@@ -28,7 +30,7 @@ bool isSegCircleIntersect(const Point& aSegStart, const Point& aSegEnd,
     double distES = distancePoint2Point(aCenter, aSegEnd);
     double length = distancePoint2Point(aSegStart, aSegEnd);
     // 相切或者端点在圆上
-    if (std::abs(dist - aRadius) < geometry::EPSILON) {
+    if (std::abs(dist - aRadius) < edagl::EPSILON) {
         return true;
     }
     // 相离
@@ -265,3 +267,4 @@ int intersectsBBoxes(const BBox& aBBox1, const BBox& aBBox2, BBox& aResult) {
     return 0;  // 返回状态0
 }
 }  // namespace geometry
+}  // namespace edagl

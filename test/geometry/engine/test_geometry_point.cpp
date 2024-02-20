@@ -1,16 +1,16 @@
 #include <gtest/gtest.h>
 #include "engine/geometry.h"
 
-using namespace core;
-using namespace geometry;
+using namespace edagl::core;
+using namespace edagl::geometry;
 
 // 点距离
 class Geometry_PointsDistanceTest : public testing::Test {};
 
 TEST_F(Geometry_PointsDistanceTest, DistanceBetweenPositivePoints) {
     // Test distance between two positive points
-    core::Point aP1 = {1, 2};
-    core::Point aP2 = {4, 6};
+    Point aP1 = {1, 2};
+    Point aP2 = {4, 6};
 
     double result = distancePoint2Point(aP1, aP2);
 
@@ -20,8 +20,8 @@ TEST_F(Geometry_PointsDistanceTest, DistanceBetweenPositivePoints) {
 
 TEST_F(Geometry_PointsDistanceTest, DistanceBetweenNegativePoints) {
     // Test distance between two negative points
-    core::Point aP1 = {-1, -2};
-    core::Point aP2 = {-4, -6};
+    Point aP1 = {-1, -2};
+    Point aP2 = {-4, -6};
 
     double result = distancePoint2Point(aP1, aP2);
 
@@ -31,8 +31,8 @@ TEST_F(Geometry_PointsDistanceTest, DistanceBetweenNegativePoints) {
 
 TEST_F(Geometry_PointsDistanceTest, DistanceBetweenMixedPoints) {
     // Test distance between mixed positive and negative points
-    core::Point aP1 = {-1, 2};
-    core::Point aP2 = {4, -6};
+    Point aP1 = {-1, 2};
+    Point aP2 = {4, -6};
 
     double result = distancePoint2Point(aP1, aP2);
 
@@ -42,8 +42,8 @@ TEST_F(Geometry_PointsDistanceTest, DistanceBetweenMixedPoints) {
 
 TEST_F(Geometry_PointsDistanceTest, DistanceBetweenPointsWithZeroCoordinates) {
     // Test distance between points with zero coordinates
-    core::Point aP1 = {0, 0};
-    core::Point aP2 = {0, 0};
+    Point aP1 = {0, 0};
+    Point aP2 = {0, 0};
 
     double result = distancePoint2Point(aP1, aP2);
 
@@ -53,8 +53,8 @@ TEST_F(Geometry_PointsDistanceTest, DistanceBetweenPointsWithZeroCoordinates) {
 
 TEST_F(Geometry_PointsDistanceTest, DistanceBetweenHorizontalPoints) {
     // Test distance between two points with same y-coordinate
-    core::Point aP1 = {1, 2};
-    core::Point aP2 = {4, 2};
+    Point aP1 = {1, 2};
+    Point aP2 = {4, 2};
 
     double result = distancePoint2Point(aP1, aP2);
 
@@ -64,8 +64,8 @@ TEST_F(Geometry_PointsDistanceTest, DistanceBetweenHorizontalPoints) {
 
 TEST_F(Geometry_PointsDistanceTest, DistanceBetweenVerticalPoints) {
     // Test distance between two points with same x-coordinate
-    core::Point aP1 = {1, 2};
-    core::Point aP2 = {1, 6};
+    Point aP1 = {1, 2};
+    Point aP2 = {1, 6};
 
     double result = distancePoint2Point(aP1, aP2);
 
@@ -78,9 +78,9 @@ class Geometry_CollinearTest : public testing::Test {};
 
 TEST_F(Geometry_CollinearTest, CollinearPoints) {
     // Test collinear points
-    core::Point aP1 = {1, 1};
-    core::Point aP2 = {2, 2};
-    core::Point aP3 = {3, 3};
+    Point aP1 = {1, 1};
+    Point aP2 = {2, 2};
+    Point aP3 = {3, 3};
 
     bool result = isCollinear(aP1, aP2, aP3);
 
@@ -90,9 +90,9 @@ TEST_F(Geometry_CollinearTest, CollinearPoints) {
 
 TEST_F(Geometry_CollinearTest, NonCollinearPoints) {
     // Test non-collinear points
-    core::Point aP1 = {1, 1};
-    core::Point aP2 = {2, 2};
-    core::Point aP3 = {3, 4};
+    Point aP1 = {1, 1};
+    Point aP2 = {2, 2};
+    Point aP3 = {3, 4};
 
     bool result = isCollinear(aP1, aP2, aP3);
 
@@ -102,9 +102,9 @@ TEST_F(Geometry_CollinearTest, NonCollinearPoints) {
 
 TEST_F(Geometry_CollinearTest, CollinearPointsWithZeroCoordinates) {
     // Test collinear points with zero coordinates
-    core::Point aP1 = {0, 0};
-    core::Point aP2 = {0, 0};
-    core::Point aP3 = {0, 0};
+    Point aP1 = {0, 0};
+    Point aP2 = {0, 0};
+    Point aP3 = {0, 0};
 
     bool result = isCollinear(aP1, aP2, aP3);
 
@@ -114,9 +114,9 @@ TEST_F(Geometry_CollinearTest, CollinearPointsWithZeroCoordinates) {
 
 TEST_F(Geometry_CollinearTest, CollinearPointsWithDifferentCoordinates) {
     // Test collinear points with different coordinates
-    core::Point aP1 = {1, 2};
-    core::Point aP2 = {2, 4};
-    core::Point aP3 = {3, 6};
+    Point aP1 = {1, 2};
+    Point aP2 = {2, 4};
+    Point aP3 = {3, 6};
 
     bool result = isCollinear(aP1, aP2, aP3);
 

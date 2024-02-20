@@ -14,6 +14,7 @@
 #include <ostream>
 #include <vector>
 
+namespace edagl {
 namespace core {
 class BBox {
 
@@ -69,5 +70,6 @@ class BBox {
     double mMaxY;
 };
 }  // namespace core
+}  // namespace edagl
 
 #endif  // EDA_GL_BBOX_H

@@ -1,5 +1,5 @@
 # 设置库名称
-set(LIB_NAME geometry)
+set(LIB_NAME edagl)
 
 # 查找库文件
 FILE(GLOB_RECURSE LIB_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cpp" "*.h")

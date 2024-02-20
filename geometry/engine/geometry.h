@@ -16,6 +16,7 @@
 #include "core/point.h"
 #include "global.h"
 
+namespace edagl {
 namespace geometry {
 
 /********************************* Vector *********************************/
@@ -347,5 +348,6 @@ bool detached(const core::BBox& aBBox1, const core::BBox& aBBox2);
 bool contains(const core::BBox& aBBox1, const core::BBox& aBBox2);
 
 }  // namespace geometry
+}  // namespace edagl
 
 #endif  // EDA_GL_GEOMETRY_H

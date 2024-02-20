@@ -4,7 +4,9 @@
 
 #include <algorithm>
 #include <cmath>
+namespace edagl {
 namespace core {
+
 /* region Constructors / Destructor */
 Rectangle::Rectangle() : x(0.0), y(0.0), h(0.0), w(0.0), angle(0.0) {}
 
@@ -60,3 +62,4 @@ Point Rectangle::bottomRight() const {
 }
 /* endregion */
 }  // namespace core
+}  // namespace edagl

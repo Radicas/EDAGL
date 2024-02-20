@@ -12,7 +12,7 @@ add_executable(${PROJECT_TEST} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_TEST} PRIVATE
         GTest::GTest
         GTest::Main
-        geometry
+        edagl
 )
 set(enable_testing())
 

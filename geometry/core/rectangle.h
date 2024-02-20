@@ -11,6 +11,7 @@
 #ifndef EDA_GL_RECTANGLE_H
 #define EDA_GL_RECTANGLE_H
 
+namespace edagl {
 namespace core {
 
 class Point;
@@ -48,5 +49,6 @@ class Rectangle {
 };
 
 }  // namespace core
+}  // namespace edagl
 
 #endif  // EDA_GL_RECTANGLE_H

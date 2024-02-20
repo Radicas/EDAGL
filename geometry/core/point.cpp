@@ -1,7 +1,9 @@
 #include "point.h"
 #include <cmath>
 
+namespace edagl {
 namespace core {
+
 Point::Point(double x, double y) : x(x), y(y) {}
 
 Point::Point(const Point& rhs) {
@@ -63,3 +65,4 @@ double Point::length() const {
 }
 
 }  // namespace core
+}  // namespace edagl
