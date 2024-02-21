@@ -1,6 +1,8 @@
 #include "display.h"
 
-#include "core/edge.h"
+#include "cgal/cgal_boolean_op.h"
+#include "cgal/cgal_edagl.h"
+#include "core/arcpolygon.h"
 #include "core/rectangle.h"
 #include "shaperender/shaperender.h"
 
@@ -13,11 +15,15 @@
 #elif __linux__
 #endif
 
-#include <chrono>
 #include <cmath>
-#include <iostream>
 
 int DISPLAY_STATE = -1;
+
+// 按钮回调函数
+void buttonCallback(int buttonId) {
+    DISPLAY_STATE = buttonId;
+    glutPostRedisplay();  // 标记窗口需要重新绘制
+}
 
 void display() {
 
@@ -32,39 +38,62 @@ void display() {
         case 0: {
             // 绘制矩形
             Rectangle rect(-0.3, -0.3, 0.6, 0.6, 0.0);
-            ShapeRender::drawRectangle(rect);
+            shaperender::drawRectangle(rect);
             break;
         }
         case 1: {
             // 绘制圆弧
-            ShapeRender::drawArc(0, 0, 0.5, 0, 3.0 * M_PI / 2.0, 100);
+            shaperender::drawArc(0, 0, 0.5, 0, 3.0 * M_PI / 2.0, 100);
             break;
         }
         case 2: {
             // 绘制简单多边形
-            ShapeRender::drawSimpleArcPolygon();
+            shaperender::drawSimpleArcPolygon();
             break;
         }
         case 3: {
             // 绘制复杂多边形
-            ShapeRender::drawComplexArcPolygon();
+            shaperender::drawComplexArcPolygon();
             break;
         }
         case 4: {
             // TODO: 求交集
+            ArcPolygon ap1({{0.0, 0.0}, {0.5, 0.0}, {0.5, 0.5}, {0.0, 0.5}});
+            ArcPolygon ap2(
+                {{0.25, 0.25}, {0.25, -0.25}, {0.75, -0.4}, {0.75, 0.4}});
+            auto result =
+                cgal::computeIntersection(cgal::arcPolygon2CgalPolygon(ap1),
+                                          cgal::arcPolygon2CgalPolygon(ap2));
+            auto arcPolygons = cgal::cgalPolygonsWithHoles2ArcPolygons(result);
+            shaperender::drawArcPolygons(arcPolygons);
             break;
         }
         case 5: {
             // TODO: 求并集
+            ArcPolygon ap1({{0.0, 0.0}, {0.5, 0.0}, {0.5, 0.5}, {0.0, 0.5}});
+            ArcPolygon ap2(
+                {{0.25, 0.25}, {0.25, -0.25}, {0.75, -0.4}, {0.75, 0.4}});
+            auto result = cgal::computeUnion(cgal::arcPolygon2CgalPolygon(ap1),
+                                             cgal::arcPolygon2CgalPolygon(ap2));
+            auto arcPolygons = cgal::cgalPolygonsWithHoles2ArcPolygons(result);
+            shaperender::drawArcPolygons(arcPolygons);
             break;
         }
         case 6: {
             // TODO: 求差集
+            ArcPolygon ap1({{0.0, 0.0}, {0.5, 0.0}, {0.5, 0.5}, {0.0, 0.5}});
+            ArcPolygon ap2(
+                {{0.25, 0.25}, {0.25, -0.25}, {0.75, -0.4}, {0.75, 0.4}});
+            auto result =
+                cgal::computeDifference(cgal::arcPolygon2CgalPolygon(ap1),
+                                        cgal::arcPolygon2CgalPolygon(ap2));
+            auto arcPolygons = cgal::cgalPolygonsWithHoles2ArcPolygons(result);
+            shaperender::drawArcPolygons(arcPolygons);
             break;
         }
         default: {
             // 绘制简单多边形
-            ShapeRender::drawSimpleArcPolygon();
+            shaperender::drawSimpleArcPolygon();
             break;
         }
     }

@@ -40,6 +40,8 @@ class LinkedNode {
     LinkedNode(LinkedNode&& rhs) noexcept;
 
     LinkedNode& operator=(LinkedNode&& rhs) noexcept;
+
+    ~LinkedNode() = default;
     /* endregion */
 
     /* region General Methods */

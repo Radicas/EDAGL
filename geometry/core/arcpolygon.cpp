@@ -2,28 +2,82 @@
 #include "bbox.h"
 #include "engine/geometry.h"
 #include "linkednode.h"
+#include "point.h"
 
 #include <limits>
+#include <vector>
 
 namespace edagl {
 namespace core {
+
 /* region Constructors / Destructor */
 ArcPolygon::ArcPolygon(LinkedNode* aHeadNode)
     : mHeadNode(aHeadNode), mBBox(new BBox()) {
     generateBBox();
 }
 
-ArcPolygon::~ArcPolygon() {
-    // 删除所有节点
-    LinkedNode* currentNode = mHeadNode;
-    while (currentNode != nullptr) {
-        LinkedNode* nextNode = currentNode->mNext;
-        delete currentNode;
-        currentNode = nextNode;
+ArcPolygon::ArcPolygon(const std::vector<edagl::core::Point>& points)
+    : mHeadNode(LinkedNode::constructLinkedNodes(points)), mBBox(new BBox()) {
+    generateBBox();
+}
+
+ArcPolygon::ArcPolygon(const ArcPolygon& other)
+    : mHeadNode(nullptr), mBBox(nullptr) {
+    if (other.mHeadNode) {
+        // 深拷贝 LinkedNode 链表
+        mHeadNode = new LinkedNode(*other.mHeadNode);
+        LinkedNode* thisCurrent = mHeadNode;
+        LinkedNode* otherCurrent = other.mHeadNode->mNext;
+        while (otherCurrent != nullptr && otherCurrent != other.mHeadNode) {
+            thisCurrent->mNext = new LinkedNode(*otherCurrent);
+            thisCurrent->mNext->mPrev = thisCurrent;
+            thisCurrent = thisCurrent->mNext;
+            otherCurrent = otherCurrent->mNext;
+        }
+        // 确保链表的尾部正确连接
+        thisCurrent->mNext = mHeadNode;
+        mHeadNode->mPrev = thisCurrent;
     }
-    // 删除bbox
+    if (other.mBBox) {
+        // 深拷贝 BBox
+        mBBox = new BBox(*other.mBBox);
+    }
+}
+
+ArcPolygon& ArcPolygon::operator=(const ArcPolygon& other) {
+    if (this != &other) {
+        // 删除当前对象的资源
+        delete mHeadNode;  // 注意：这里需要编写代码来逐个删除链表中的所有节点
+        delete mBBox;
+
+        mHeadNode = nullptr;
+        mBBox = nullptr;
+
+        // 深拷贝新对象的资源
+        if (other.mHeadNode) {
+            mHeadNode = new LinkedNode(*other.mHeadNode);
+            // 重复上面的深拷贝链表逻辑
+        }
+        if (other.mBBox) {
+            mBBox = new BBox(*other.mBBox);
+        }
+    }
+    return *this;
+}
+
+ArcPolygon::~ArcPolygon() {
+    if (mHeadNode) {
+        LinkedNode* tail = mHeadNode->mNext;
+        while (tail && tail != mHeadNode) {
+            LinkedNode* next = tail->mNext;
+            delete tail;
+            tail = next;
+        }
+        delete mHeadNode;
+    }
     delete mBBox;
 }
+
 /* endregion */
 
 /* region Private Methods */

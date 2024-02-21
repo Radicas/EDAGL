@@ -22,6 +22,8 @@ find_package(benchmark REQUIRED)
 # 查找 Gtest库
 find_package(GTest REQUIRED)
 
+find_package(CGAL REQUIRED)
+
 # 添加子目录
 add_subdirectory(geometry) # 几何库
 add_subdirectory(src) # 源文件

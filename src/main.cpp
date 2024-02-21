@@ -10,12 +10,6 @@
 #elif __linux__
 #endif
 
-// 按钮回调函数
-void buttonCallback(int buttonId) {
-    DISPLAY_STATE = buttonId;
-    glutPostRedisplay();  // 标记窗口需要重新绘制
-}
-
 // 创建菜单
 void createActions() {
     glutCreateMenu(buttonCallback);

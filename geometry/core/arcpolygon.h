@@ -16,7 +16,7 @@
 namespace edagl {
 namespace core {
 class LinkedNode;
-
+class Point;
 class BBox;
 
 class ArcPolygon {
@@ -24,6 +24,12 @@ class ArcPolygon {
     /* region Constructors / Destructor */
 
     explicit ArcPolygon(LinkedNode* aHeadNode);
+
+    explicit ArcPolygon(const std::vector<edagl::core::Point>& points);
+
+    ArcPolygon(const ArcPolygon& other);
+
+    ArcPolygon& operator=(const ArcPolygon& other);
 
     ~ArcPolygon();
 

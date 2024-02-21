@@ -7,21 +7,16 @@
 #elif __linux__
 #endif
 
-#include <cmath>
-#include "core/point.h"
+#include "core/arcpolygon.h"
+#include "core/linkednode.h"
 #include "core/rectangle.h"
 
+#include <cmath>
+
+namespace shaperender {
 using namespace edagl::core;
 
-/* region Constructors / Destructor */
-ShapeRender::ShapeRender() = default;
-
-ShapeRender::~ShapeRender() = default;
-
-/* endregion */
-
-/* region General Methods */
-void ShapeRender::drawRectangle(const edagl::core::Rectangle& rect) {
+void drawRectangle(const edagl::core::Rectangle& rect) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // 设置绘制模式为线框模式
     glBegin(GL_QUADS);
     glVertex2d(rect.topLeft().x, rect.topLeft().y);
@@ -32,8 +27,8 @@ void ShapeRender::drawRectangle(const edagl::core::Rectangle& rect) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // 恢复绘制模式为填充模式
 }
 
-void ShapeRender::drawArc(double cx, double cy, double radius,
-                          double startAngle, double endAngle, int numSegments) {
+void drawArc(double cx, double cy, double radius, double startAngle,
+             double endAngle, int numSegments) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // 设置绘制模式为线框模式
     glBegin(GL_LINE_STRIP);
     // 画圆心
@@ -49,34 +44,13 @@ void ShapeRender::drawArc(double cx, double cy, double radius,
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // 恢复绘制模式为填充模式
 }
 
-void ShapeRender::drawSimpleArcPolygon() {
-    // 设置绘制模式为线框模式
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    // 图形1
-    glBegin(GL_LINE_STRIP);
-    glVertex2d(0.0f, 0.2f);
-    glVertex2d(0.0f, 0.4f);
-    glVertex2d(-0.4f, 0.4f);
-    glVertex2d(-0.4f, 0.0f);
-    glVertex2d(-0.2f, 0.0f);
-    glEnd();
-    drawArc(0.0f, 0.0f, 0.2f, M_PI, 2.5f * M_PI, 32);
-
-    // 图形2
-    glBegin(GL_LINE_STRIP);
-    glVertex2d(0.5f, 0.0f);
-    glVertex2d(0.7f, 0.0f);
-    glVertex2d(0.7f, 0.4f);
-    glVertex2d(0.3f, 0.4f);
-    glVertex2d(0.3f, 0.2f);
-    glEnd();
-    drawArc(0.3f, 0.0f, 0.2f, 0.5 * M_PI, 2 * M_PI, 32);
-
-    // 恢复绘制模式为填充模式
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+void drawSimpleArcPolygon() {
+    ArcPolygon ap1({{0.0, 0.0}, {0.5, 0.0}, {0.5, 0.5}, {0.0, 0.5}});
+    ArcPolygon ap2({{0.25, 0.25}, {0.25, -0.25}, {0.75, -0.4}, {0.75, 0.4}});
+    shaperender::drawArcPolygons({ap1, ap2});
 }
 
-void ShapeRender::drawComplexArcPolygon() {
+void drawComplexArcPolygon() {
     // 设置绘制模式为线框模式
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // 图形1
@@ -101,4 +75,26 @@ void ShapeRender::drawComplexArcPolygon() {
     // 恢复绘制模式为填充模式
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
-/* endregion */
+
+void drawArcPolygons(const std::vector<edagl::core::ArcPolygon>& polygons) {
+    // 设置绘制模式为线框模式
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    for (const auto& polygon : polygons) {
+        LinkedNode* currentNode = polygon.getHeadNode();  // 获取多边形的头节点
+        if (currentNode == nullptr)
+            continue;  // 如果头节点为空，则跳过这个多边形
+        glBegin(GL_LINE_STRIP);  // 开始绘制线段
+        do {
+            glVertex2f((float)currentNode->mData.x,
+                       (float)currentNode->mData.y);  // 使用节点的数据绘制顶点
+            currentNode = currentNode->mNext;  // 移动到下一个节点
+        } while (currentNode !=
+                 polygon.getHeadNode());  // 继绀遍历直到回到头节点
+        glVertex2f((float)currentNode->mData.x,
+                   (float)currentNode->mData.y);  // 确保闭合多边形
+        glEnd();                                  // 结束绘制
+    }
+    // 恢复绘制模式为填充模式
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+}  // namespace shaperender

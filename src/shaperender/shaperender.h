@@ -11,40 +11,28 @@
 #ifndef EDA_GL_SHAPERENDER_H
 #define EDA_GL_SHAPERENDER_H
 
+#include "core/point.h"
+
 namespace edagl {
 namespace core {
 struct Rectangle;
-}
+class ArcPolygon;
+}  // namespace core
 }  // namespace edagl
 
-class ShapeRender {
+namespace shaperender {
 
-   public:
-    /* region Constructors */
-    ShapeRender();
+void drawRectangle(const edagl::core::Rectangle& rect);
 
-    ShapeRender(const ShapeRender& other) = delete;
+void drawArc(double cx, double cy, double radius, double startAngle,
+             double endAngle, int numSegments);
 
-    ShapeRender& operator=(const ShapeRender& rhs) = delete;
+void drawSimpleArcPolygon();
 
-    ~ShapeRender();
-    /* endregion */
+void drawComplexArcPolygon();
 
-    /* region General Methods */
-    static void drawRectangle(const edagl::core::Rectangle& rect);
+void drawArcPolygons(const std::vector<edagl::core::ArcPolygon>& polygons);
 
-    static void drawArc(double cx, double cy, double radius, double startAngle,
-                        double endAngle, int numSegments);
-
-    static void drawSimpleArcPolygon();
-
-    static void drawComplexArcPolygon();
-    /* endregion */
-
-   private:
-    /* region Data Members */
-
-    /* endregion */
-};
+};  // namespace shaperender
 
 #endif  // EDA_GL_SHAPERENDER_H
