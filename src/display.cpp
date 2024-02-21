@@ -34,6 +34,10 @@ void display() {
     glLoadIdentity();                      // 重置当前矩阵为单位矩阵
     glColor3f(0.0f, 1.0f, 1.0f);           // 设置绘制颜色为红色
 
+    ArcPolygon ap1(
+        {{-0.6, 0.2}, {0.1, -0.3}, {-0.2, 0.2}, {0.3, 0.3}, {-0.3, 0.5}});
+    ArcPolygon ap2({{-0.5, 0.4}, {-0.5, -0.1}, {0.2, -0.2}, {0.2, 0.4}});
+
     switch (DISPLAY_STATE) {
         case 0: {
             // 绘制矩形
@@ -48,7 +52,7 @@ void display() {
         }
         case 2: {
             // 绘制简单多边形
-            shaperender::drawSimpleArcPolygon();
+            shaperender::drawArcPolygons({ap1, ap2});
             break;
         }
         case 3: {
@@ -58,9 +62,6 @@ void display() {
         }
         case 4: {
             // TODO: 求交集
-            ArcPolygon ap1({{0.0, 0.0}, {0.5, 0.0}, {0.5, 0.5}, {0.0, 0.5}});
-            ArcPolygon ap2(
-                {{0.25, 0.25}, {0.25, -0.25}, {0.75, -0.4}, {0.75, 0.4}});
             auto result =
                 cgal::computeIntersection(cgal::arcPolygon2CgalPolygon(ap1),
                                           cgal::arcPolygon2CgalPolygon(ap2));
@@ -70,9 +71,6 @@ void display() {
         }
         case 5: {
             // TODO: 求并集
-            ArcPolygon ap1({{0.0, 0.0}, {0.5, 0.0}, {0.5, 0.5}, {0.0, 0.5}});
-            ArcPolygon ap2(
-                {{0.25, 0.25}, {0.25, -0.25}, {0.75, -0.4}, {0.75, 0.4}});
             auto result = cgal::computeUnion(cgal::arcPolygon2CgalPolygon(ap1),
                                              cgal::arcPolygon2CgalPolygon(ap2));
             auto arcPolygons = cgal::cgalPolygonsWithHoles2ArcPolygons(result);
@@ -81,9 +79,7 @@ void display() {
         }
         case 6: {
             // TODO: 求差集
-            ArcPolygon ap1({{0.0, 0.0}, {0.5, 0.0}, {0.5, 0.5}, {0.0, 0.5}});
-            ArcPolygon ap2(
-                {{0.25, 0.25}, {0.25, -0.25}, {0.75, -0.4}, {0.75, 0.4}});
+
             auto result =
                 cgal::computeDifference(cgal::arcPolygon2CgalPolygon(ap1),
                                         cgal::arcPolygon2CgalPolygon(ap2));
@@ -93,7 +89,7 @@ void display() {
         }
         default: {
             // 绘制简单多边形
-            shaperender::drawSimpleArcPolygon();
+            //            shaperender::drawSimpleArcPolygon();
             break;
         }
     }

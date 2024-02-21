@@ -1,4 +1,4 @@
-#include "boolean.h"
+#include "boolean_kerner.h"
 
 #include "core/arcpolygon.h"
 #include "core/bbox.h"
@@ -7,8 +7,8 @@
 #include "core/eventnode.h"
 #include "core/linkednode.h"
 #include "core/point.h"
-#include "engine/geometry.h"
-#include "engine/intersection.h"
+#include "geometry/geometry.h"
+#include "geometry/intersection.h"
 #include "utils/Timer.h"
 
 #include <algorithm>

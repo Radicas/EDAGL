@@ -1,6 +1,6 @@
 #include "intersection.h"
 #include "core/edge.h"
-#include "engine/geometry.h"
+#include "geometry/geometry.h"
 
 #include <algorithm>
 #include <cmath>

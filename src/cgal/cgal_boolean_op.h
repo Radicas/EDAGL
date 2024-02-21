@@ -5,6 +5,7 @@
 #include <CGAL/Polygon_with_holes_2.h>
 #include <CGAL/Simple_cartesian.h>
 #include <vector>
+
 namespace cgal {
 
 typedef CGAL::Simple_cartesian<double> Kernel;

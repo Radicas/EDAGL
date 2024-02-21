@@ -25,7 +25,7 @@ find_package(GTest REQUIRED)
 find_package(CGAL REQUIRED)
 
 # 添加子目录
-add_subdirectory(geometry) # 几何库
+add_subdirectory(edagl) # 几何库
 add_subdirectory(src) # 源文件
 add_subdirectory(test) # google test 单元测试
 

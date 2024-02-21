@@ -1,5 +1,5 @@
 #include "edge.h"
-#include "engine/geometry.h"
+#include "geometry/geometry.h"
 
 namespace edagl {
 namespace core {
