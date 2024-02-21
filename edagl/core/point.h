@@ -1,6 +1,6 @@
 /**
  * @file point.h
- * @author your name (you@domain.com)
+ * @author Radica
  * @brief
  * @version 0.1
  * @date 2024-01-03
@@ -16,6 +16,10 @@
 namespace edagl {
 namespace core {
 
+/**
+ * @brief 
+ * 
+ */
 class Point {
    public:
     double x{};
@@ -53,8 +57,17 @@ class Point {
         return os;
     }
 
+    /**
+     * @brief 
+     * 
+     */
     inline void Negate();
 
+    /**
+     * @brief 
+     * 
+     * @return double 
+     */
     double length() const;
 };
 typedef Point Vector2D;

@@ -19,42 +19,137 @@ namespace core {
 class Edge {
    public:
     /* region Constructors / Destructor */
+    /**
+     * @brief Construct a new Edge object
+     * 
+     */
     Edge();
 
+    /**
+     * @brief Construct a new Edge object
+     * 
+     * @param aStart 
+     * @param aEnd 
+     * @param aCenter 
+     * @param aIsArc 
+     * @param aIsCW 
+     */
     Edge(const Point& aStart, const Point& aEnd,
          const Point& aCenter = {0.0, 0.0}, bool aIsArc = false,
          bool aIsCW = false);
 
+    /**
+     * @brief Construct a new Edge object
+     * 
+     * @param aRhs 
+     */
     Edge(const Edge& aRhs);
 
+    /**
+     * @brief 
+     * 
+     * @param aRhs 
+     * @return Edge& 
+     */
     Edge& operator=(const Edge& aRhs);
 
+    /**
+     * @brief Destroy the Edge object
+     * 
+     */
     ~Edge();
 
+    /**
+     * @brief 
+     * 
+     * @param aRhs 
+     * @return true 
+     * @return false 
+     */
     bool operator<(const Edge& aRhs) const;
+
     /* endregion */
 
     /* region Getters */
+
+    /**
+     * @brief Get the Start object
+     * 
+     * @return const Point& 
+     */
     const Point& getStart() const;
 
+    /**
+     * @brief Get the End object
+     * 
+     * @return const Point& 
+     */
     const Point& getEnd() const;
 
+    /**
+     * @brief Get the Appendix object
+     * 
+     * @return const Point& 
+     */
     const Point& getAppendix() const;
 
+    /**
+     * @brief Get the Center object
+     * 
+     * @return const Point& 
+     */
     const Point& getCenter() const;
 
+    /**
+     * @brief Get the Radius object
+     * 
+     * @return double 
+     */
     double getRadius() const;
 
+    /**
+     * @brief Get the Start Angle object
+     * 
+     * @return double 
+     */
     double getStartAngle() const;
 
+    /**
+     * @brief Get the End Angle object
+     * 
+     * @return double 
+     */
     double getEndAngle() const;
 
+    /**
+     * @brief Get the Sweep Angle object
+     * 
+     * @return double 
+     */
     double getSweepAngle() const;
 
+    /**
+     * @brief 
+     * 
+     * @return true 
+     * @return false 
+     */
     bool isArc() const;
 
+    /**
+     * @brief 
+     * 
+     * @return true 
+     * @return false 
+     */
     bool isXMonotone() const;
 
+    /**
+     * @brief 
+     * 
+     * @return true 
+     * @return false 
+     */
     bool isCW() const;
     /* endregion */
 
@@ -64,6 +159,13 @@ class Edge {
 
     /* region General Methods */
 
+    /**
+     * @brief 
+     * 
+     * @param os 
+     * @param edge 
+     * @return std::ostream& 
+     */
     friend std::ostream& operator<<(std::ostream& os, const Edge& edge) {
         os << "********** edge info **********\n"
            << "is Arc: " << edge.isArc() << "\n"

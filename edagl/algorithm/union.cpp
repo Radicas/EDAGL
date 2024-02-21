@@ -7,8 +7,6 @@
 namespace edagl {
 
 std::vector<edaglPolygon> union_(const edaglPolygon& polygon1,
-                                 const edaglPolygon& polygon2) {
-
-}
+                                 const edaglPolygon& polygon2) {}
 
 }  // namespace edagl

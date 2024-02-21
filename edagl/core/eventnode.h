@@ -1,3 +1,13 @@
+/**
+ * @file eventnode.h
+ * @author Radica
+ * @brief 
+ * @version 0.1
+ * @date 2024-02-21
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #ifndef EDA_GL_EVENTNODE_H
 #define EDA_GL_EVENTNODE_H
 
@@ -12,6 +22,10 @@ class Point;
  */
 enum class NodePosition { LEFT = 0x0, RIGHT = 0x2, INTERSECT = 0x4 };
 
+/**
+ * @brief 
+ * 
+ */
 struct EventNode {
     Point mPoint;            ///< 坐标点
     NodePosition mPosition;  ///< 事件节点的位置

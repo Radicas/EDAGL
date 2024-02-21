@@ -1,6 +1,6 @@
 /**
  * @file geometry.h
- * @author your name (you@domain.com)
+ * @author Radica
  * @brief
  * @version 0.1
  * @date 2024-01-11

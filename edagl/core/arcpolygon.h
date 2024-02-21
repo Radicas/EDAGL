@@ -1,6 +1,6 @@
 /**
  * @file arcpolygon.h
- * @author your name (you@domain.com)
+ * @author Radica
  * @brief
  * @version 0.1
  * @date 2024-01-10
@@ -23,22 +23,57 @@ class ArcPolygon {
    public:
     /* region Constructors / Destructor */
 
+    /**
+     * @brief Construct a new Arc Polygon object
+     * 
+     * @param aHeadNode 
+     */
     explicit ArcPolygon(LinkedNode* aHeadNode);
 
+    /**
+     * @brief Construct a new Arc Polygon object
+     * 
+     * @param points 
+     */
     explicit ArcPolygon(const std::vector<edagl::core::Point>& points);
 
+    /**
+     * @brief Construct a new Arc Polygon object
+     * 
+     * @param other 
+     */
     ArcPolygon(const ArcPolygon& other);
 
+    /**
+     * @brief 
+     * 
+     * @param other 
+     * @return ArcPolygon& 
+     */
     ArcPolygon& operator=(const ArcPolygon& other);
 
+    /**
+     * @brief Destroy the Arc Polygon object
+     * 
+     */
     ~ArcPolygon();
 
     /* endregion */
 
     /* region Getters */
 
+    /**
+     * @brief 
+     * 
+     * @return BBox* 
+     */
     BBox* getBBox() const;
 
+    /**
+     * @brief Get the Head Node object
+     * 
+     * @return LinkedNode* 
+     */
     LinkedNode* getHeadNode() const;
 
     /* endregion */

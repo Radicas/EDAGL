@@ -1,3 +1,13 @@
+/**
+ * @file intersection.h
+ * @author Radica
+ * @brief 
+ * @version 0.1
+ * @date 2024-02-21
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #ifndef EDA_GL_INTERSECTION_H
 #define EDA_GL_INTERSECTION_H
 

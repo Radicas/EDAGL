@@ -16,6 +16,11 @@
 
 namespace edagl {
 namespace core {
+
+/**
+ * @brief 
+ * 
+ */
 class LinkedNode {
    public:
     Point mData;        ///< 坐标
@@ -26,25 +31,78 @@ class LinkedNode {
     LinkedNode* mNext;  ///< 后一个节点
 
     /* region Constructors / Destructor */
+
+    /**
+     * @brief Construct a new Linked Node object
+     * 
+     */
     LinkedNode();
 
+    /**
+     * @brief Construct a new Linked Node object
+     * 
+     * @param data 
+     */
     explicit LinkedNode(const Point& data);
 
+    /**
+     * @brief Construct a new Linked Node object
+     * 
+     * @param aData 
+     * @param aIsAppendix 
+     * @param aIsCrossing 
+     * @param aEE 
+     * @param aPrev 
+     * @param aNext 
+     */
     LinkedNode(const Point& aData, bool aIsAppendix, bool aIsCrossing, bool aEE,
                LinkedNode* aPrev, LinkedNode* aNext);
 
+    /**
+     * @brief Construct a new Linked Node object
+     * 
+     * @param rhs 
+     */
     LinkedNode(const LinkedNode& rhs);
 
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return LinkedNode& 
+     */
     LinkedNode& operator=(const LinkedNode& rhs) = default;
 
+    /**
+     * @brief Construct a new Linked Node object
+     * 
+     * @param rhs 
+     */
     LinkedNode(LinkedNode&& rhs) noexcept;
 
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return LinkedNode& 
+     */
     LinkedNode& operator=(LinkedNode&& rhs) noexcept;
 
+    /**
+     * @brief Destroy the Linked Node object
+     * 
+     */
     ~LinkedNode() = default;
     /* endregion */
 
     /* region General Methods */
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
     bool operator==(const LinkedNode& rhs) const;
 
     /**
@@ -58,6 +116,13 @@ class LinkedNode {
      */
     static LinkedNode* constructLinkedNodes(const std::vector<Point>& aPath);
 
+    /**
+     * @brief 
+     * 
+     * @param os 
+     * @param node 
+     * @return std::ostream& 
+     */
     friend std::ostream& operator<<(std::ostream& os, const LinkedNode* node) {
         os << "data: (" << node->mData.x << "," << node->mData.y << ")\n"
            << "appendix: " << node->mIsAppendix << "\n"
