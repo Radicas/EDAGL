@@ -15,17 +15,20 @@
 #include <core/point.h>
 #include <vector>
 namespace edagl {
+namespace algorithm {
+
 typedef core::Point Point;
-typedef core::ArcPolygon edaglPolygon;
+typedef core::ArcPolygon ArcPolygon;
 
 /**
- * @brief
+ * @brief 差集
  * @param polygon1
  * @param polygon2
  * @return
  */
-std::vector<edaglPolygon> difference(const edaglPolygon& polygon1,
-                                     const edaglPolygon& polygon2);
-
+std::vector<ArcPolygon> difference(const ArcPolygon& polygon1,
+                                   const ArcPolygon& polygon2);
+}  // namespace algorithm
 }  // namespace edagl
+
 #endif  //EDA_GL_DIFFERENCE_H

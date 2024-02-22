@@ -1,7 +1,7 @@
 /**
  * @file union.h
  * @author Radica
- * @brief 
+ * @brief 并集
  * @version 0.1
  * @date 2024-02-21
  * 
@@ -17,18 +17,20 @@
 #include <vector>
 
 namespace edagl {
+namespace algorithm {
 
 typedef core::Point Point;
-typedef core::ArcPolygon edaglPolygon;
+typedef core::ArcPolygon ArcPolygon;
 
 /**
- * @brief
+ * @brief 并集
  * @param polygon1
  * @param polygon2
  * @return
  */
-std::vector<edaglPolygon> union_(const edaglPolygon& polygon1,
-                                 const edaglPolygon& polygon2);
+std::vector<ArcPolygon> union_(const ArcPolygon& polygon1,
+                               const ArcPolygon& polygon2);
 
+}  // namespace algorithm
 }  // namespace edagl
 #endif  //EDA_GL_UNION_H

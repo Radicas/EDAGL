@@ -1,3 +1,13 @@
+/**
+ * @file main.cpp
+ * @author Radica
+ * @brief 
+ * @version 0.1
+ * @date 2024-02-22
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #include "display.h"
 #include "reshape.h"
 

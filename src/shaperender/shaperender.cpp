@@ -9,6 +9,7 @@
 
 #include "core/arcpolygon.h"
 #include "core/linkednode.h"
+#include "core/polygon_with_holes.h"
 #include "core/rectangle.h"
 
 #include <cmath>
@@ -96,5 +97,12 @@ void drawArcPolygons(const std::vector<edagl::core::ArcPolygon>& polygons) {
     }
     // 恢复绘制模式为填充模式
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void drawPolygonsWithHoles(
+    const std::vector<edagl::core::PolygonWithHoles>& polygonsWithHoles) {
+    for (const auto& polygonWithHoles : polygonsWithHoles) {
+        drawArcPolygons(polygonWithHoles.mData);
+    }
 }
 }  // namespace shaperender

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "algorithm/boolean_kerner.h"
+#include "algorithm/boolean_kernel.h"
 #include "core/arcpolygon.h"
 #include "core/edge.h"
 #include "core/linkednode.h"

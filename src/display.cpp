@@ -3,7 +3,9 @@
 #include "cgal/cgal_boolean_op.h"
 #include "cgal/cgal_edagl.h"
 #include "core/arcpolygon.h"
+#include "core/polygon_with_holes.h"
 #include "core/rectangle.h"
+#include "edgl_boolean_operations.h"
 #include "shaperender/shaperender.h"
 
 #ifdef WIN32
@@ -17,16 +19,19 @@
 
 #include <cmath>
 
-int DISPLAY_STATE = -1;
+#define CGAL_
+
+int DISPLAY_STATE = -1;    // 显示状态
+static float angle = 0.0;  // 旋转角度
 
 // 按钮回调函数
 void buttonCallback(int buttonId) {
     DISPLAY_STATE = buttonId;
-    glutPostRedisplay();  // 标记窗口需要重新绘制
+    // 标记窗口需要重新绘制
+    glutPostRedisplay();
 }
 
 void display() {
-
     using namespace edagl::core;
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // 设置清除颜色为黑色
@@ -35,61 +40,73 @@ void display() {
     glColor3f(0.0f, 1.0f, 1.0f);           // 设置绘制颜色为红色
 
     ArcPolygon ap1(
-        {{-0.6, 0.2}, {0.1, -0.3}, {-0.2, 0.2}, {0.3, 0.3}, {-0.3, 0.5}});
-    ArcPolygon ap2({{-0.5, 0.4}, {-0.5, -0.1}, {0.2, -0.2}, {0.2, 0.4}});
+        {{-0.5, 0.4}, {-0.5, -0.2}, {0.2, -0.2}, {0.2, 0.4}, {-0.5, 0.4}});
+    ArcPolygon ap2({{-0.2, 0.1},
+                    {-0.2, -0.4},
+                    {0.0, -0.1},
+                    {0.4, -0.1},
+                    {0.4, 0.1},
+                    {-0.2, 0.1}});
 
     switch (DISPLAY_STATE) {
-        case 0: {
-            // 绘制矩形
+        case 0: {  // 绘制矩形
             Rectangle rect(-0.3, -0.3, 0.6, 0.6, 0.0);
             shaperender::drawRectangle(rect);
             break;
         }
-        case 1: {
-            // 绘制圆弧
+        case 1: {  // 绘制圆弧
             shaperender::drawArc(0, 0, 0.5, 0, 3.0 * M_PI / 2.0, 100);
             break;
         }
-        case 2: {
-            // 绘制简单多边形
+        case 2: {  // 绘制简单多边形
             shaperender::drawArcPolygons({ap1, ap2});
             break;
         }
-        case 3: {
-            // 绘制复杂多边形
+        case 3: {  // 绘制复杂多边形
             shaperender::drawComplexArcPolygon();
             break;
         }
-        case 4: {
-            // TODO: 求交集
+        case 4: {  // 交集
+#ifdef CGAL_
             auto result =
                 cgal::computeIntersection(cgal::arcPolygon2CgalPolygon(ap1),
                                           cgal::arcPolygon2CgalPolygon(ap2));
-            auto arcPolygons = cgal::cgalPolygonsWithHoles2ArcPolygons(result);
-            shaperender::drawArcPolygons(arcPolygons);
+            auto arcPolygons = cgal::cgal2EdaglPolygonWithHoles(result);
+            shaperender::drawPolygonsWithHoles(arcPolygons);
+#else
+            auto result = edagl::algorithm::union_(ap1, ap2);
+            shaperender::drawPolygonsWithHoles(result);
+#endif
+
             break;
         }
-        case 5: {
-            // TODO: 求并集
+        case 5: {  // 并集
+#ifdef CGAL_
             auto result = cgal::computeUnion(cgal::arcPolygon2CgalPolygon(ap1),
                                              cgal::arcPolygon2CgalPolygon(ap2));
-            auto arcPolygons = cgal::cgalPolygonsWithHoles2ArcPolygons(result);
-            shaperender::drawArcPolygons(arcPolygons);
+            auto arcPolygons = cgal::cgal2EdaglPolygonWithHoles(result);
+            shaperender::drawPolygonsWithHoles(arcPolygons);
+#else
+            auto result = edagl::algorithm::intersect(ap1, ap2);
+            shaperender::drawPolygonsWithHoles(result);
+#endif
+
             break;
         }
-        case 6: {
-            // TODO: 求差集
-
+        case 6: {  // 差集
+#ifdef CGAL_
             auto result =
                 cgal::computeDifference(cgal::arcPolygon2CgalPolygon(ap1),
                                         cgal::arcPolygon2CgalPolygon(ap2));
-            auto arcPolygons = cgal::cgalPolygonsWithHoles2ArcPolygons(result);
-            shaperender::drawArcPolygons(arcPolygons);
+            auto arcPolygons = cgal::cgal2EdaglPolygonWithHoles(result);
+            shaperender::drawPolygonsWithHoles(arcPolygons);
+#else
+            auto result = edagl::algorithm::difference(ap1, ap2);
+            shaperender::drawArcPolygons(result);
+#endif
             break;
         }
         default: {
-            // 绘制简单多边形
-            //            shaperender::drawSimpleArcPolygon();
             break;
         }
     }

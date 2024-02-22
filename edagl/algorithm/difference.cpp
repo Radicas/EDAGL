@@ -1,13 +1,14 @@
-//
-// Created by Radica on 2024/2/21.
-//
-
 #include "difference.h"
+
+#include "boolean_kernel.h"
+
 namespace edagl {
-typedef core::Point Point;
-typedef core::ArcPolygon edaglPolygon;
+namespace algorithm {
 
-std::vector<edaglPolygon> difference(const edaglPolygon& polygon1,
-                                     const edaglPolygon& polygon2) {}
+std::vector<ArcPolygon> difference(const ArcPolygon& polygon1,
+                                   const ArcPolygon& polygon2) {
+    return booleanOperation(polygon1, polygon2, Traits::DIFFERENCE);
+}
 
+}  // namespace algorithm
 }  // namespace edagl

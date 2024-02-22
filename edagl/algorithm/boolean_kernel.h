@@ -1,15 +1,15 @@
 /**
- * @file boolean_kerner.h
+ * @file boolean_kernel.h
  * @author Radica
- * @brief 
+ * @brief 布尔运算内核
  * @version 0.1
  * @date 2024-02-21
  * 
  * @copyright Copyright (c) 2024 
  * 
  */
-#ifndef EDA_GL_BOOLEAN_KERNER_H
-#define EDA_GL_BOOLEAN_KERNER_H
+#ifndef EDA_GL_BOOLEAN_KERNEL_H
+#define EDA_GL_BOOLEAN_KERNEL_H
 
 #include <queue>
 #include <set>
@@ -24,8 +24,12 @@ class EdgeNode;
 class ArcPolygon;
 class EventNode;
 }  // namespace core
-}  // namespace edagl
 namespace algorithm {
+
+/**
+ * @brief 运算策略
+ */
+enum class Traits { INTERSECTION = 0x2, UNION = 0x4, DIFFERENCE = 0x8 };
 
 /**
  * @brief 根据有效轴获取圆弧多边形的相关边
@@ -38,7 +42,7 @@ namespace algorithm {
  * @param aRelatedEdge 相关边结果
  * @return 0 执行正常
  */
-int relatedEdgesBetweenAxis(edagl::core::ArcPolygon* aArcPolygon,
+int relatedEdgesBetweenAxis(const edagl::core::ArcPolygon& aArcPolygon,
                             double aAxisSmall, double aAxisBig, bool aXAxis,
                             std::vector<edagl::core::Edge>& aRelatedEdge);
 
@@ -53,12 +57,12 @@ int relatedEdgesBetweenAxis(edagl::core::ArcPolygon* aArcPolygon,
  * @param aRelatedEdge2 相关边2
  * @return 0
  */
-int arcPolyPretreatment(edagl::core::ArcPolygon* aArcPoly1,
-                        edagl::core::ArcPolygon* aArcPoly2,
-                        std::vector<edagl::core::EdgeNode>& aSequencedEdge1,
-                        std::vector<edagl::core::EdgeNode>& aSequencedEdge2,
-                        std::vector<edagl::core::Edge>& aRelatedEdge1,
-                        std::vector<edagl::core::Edge>& aRelatedEdge2);
+int pretreatment(const edagl::core::ArcPolygon& aArcPoly1,
+                 const edagl::core::ArcPolygon& aArcPoly2,
+                 std::vector<edagl::core::EdgeNode>& aSequencedEdge1,
+                 std::vector<edagl::core::EdgeNode>& aSequencedEdge2,
+                 std::vector<edagl::core::Edge>& aRelatedEdge1,
+                 std::vector<edagl::core::Edge>& aRelatedEdge2);
 
 /**
  * @brief 初始化边域
@@ -146,6 +150,18 @@ void handleIntersectNode(std::set<edagl::core::EdgeNode*>& aRbTree,
  */
 int constructProcessedArcPolygon();
 
-}  // namespace algorithm
+/**
+ *
+ * @param ap1
+ * @param ap2
+ * @param traits
+ * @return
+ */
+std::vector<core::ArcPolygon> booleanOperation(const core::ArcPolygon& ap1,
+                                               const core::ArcPolygon& ap2,
+                                               Traits traits);
 
-#endif  // EDA_GL_BOOLEAN_KERNER_H
+}  // namespace algorithm
+}  // namespace edagl
+
+#endif  // EDA_GL_BOOLEAN_KERNEL_H

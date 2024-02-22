@@ -1,11 +1,12 @@
-//
-// Created by Radica on 2024/2/21.
-//
-
 #include "intersection.h"
+#include "boolean_kernel.h"
+
 namespace edagl {
+namespace algorithm {
 
-std::vector<edaglPolygon> intersect(const edaglPolygon& polygon1,
-                                    const edaglPolygon& polygon2) {}
-
+std::vector<ArcPolygon> intersect(const ArcPolygon& polygon1,
+                                  const ArcPolygon& polygon2) {
+    return booleanOperation(polygon1, polygon2, Traits::INTERSECTION);
+}
+}  // namespace algorithm
 }  // namespace edagl

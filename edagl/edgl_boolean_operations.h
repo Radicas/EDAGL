@@ -1,7 +1,7 @@
 /**
  * @file edgl_boolean_operations.h
  * @author Radica
- * @brief 
+ * @brief 布尔运算用户接口
  * @version 0.1
  * @date 2024-02-21
  * 

@@ -1,12 +1,13 @@
-//
-// Created by Radica on 2024/2/21.
-//
-
 #include "union.h"
 
+#include "boolean_kernel.h"
+
 namespace edagl {
+namespace algorithm {
 
-std::vector<edaglPolygon> union_(const edaglPolygon& polygon1,
-                                 const edaglPolygon& polygon2) {}
-
+std::vector<ArcPolygon> union_(const ArcPolygon& polygon1,
+                               const ArcPolygon& polygon2) {
+    return booleanOperation(polygon1, polygon2, Traits::UNION);
+}
+}  // namespace algorithm
 }  // namespace edagl

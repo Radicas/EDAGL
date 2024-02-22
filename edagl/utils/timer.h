@@ -1,7 +1,13 @@
-//
-// Created by Radica on 2024/1/16.
-//
-
+/**
+ * @file timer.h
+ * @author Radica
+ * @brief 计时器
+ * @version 0.1
+ * @date 2024-02-22
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #ifndef EDA_GL_TIMER_H
 #define EDA_GL_TIMER_H
 

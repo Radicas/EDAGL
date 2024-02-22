@@ -1,7 +1,7 @@
 /**
  * @file global.h
  * @author Radica
- * @brief 
+ * @brief EDAGL全局参数
  * @version 0.1
  * @date 2024-02-21
  * 

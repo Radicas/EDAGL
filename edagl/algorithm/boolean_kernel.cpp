@@ -1,4 +1,4 @@
-#include "boolean_kerner.h"
+#include "boolean_kernel.h"
 
 #include "core/arcpolygon.h"
 #include "core/bbox.h"
@@ -13,15 +13,16 @@
 
 #include <algorithm>
 
+namespace edagl {
 namespace algorithm {
 
 using namespace edagl::core;
 using namespace edagl::geometry;
 
-int relatedEdgesBetweenAxis(ArcPolygon* aArcPolygon, double aAxisSmall,
+int relatedEdgesBetweenAxis(const ArcPolygon& aArcPolygon, double aAxisSmall,
                             double aAxisBig, bool aXAxis,
                             std::vector<Edge>& aRelatedEdge) {
-    auto* tail = aArcPolygon->getHeadNode();
+    auto* tail = aArcPolygon.getHeadNode();
     while (tail) {
         // 当前节点
         auto currPoint = tail->mData;
@@ -63,7 +64,7 @@ int relatedEdgesBetweenAxis(ArcPolygon* aArcPolygon, double aAxisSmall,
             tail = next->mNext;
         }
 
-        if (tail == aArcPolygon->getHeadNode()) {
+        if (tail == aArcPolygon.getHeadNode()) {
             break;
         }
     }
@@ -71,49 +72,16 @@ int relatedEdgesBetweenAxis(ArcPolygon* aArcPolygon, double aAxisSmall,
     return 0;
 }
 
-/**
-*  逻辑：
-*  获取两个圆弧多边形的包围盒
-*  根据包围盒，计算出有效轴是x还是y
-*  根据包围盒的边界值和有效轴，找出两个圆弧多边形各自的相关边
-*  这里的相关边，可能是线段，也可能是圆弧
-*  创建两个空序列，用于存放多边形的边以及附带信息
-*  根据相关边，初始化边序列
-*  排序边序列，所有端点存到优先队列Q里
-*  遍历Q
-*      如果点是线段的左端点
-*          将线段赋予两个标签，将线段存到红黑树里
-*          如果线段的第一个标签，和前或后的两个线段的标签不一致
-*              如过此线段和前后两个点组成的线段相交
-*                  将交点插入红黑树，并且将小数插入S1和S2
-*      如果点是线段右端点
-*          如果线段前后两个点组成的线段的第一个标签和线段不一致
-*              如果它们存在交点，且交点不属于队列Q
-*                  将点存入Q，将线段从红黑树删除，将小数插入S1和S2
-*      否则
-*          点就是两个线段的交点
-*          交换红黑树中，两个线段的位置
-*          如果两个线段之一的第一个标签和前或后的任意一条线段的第一个标签不一致
-*              如果这两个线段相交
-*                  将交点插入队列Q，并且将小数插入S1和S2
-*  S1、S2、R1、R2就处理好了
-*/
-int arcPolyPretreatment(ArcPolygon* aArcPoly1, ArcPolygon* aArcPoly2,
-                        std::vector<EdgeNode>& aSequencedEdge1,
-                        std::vector<EdgeNode>& aSequencedEdge2,
-                        std::vector<Edge>& aRelatedEdge1,
-                        std::vector<Edge>& aRelatedEdge2) {
+int pretreatment(const edagl::core::ArcPolygon& aArcPoly1,
+                 const edagl::core::ArcPolygon& aArcPoly2,
+                 std::vector<edagl::core::EdgeNode>& aSequencedEdge1,
+                 std::vector<edagl::core::EdgeNode>& aSequencedEdge2,
+                 std::vector<edagl::core::Edge>& aRelatedEdge1,
+                 std::vector<edagl::core::Edge>& aRelatedEdge2) {
     edagl::Timer t("arc poly pretreatment", true);
     // 获取包围盒
-    auto* bBox1 = aArcPoly1->getBBox();
-    auto* bBox2 = aArcPoly2->getBBox();
-#ifdef LOG_
-    std::cout << "******** pre treatment ********" << std::endl;
-    std::cout << "******** bbox1 ********" << std::endl;
-    std::cout << *bBox1 << std::endl;
-    std::cout << "******** bbox2 ********" << std::endl;
-    std::cout << *bBox2 << std::endl;
-#endif
+    auto* bBox1 = aArcPoly1.getBBox();
+    auto* bBox2 = aArcPoly2.getBBox();
     // 获取相交包围盒
     BBox newBBox;
     intersectsBBoxes(*bBox1, *bBox2, newBBox);
@@ -404,25 +372,19 @@ void handleIntersectNode(std::set<EdgeNode*>& aRbTree,
 }
 
 int constructProcessedArcPolygon() {
-    /**
-     * 逻辑:
-     * 初始化两个空ArcPolygon
-     * 遍历原始多边形的边
-     *     如果边不属于相关边
-     *         将边放入结果多边形，循环计数+1
-     *     否则是相关边
-     *         如果此边不是分解弧
-     *             如果此边和其他没有交点
-     *                 将此边放入结果多边形，循环计数+1
-     *             否则有交点
-     *                 如果此边是圆弧
-     *                     插入附加点
-     *                 将边放入结果多边形，循环计数+1
-     *         如果是分解弧
-     *             合并分解弧
-     *             将处理后的边放入结果多边形
-     */
-
     return 0;
 }
+
+std::vector<core::ArcPolygon> booleanOperation(const core::ArcPolygon& ap1,
+                                               const core::ArcPolygon& ap2,
+                                               Traits traits) {
+    std::vector<edagl::core::EdgeNode> sequencedEdge1;
+    std::vector<edagl::core::EdgeNode> sequencedEdge2;
+    std::vector<edagl::core::Edge> relatedEdge1;
+    std::vector<edagl::core::Edge> relatedEdge2;
+    pretreatment(ap1, ap2, sequencedEdge1, sequencedEdge2, relatedEdge1,
+                 relatedEdge2);
+}
+
 }  // namespace algorithm
+}  // namespace edagl
