@@ -3,18 +3,13 @@
 
 namespace edagl {
 namespace core {
-/* region Constructors / Destructor */
-EdgeNode::EdgeNode()
-    : mRelatedEdge(), mLocation(), mArcMark(0), mIsFromFirst(true), mId(-1) {}
 
-EdgeNode::EdgeNode(const Edge& aEdge,
-                   const std::pair<double, double>& aLocation,
+/* region Constructors / Destructor */
+EdgeNode::EdgeNode() : mRelatedEdge(), mIntersectPts(), mTriValue(0) {}
+
+EdgeNode::EdgeNode(const Edge& aEdge, const std::vector<Point>& intersectPts,
                    short int aArcMark)
-    : mRelatedEdge(aEdge),
-      mLocation(aLocation),
-      mArcMark(aArcMark),
-      mIsFromFirst(true),
-      mId(-1) {}
+    : mRelatedEdge(aEdge), mIntersectPts(intersectPts), mTriValue(aArcMark) {}
 
 EdgeNode::EdgeNode(const EdgeNode& aRhs) = default;
 
@@ -32,35 +27,28 @@ Edge& EdgeNode::getRelatedEdge() {
     return mRelatedEdge;
 }
 
-std::pair<double, double>& EdgeNode::getLocation() {
-    return mLocation;
+std::vector<Point>& EdgeNode::getIntersectPts() {
+    return mIntersectPts;
 }
 
-short int EdgeNode::getArcMark() const {
-    return mArcMark;
+short int EdgeNode::getTriValue() const {
+    return mTriValue;
 }
 
-bool EdgeNode::isFromFirst() const {
-    return mIsFromFirst;
-}
-
-int EdgeNode::getId() const {
-    return mId;
-}
 /* endregion */
 
 /* region Setters */
-void EdgeNode::setIsFromFirst(bool aFirst) {
-    mIsFromFirst = aFirst;
-}
-
-void EdgeNode::setId(int aId) {
-    mId = aId;
+void EdgeNode::setTriValue(short int triValue) {
+    mTriValue = triValue;
 }
 /* endregion */
 
 /* region General Methods */
-
+std::ostream& operator<<(std::ostream& os, const EdgeNode& en) {
+    os << "边:" << en.mRelatedEdge << " 交点:"
+       << "三值:" << en.mTriValue << std::endl;
+    return os;
+}
 /* endregion */
 
 }  // namespace core

@@ -151,9 +151,32 @@ class Edge {
      * @return false 
      */
     bool isCW() const;
+
+    /**
+     *
+     * @return
+     */
+    bool isFirst() const;
+
+    /**
+     *
+     * @return
+     */
+    int getLocation() const;
     /* endregion */
 
     /* region Setters */
+    /**
+     *
+     * @param isFirst
+     */
+    void setIsFirst(bool isFirst);
+
+    /**
+     *
+     * @param location
+     */
+    void setLocation(int location);
 
     /* endregion */
 
@@ -166,20 +189,7 @@ class Edge {
      * @param edge 
      * @return std::ostream& 
      */
-    friend std::ostream& operator<<(std::ostream& os, const Edge& edge) {
-        os << "********** edge info **********\n"
-           << "is Arc: " << edge.isArc() << "\n"
-           << "is X Monotone: " << edge.isXMonotone() << "\n"
-           << "is CW: " << edge.isCW() << "\n"
-           << "start: " << edge.getStart() << "\n"
-           << "end: " << edge.getEnd() << "\n"
-           << "center: " << edge.getCenter() << "\n"
-           << "radius: " << edge.getRadius() << "\n"
-           << "startAngle: " << edge.getStartAngle() << "\n"
-           << "endAngle: " << edge.getEndAngle() << "\n"
-           << "sweepAngle: " << edge.getSweepAngle() << "\n";
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const Edge& edge);
 
     /* endregion */
 
@@ -202,6 +212,9 @@ class Edge {
     double mEndAngle;    ///< 终止角度，(0, 2π]
     double mSweepAngle;  ///< 扫过的角度，(0, 2π]
     bool mIsCW;          ///< true表示顺时针；false逆时针
+    bool mIsFirst;       ///< 标签1，是否属于第一个多边形
+    int mLocation;       ///< 标签2，序列边中的位置
+    double mXCoord;      ///< 扫描线传入的x坐标ï
 };
 
 }  // namespace core

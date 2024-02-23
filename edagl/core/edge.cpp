@@ -16,9 +16,11 @@ Edge::Edge()
       mStartAngle(0.0),
       mEndAngle(0.0),
       mSweepAngle(0.0),
-      mIsCW(false) {
-    // 初始化圆弧属性
-    initArcValues();
+      mIsCW(false),
+      mIsFirst(false),
+      mLocation(-1),
+      mXCoord(std::numeric_limits<double>::max()) {
+    initArcValues();  // 初始化圆弧属性
 }
 
 Edge::Edge(const Point& aStart, const Point& aEnd, const Point& aCenter,
@@ -33,9 +35,11 @@ Edge::Edge(const Point& aStart, const Point& aEnd, const Point& aCenter,
       mStartAngle(),
       mEndAngle(),
       mSweepAngle(),
-      mIsCW(aIsCW) {
-    // 初始化圆弧属性
-    initArcValues();
+      mIsCW(aIsCW),
+      mIsFirst(false),
+      mLocation(-1),
+      mXCoord(std::numeric_limits<double>::max()) {
+    initArcValues();  // 初始化圆弧属性
 }
 
 Edge::Edge(const Edge& aRhs) = default;
@@ -45,18 +49,35 @@ Edge& Edge::operator=(const Edge& aRhs) = default;
 Edge::~Edge() = default;
 
 bool Edge::operator<(const Edge& aRhs) const {
-    if (mStart.y > aRhs.mStart.y) {
-        return true;
-    } else if (mStart.y == aRhs.mStart.y) {
-        return mEnd.y > aRhs.mEnd.y;
-    }
+    /**
+     * // TODO: 性能优化点
+     * 这里的比较主要用于红黑树中排序的规则
+     * true：元素放在靠左的位置
+     * false：元素放在靠右的位置
+     * 对于线段，可以考虑缓存一个斜截式，利用插值x计算出y。但要考虑斜率不存在情况
+     * 对于圆弧，稍微麻烦一点了
+     */
+
     return false;
 }
 
 /* endregion */
 
 /* region General Methods */
-
+std::ostream& operator<<(std::ostream& os, const Edge& edge) {
+    os << "********** edge info **********\n"
+       << "is Arc: " << edge.isArc() << "\n"
+       << "is X Monotone: " << edge.isXMonotone() << "\n"
+       << "is CW: " << edge.isCW() << "\n"
+       << "start: " << edge.getStart() << "\n"
+       << "end: " << edge.getEnd() << "\n"
+       << "center: " << edge.getCenter() << "\n"
+       << "radius: " << edge.getRadius() << "\n"
+       << "startAngle: " << edge.getStartAngle() << "\n"
+       << "endAngle: " << edge.getEndAngle() << "\n"
+       << "sweepAngle: " << edge.getSweepAngle() << "\n";
+    return os;
+}
 /* endregion */
 
 /* region Getters */
@@ -103,10 +124,24 @@ double Edge::getEndAngle() const {
 double Edge::getSweepAngle() const {
     return mSweepAngle;
 }
+
+bool Edge::isFirst() const {
+    return mIsFirst;
+}
+
+int Edge::getLocation() const {
+    return mLocation;
+}
 /* endregion */
 
 /* region Setters */
+void Edge::setIsFirst(bool isFirst) {
+    mIsFirst = isFirst;
+}
 
+void Edge::setLocation(int location) {
+    mLocation = location;
+}
 /* endregion */
 
 /* region Private Methods */
@@ -115,12 +150,6 @@ void Edge::initArcValues() {
     if (!mIsArc) {
         return;
     }
-    //    if (geometry::isCollinear(mStart, mEnd, mAppendix)) {
-    //        std::cerr << "error: three points in a line -> " << __FILE_NAME__
-    //                  << __LINE__ << std::endl;
-    //        exit(-1);
-    //    }
-    //    geometry::circleFrom3Points(mStart, mEnd, mAppendix, mCenter, mRadius);
     mRadius = geometry::arcRadius(mStart, mCenter);
     // 计算起始角度，范围为 [0, 2π)
     mStartAngle = geometry::arcStartAngle(mStart, mCenter);

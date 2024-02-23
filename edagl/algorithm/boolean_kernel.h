@@ -22,14 +22,23 @@ class Point;
 class Edge;
 class EdgeNode;
 class ArcPolygon;
+class PolygonWithHoles;
 class EventNode;
 }  // namespace core
 namespace algorithm {
 
+typedef edagl::core::Point Point;
+typedef edagl::core::ArcPolygon ArcPolygon;
+typedef edagl::core::Edge Edge;
+typedef edagl::core::EdgeNode EdgeNode;
+typedef edagl::core::EventNode EventNode;
+typedef edagl::core::PolygonWithHoles PolygonWithHoles;
+typedef std::vector<PolygonWithHoles> PolygonsWithHoles;
+
 /**
  * @brief 运算策略
  */
-enum class Traits { INTERSECTION = 0x2, UNION = 0x4, DIFFERENCE = 0x8 };
+enum class Traits { INTERSECTION = 0x1, UNION = 0x2, DIFFERENCE = 0x4 };
 
 /**
  * @brief 根据有效轴获取圆弧多边形的相关边
@@ -42,9 +51,9 @@ enum class Traits { INTERSECTION = 0x2, UNION = 0x4, DIFFERENCE = 0x8 };
  * @param aRelatedEdge 相关边结果
  * @return 0 执行正常
  */
-int relatedEdgesBetweenAxis(const edagl::core::ArcPolygon& aArcPolygon,
-                            double aAxisSmall, double aAxisBig, bool aXAxis,
-                            std::vector<edagl::core::Edge>& aRelatedEdge);
+int relatedEdgesBetweenAxis(const ArcPolygon& aArcPolygon, double aAxisSmall,
+                            double aAxisBig, bool aXAxis,
+                            std::vector<Edge>& aRelatedEdge);
 
 /**
  * @brief 圆弧多边形预处理
@@ -57,12 +66,11 @@ int relatedEdgesBetweenAxis(const edagl::core::ArcPolygon& aArcPolygon,
  * @param aRelatedEdge2 相关边2
  * @return 0
  */
-int pretreatment(const edagl::core::ArcPolygon& aArcPoly1,
-                 const edagl::core::ArcPolygon& aArcPoly2,
-                 std::vector<edagl::core::EdgeNode>& aSequencedEdge1,
-                 std::vector<edagl::core::EdgeNode>& aSequencedEdge2,
-                 std::vector<edagl::core::Edge>& aRelatedEdge1,
-                 std::vector<edagl::core::Edge>& aRelatedEdge2);
+int pretreatment(const ArcPolygon& aArcPoly1, const ArcPolygon& aArcPoly2,
+                 std::vector<EdgeNode>& aSequencedEdge1,
+                 std::vector<EdgeNode>& aSequencedEdge2,
+                 std::vector<Edge>& aRelatedEdge1,
+                 std::vector<Edge>& aRelatedEdge2);
 
 /**
  * @brief 初始化边域
@@ -71,8 +79,8 @@ int pretreatment(const edagl::core::ArcPolygon& aArcPoly1,
  * @param aRelatedEdge 相关边
  * @return 0 正常
  */
-int initSequencedEdge(std::vector<edagl::core::EdgeNode>& aSequencedEdge,
-                      const std::vector<edagl::core::Edge>& aRelatedEdge);
+int initSequencedEdge(std::vector<EdgeNode>& aSequencedEdge,
+                      const std::vector<Edge>& aRelatedEdge);
 
 /**
  * @brief 利用扫描线算法重建序列边，将交点信息插入
@@ -80,8 +88,8 @@ int initSequencedEdge(std::vector<edagl::core::EdgeNode>& aSequencedEdge,
  * @param aSequencedEdge1
  * @param aSequencedEdge2
  */
-void rebuildSequencedEdge(std::vector<edagl::core::EdgeNode>& aSequencedEdge1,
-                          std::vector<edagl::core::EdgeNode>& aSequencedEdge2);
+void rebuildSequencedEdge(std::vector<EdgeNode>& aSequencedEdge1,
+                          std::vector<EdgeNode>& aSequencedEdge2);
 
 /**
  * @brief 将x单调圆弧分解为2-3个非x单调圆弧
@@ -89,7 +97,7 @@ void rebuildSequencedEdge(std::vector<edagl::core::EdgeNode>& aSequencedEdge1,
  * @param aEdge 圆弧边
  * @return 分解后的圆弧边
  */
-std::vector<edagl::core::Edge> decomposeArc(const edagl::core::Edge& aEdge);
+std::vector<Edge> decomposeArc(const Edge& aEdge);
 
 /**
  * @brief 将x单调圆弧分解为3个非x单调圆弧
@@ -99,9 +107,8 @@ std::vector<edagl::core::Edge> decomposeArc(const edagl::core::Edge& aEdge);
  * @param aWest
  * @return
  */
-std::vector<edagl::core::Edge> decomposeArcToThree(
-    const edagl::core::Edge& aEdge, const edagl::core::Point& aEast,
-    const edagl::core::Point& aWest);
+std::vector<Edge> decomposeArcToThree(const Edge& aEdge, const Point& aEast,
+                                      const Point& aWest);
 
 /**
  * @brief 将x单调圆弧分解为2个非x单调圆弧
@@ -110,8 +117,8 @@ std::vector<edagl::core::Edge> decomposeArcToThree(
  * @param aBreakPoint
  * @return
  */
-std::vector<edagl::core::Edge> decomposeArcToTwo(
-    const edagl::core::Edge& aEdge, const edagl::core::Point& aBreakPoint);
+std::vector<Edge> decomposeArcToTwo(const Edge& aEdge,
+                                    const Point& aBreakPoint);
 
 /**
  * @brief 处理左节点
@@ -119,19 +126,19 @@ std::vector<edagl::core::Edge> decomposeArcToTwo(
  * @param aRbTree
  * @param aEventNode
  */
-void handleLeftNode(std::set<edagl::core::EdgeNode*>& aRbTree,
-                    std::priority_queue<edagl::core::EventNode>& aPQueue,
-                    edagl::core::EventNode& aEventNode);
+void handleLeftNode(std::set<Edge*>& aRbTree,
+                    std::priority_queue<EventNode>& aPQueue,
+                    const EventNode& aEventNode);
 
 /**
  * @brief 处理右节点
  *
- * @param aRbTree
- * @param aEventNode
+ * @param rbTree
+ * @param eventNode
  */
-void handleRightNode(std::set<edagl::core::EdgeNode*>& aRbTree,
-                     std::priority_queue<edagl::core::EventNode>& aPQueue,
-                     edagl::core::EventNode& aEventNode);
+void handleRightNode(std::set<Edge*>& rbTree,
+                     std::priority_queue<EventNode>& pQueue,
+                     const EventNode& eventNode);
 
 /**
  * @brief 处理交点节点
@@ -139,9 +146,9 @@ void handleRightNode(std::set<edagl::core::EdgeNode*>& aRbTree,
  * @param aRbTree
  * @param aEventNode
  */
-void handleIntersectNode(std::set<edagl::core::EdgeNode*>& aRbTree,
-                         std::priority_queue<edagl::core::EventNode>& aPQueue,
-                         edagl::core::EventNode& aEventNode);
+void handleIntersectNode(std::set<Edge*>& aRbTree,
+                         std::priority_queue<EventNode>& aPQueue,
+                         const EventNode& aEventNode);
 
 /**
  * @brief 构建处理过的圆弧多边形
@@ -157,9 +164,8 @@ int constructProcessedArcPolygon();
  * @param traits
  * @return
  */
-std::vector<core::ArcPolygon> booleanOperation(const core::ArcPolygon& ap1,
-                                               const core::ArcPolygon& ap2,
-                                               Traits traits);
+PolygonsWithHoles booleanOperation(const ArcPolygon& ap1, const ArcPolygon& ap2,
+                                   Traits traits);
 
 }  // namespace algorithm
 }  // namespace edagl

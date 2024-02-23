@@ -52,10 +52,7 @@ class Point {
     bool operator!=(const Point& rhs) const;
 
     // 声明为友元，可以访问私有属性
-    friend std::ostream& operator<<(std::ostream& os, const Point& point) {
-        os << point.x << "," << point.y;
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const Point& point);
 
     /**
      * @brief 

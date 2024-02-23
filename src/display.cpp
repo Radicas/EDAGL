@@ -19,10 +19,9 @@
 
 #include <cmath>
 
-#define CGAL_
+//#define CGAL_
 
-int DISPLAY_STATE = -1;    // 显示状态
-static float angle = 0.0;  // 旋转角度
+int DISPLAY_STATE = -1;  // 显示状态
 
 // 按钮回调函数
 void buttonCallback(int buttonId) {
@@ -41,12 +40,12 @@ void display() {
 
     ArcPolygon ap1(
         {{-0.5, 0.4}, {-0.5, -0.2}, {0.2, -0.2}, {0.2, 0.4}, {-0.5, 0.4}});
-    ArcPolygon ap2({{-0.2, 0.1},
-                    {-0.2, -0.4},
-                    {0.0, -0.1},
-                    {0.4, -0.1},
-                    {0.4, 0.1},
-                    {-0.2, 0.1}});
+    ArcPolygon ap2({{-0.3, 0.3},
+                    {-0.4, -0.4},
+                    {-0.1, 0.1},
+                    {-0.1, -0.3},
+                    {0.4, 0.3},
+                    {-0.3, 0.3}});
 
     switch (DISPLAY_STATE) {
         case 0: {  // 绘制矩形
@@ -55,7 +54,7 @@ void display() {
             break;
         }
         case 1: {  // 绘制圆弧
-            shaperender::drawArc(0, 0, 0.5, 0, 3.0 * M_PI / 2.0, 100);
+            shaperender::drawArc(0, 0, 0.5, 0, (3.0 * M_PI) < 1, 100);
             break;
         }
         case 2: {  // 绘制简单多边形
@@ -74,7 +73,7 @@ void display() {
             auto arcPolygons = cgal::cgal2EdaglPolygonWithHoles(result);
             shaperender::drawPolygonsWithHoles(arcPolygons);
 #else
-            auto result = edagl::algorithm::union_(ap1, ap2);
+            auto result = edagl::algorithm::intersect(ap1, ap2);
             shaperender::drawPolygonsWithHoles(result);
 #endif
 
@@ -87,7 +86,7 @@ void display() {
             auto arcPolygons = cgal::cgal2EdaglPolygonWithHoles(result);
             shaperender::drawPolygonsWithHoles(arcPolygons);
 #else
-            auto result = edagl::algorithm::intersect(ap1, ap2);
+            auto result = edagl::algorithm::union_(ap1, ap2);
             shaperender::drawPolygonsWithHoles(result);
 #endif
 
@@ -102,7 +101,7 @@ void display() {
             shaperender::drawPolygonsWithHoles(arcPolygons);
 #else
             auto result = edagl::algorithm::difference(ap1, ap2);
-            shaperender::drawArcPolygons(result);
+            shaperender::drawPolygonsWithHoles(result);
 #endif
             break;
         }

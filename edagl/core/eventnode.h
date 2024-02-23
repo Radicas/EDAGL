@@ -11,28 +11,49 @@
 #ifndef EDA_GL_EVENTNODE_H
 #define EDA_GL_EVENTNODE_H
 
-#include "core/edgenode.h"
+#include "point.h"
 
 namespace edagl {
 namespace core {
+class Edge;
 class Point;
-
-/**
- * @brief 节点基于线段或弧线的位置
- */
-enum class NodePosition { LEFT = 0x0, RIGHT = 0x2, INTERSECT = 0x4 };
 
 /**
  * @brief 
  * 
  */
-struct EventNode {
-    Point mPoint;            ///< 坐标点
-    NodePosition mPosition;  ///< 事件节点的位置
-    EdgeNode* mEdgeNode;     ///< 属于的边
-    EdgeNode* mAnotherNode;  ///< 属于的另一个边(可能为空)
+class EventNode {
+   public:
+    /**
+    * @brief 事件基于线段或弧线的位置
+    */
+    enum class EventPosition { LEFT = 0x1, RIGHT = 0x2, INTERSECT = 0x4 };
 
-    EventNode();
+    EventPosition mPosition;  ///< 事件位置
+    const Point* mPoint;      ///< 坐标点指针
+    Edge* mEdge;              ///< 属于的边
+    Edge* mAnotherEdge;       ///< 属于的另一个边(可能为空)
+
+    /**
+     * @brief
+     *
+     * @param rhs
+     */
+    EventNode(const EventNode& rhs);
+
+    /**
+     *
+     * @param edge
+     * @return
+     */
+    static EventNode createLeft(Edge* edge);
+
+    /**
+     *
+     * @param edge
+     * @return
+     */
+    static EventNode createRight(Edge* edge);
 
     /**
      * @brief 比较重载
@@ -41,6 +62,13 @@ struct EventNode {
      * @return false
      */
     bool operator<(const EventNode& rhs) const;
+
+   private:
+    /**
+     *
+     * @param edge
+     */
+    explicit EventNode(Edge* edge);
 };
 }  // namespace core
 }  // namespace edagl

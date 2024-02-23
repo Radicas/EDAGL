@@ -11,15 +11,18 @@
 #ifndef EDA_GL_INTERSECTION_H
 #define EDA_GL_INTERSECTION_H
 
-#include <core/arcpolygon.h>
-#include <core/point.h>
 #include <vector>
 
 namespace edagl {
+namespace core {
+class ArcPolygon;
+class PolygonWithHoles;
+}  // namespace core
 namespace algorithm {
 
-typedef core::Point Point;
-typedef core::ArcPolygon ArcPolygon;
+typedef edagl::core::ArcPolygon ArcPolygon;
+typedef edagl::core::PolygonWithHoles PolygonWithHoles;
+typedef std::vector<PolygonWithHoles> PolygonsWithHoles;
 
 /**
  * @brief 交集
@@ -27,8 +30,17 @@ typedef core::ArcPolygon ArcPolygon;
  * @param polygon2
  * @return
  */
-std::vector<ArcPolygon> intersect(const ArcPolygon& polygon1,
-                                  const ArcPolygon& polygon2);
+PolygonsWithHoles intersect(const ArcPolygon& polygon1,
+                            const ArcPolygon& polygon2);
+
+/**
+ *
+ * @param pwh1
+ * @param pwh2
+ * @return
+ */
+PolygonsWithHoles intersect(const PolygonWithHoles& pwh1,
+                            const PolygonWithHoles& pwh2);
 
 }  // namespace algorithm
 }  // namespace edagl

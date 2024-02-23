@@ -31,7 +31,7 @@ class EdgeNode {
      * @param aLocation 
      * @param aArcMark 
      */
-    EdgeNode(const Edge& aEdge, const std::pair<double, double>& aLocation,
+    EdgeNode(const Edge& aEdge, const std::vector<Point>& intersectPts,
              short int aArcMark);
 
     /**
@@ -75,60 +75,31 @@ class EdgeNode {
     Edge& getRelatedEdge();
 
     /**
-     * @brief Get the Location object
-     * 
-     * @return std::pair<double, double>& 
+     * @brief
+     *
+     * @return
      */
-    std::pair<double, double>& getLocation();
+    std::vector<Point>& getIntersectPts();
 
     /**
      * @brief Get the Arc Mark object
      * 
      * @return short int 
      */
-    short int getArcMark() const;
-
-    /**
-     * @brief 
-     * 
-     * @return true 
-     * @return false 
-     */
-    bool isFromFirst() const;
-
-    /**
-     * @brief Get the Id object
-     * 
-     * @return int 
-     */
-    int getId() const;
+    short int getTriValue() const;
 
     /* endregion */
 
     /* region Setters */
-
-    /**
-     * @brief Set the Is From First object
-     * 
-     * @param aFirst 
-     */
-    void setIsFromFirst(bool aFirst);
-
-    /**
-     * @brief Set the Id object
-     * 
-     * @param aId 
-     */
-    void setId(int aId);
-
+    void setTriValue(short int triValue);
     /* endregion */
 
+    friend std::ostream& operator<<(std::ostream& os, const EdgeNode& en);
+
    private:
-    Edge mRelatedEdge;                    ///< 相关边
-    std::pair<double, double> mLocation;  ///< 交点位置信息
-    short int mArcMark;                   ///< 三值开关
-    bool mIsFromFirst;                    ///< 是否第一个多边形
-    int mId;                              ///< 序号
+    Edge mRelatedEdge;                 ///< 相关边
+    std::vector<Point> mIntersectPts;  ///< 交点
+    short int mTriValue;               ///< 三值开关
 };
 
 }  // namespace core

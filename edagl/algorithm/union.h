@@ -17,10 +17,15 @@
 #include <vector>
 
 namespace edagl {
+namespace core {
+class ArcPolygon;
+class PolygonWithHoles;
+}  // namespace core
 namespace algorithm {
 
-typedef core::Point Point;
-typedef core::ArcPolygon ArcPolygon;
+typedef edagl::core::ArcPolygon ArcPolygon;
+typedef edagl::core::PolygonWithHoles PolygonWithHoles;
+typedef std::vector<PolygonWithHoles> PolygonsWithHoles;
 
 /**
  * @brief 并集
@@ -28,8 +33,17 @@ typedef core::ArcPolygon ArcPolygon;
  * @param polygon2
  * @return
  */
-std::vector<ArcPolygon> union_(const ArcPolygon& polygon1,
-                               const ArcPolygon& polygon2);
+PolygonsWithHoles union_(const ArcPolygon& polygon1,
+                         const ArcPolygon& polygon2);
+
+/**
+ *
+ * @param pwh1
+ * @param pwh2
+ * @return
+ */
+PolygonsWithHoles union_(const PolygonWithHoles& pwh1,
+                         const PolygonWithHoles& pwh2);
 
 }  // namespace algorithm
 }  // namespace edagl

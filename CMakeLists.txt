@@ -23,6 +23,8 @@ find_package(benchmark REQUIRED)
 find_package(GTest REQUIRED)
 
 find_package(CGAL REQUIRED)
+# 关掉 DEBUG 下CGAL的警告
+set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 
 # 添加子目录
 add_subdirectory(edagl) # 几何库
