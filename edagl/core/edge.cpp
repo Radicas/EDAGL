@@ -1,7 +1,10 @@
 #include "edge.h"
 #include "geometry/geometry.h"
+#include "geometry/intersection.h"
+#include "global.h"
 
 namespace edagl {
+
 namespace core {
 
 /* region Constructors / Destructor */
@@ -19,8 +22,10 @@ Edge::Edge()
       mIsCW(false),
       mIsFirst(false),
       mLocation(-1),
-      mXCoord(std::numeric_limits<double>::max()) {
-    initArcValues();  // 初始化圆弧属性
+      mSlopIntercept(std::make_pair(0.0, 0.0)),
+      mYCoord(std::numeric_limits<double>::max()) {
+    initSegAttributes();  // 初始化线段属性
+    initArcAttributes();  // 初始化圆弧属性
 }
 
 Edge::Edge(const Point& aStart, const Point& aEnd, const Point& aCenter,
@@ -38,8 +43,11 @@ Edge::Edge(const Point& aStart, const Point& aEnd, const Point& aCenter,
       mIsCW(aIsCW),
       mIsFirst(false),
       mLocation(-1),
-      mXCoord(std::numeric_limits<double>::max()) {
-    initArcValues();  // 初始化圆弧属性
+      mSlopIntercept(std::make_pair(std::numeric_limits<double>::max(),
+                                    std::numeric_limits<double>::max())),
+      mYCoord(std::numeric_limits<double>::max()) {
+    initSegAttributes();  // 初始化线段属性
+    initArcAttributes();  // 初始化圆弧属性
 }
 
 Edge::Edge(const Edge& aRhs) = default;
@@ -47,19 +55,6 @@ Edge::Edge(const Edge& aRhs) = default;
 Edge& Edge::operator=(const Edge& aRhs) = default;
 
 Edge::~Edge() = default;
-
-bool Edge::operator<(const Edge& aRhs) const {
-    /**
-     * // TODO: 性能优化点
-     * 这里的比较主要用于红黑树中排序的规则
-     * true：元素放在靠左的位置
-     * false：元素放在靠右的位置
-     * 对于线段，可以考虑缓存一个斜截式，利用插值x计算出y。但要考虑斜率不存在情况
-     * 对于圆弧，稍微麻烦一点了
-     */
-
-    return false;
-}
 
 /* endregion */
 
@@ -78,6 +73,13 @@ std::ostream& operator<<(std::ostream& os, const Edge& edge) {
        << "sweepAngle: " << edge.getSweepAngle() << "\n";
     return os;
 }
+
+void Edge::calcYCoord(double xCoord) {
+    if (mIsArc)
+        calcArcYCoord(xCoord);
+    calcSegYCoord(xCoord);
+}
+
 /* endregion */
 
 /* region Getters */
@@ -145,7 +147,15 @@ void Edge::setLocation(int location) {
 /* endregion */
 
 /* region Private Methods */
-void Edge::initArcValues() {
+
+void Edge::initSegAttributes() {
+    if (mStart.x == mEnd.x)
+        return;
+    mSlopIntercept.first = (mEnd.y - mStart.y) / (mEnd.x - mStart.x);
+    mSlopIntercept.second = mStart.y - mSlopIntercept.first * mStart.x;
+}
+
+void Edge::initArcAttributes() {
     // 线段直接退出
     if (!mIsArc) {
         return;
@@ -161,6 +171,24 @@ void Edge::initArcValues() {
     mIsXMonotone = geometry::isXMonotoneArc(mStart, mEnd, mCenter, mSweepAngle);
     // 计算圆弧的附加点
     mAppendix = geometry::midPointOfArc(mStart, mEnd, mCenter, mIsCW);
+}
+
+void Edge::calcSegYCoord(double x) {
+    mYCoord = mSlopIntercept.first * x + mSlopIntercept.second;
+}
+
+void Edge::calcArcYCoord(double x) {
+    std::vector<Point> results;
+    geometry::lineCircleIntersectPoints(1, 0, -x, getCenter(), getRadius(),
+                                        results);
+    for (const auto& point : results) {
+        bool in = geometry::isPointInArcRange(point, getStartAngle(),
+                                              getSweepAngle(), isCW(), point);
+        if (in) {
+            mYCoord = point.y;
+            return;
+        }
+    }
 }
 
 /* endregion */

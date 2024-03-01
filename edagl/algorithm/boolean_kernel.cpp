@@ -13,6 +13,7 @@
 #include <algorithm>
 
 namespace edagl {
+
 namespace algorithm {
 
 int relatedEdgesBetweenAxis(const ArcPolygon& aArcPolygon, double aAxisSmall,
@@ -141,7 +142,7 @@ int initSequencedEdge(std::vector<EdgeNode>& aSequencedEdge,
     return 0;
 }
 
-void appendEventNode(std::priority_queue<EventNode>& aPq,
+void appendEventNode(std::priority_queue<EventNode>& events,
                      std::vector<EdgeNode>& aSequencedEdge, bool aFirst) {
     /**
      * 注意，扫描线算法处理不了竖直的线段
@@ -150,50 +151,216 @@ void appendEventNode(std::priority_queue<EventNode>& aPq,
      */
     for (auto& edgeNode : aSequencedEdge) {
         auto& edge = edgeNode.getRelatedEdge();
-        // 设置两个标签
-        // 标签一：来自哪个多边形
-        // 标签二：在序列中的位置
+        // 来自哪个多边形
         edge.setIsFirst(aFirst);
+        // 在序列中的位置
         edge.setLocation((int)(&edgeNode - &aSequencedEdge[0]));
         // 添加左端点事件
-        aPq.push(EventNode::createLeft(&edge));
+        events.push(EventNode::createLeft(&edge));
         // 添加右端点事件
-        aPq.push(EventNode::createRight(&edge));
+        events.push(EventNode::createRight(&edge));
     }
 }
 
+auto CompareEdgePtr = [](Edge* edge1, Edge* edge2) {
+    return edge1->mYCoord < edge2->mYCoord;
+};
+
+void recalculate(std::set<Edge*, decltype(CompareEdgePtr)>& rbTree, double x) {
+    auto it = rbTree.begin();
+    while (it != rbTree.end()) {
+        (*it)->calcYCoord(x);
+        it++;
+    }
+}
+
+void insertIntersectPoints(const std::vector<Point>& intersectPts, Edge* edge,
+                           std::vector<EdgeNode>& sequencedEdge1,
+                           std::vector<EdgeNode>& sequencedEdge2) {
+    auto& sequencedEdge = edge->isFirst() ? sequencedEdge1 : sequencedEdge2;
+    auto& edgeNode = sequencedEdge[edge->getLocation()];
+    auto& edgeInPts = edgeNode.getIntersectPts();
+    edgeInPts.insert(edgeInPts.end(), intersectPts.begin(), intersectPts.end());
+}
+
+void reportIntersection(Edge* edge1, Edge* edge2,
+                        std::priority_queue<EventNode>& events,
+                        std::vector<EdgeNode>& sequencedEdge1,
+                        std::vector<EdgeNode>& sequencedEdge2) {
+    if (edge1->isFirst() == edge2->isFirst())
+        return;
+    std::vector<Point> intersectPts;
+    if (geometry::edgeEdgeIntersectPoints(*edge1, *edge2, intersectPts)) {
+        // 插入序列1
+        insertIntersectPoints(intersectPts, edge1, sequencedEdge1,
+                              sequencedEdge2);
+        // 插入序列2
+        insertIntersectPoints(intersectPts, edge2, sequencedEdge1,
+                              sequencedEdge2);
+        //         插入交点事件
+        for (const auto& point : intersectPts) {
+            auto en = EventNode::createIntersect(edge1, edge2, point);
+            events.push(std::move(en));
+        }
+    }
+}
+
+void handleVerticalNode(std::set<Edge*, decltype(CompareEdgePtr)>& rbTree,
+                        const EventNode& eventNode,
+                        std::vector<EdgeNode>& sequencedEdge1,
+                        std::vector<EdgeNode>& sequencedEdge2) {
+    // 进入垂直边时，需要检查所有平衡树中的边的相交关系
+    // 垂直边不放入平衡树
+    Edge* currentEdge = eventNode.mEdge;
+    std::vector<Point> intersections;
+    for (const auto* edge : rbTree) {
+        // 属于同一个多边形则跳过
+        if (edge->isFirst() == currentEdge->isFirst())
+            continue;
+        // 垂直边产生的交点不再需要放进事件中继续处理
+        bool hasIntersections = geometry::edgeEdgeIntersectPoints(
+            *edge, *currentEdge, intersections);
+        // 无交点则跳过
+        if (!hasIntersections)
+            continue;
+        for (const auto& inP : intersections) {
+            std::cout << "!!!报告交点:" << inP
+                      << "\t来自边:" << eventNode.mEdge->getStart() << ","
+                      << edge->getEnd() << "\t" << edge->getStart() << ","
+                      << edge->getEnd() << "\n\n ";
+        }
+        // 处理平衡树中的边，插入数据
+        auto& sequencedEdge = edge->isFirst() ? sequencedEdge1 : sequencedEdge2;
+        auto& edgeNode = sequencedEdge[edge->getLocation()];
+        auto& edgeNodeIntPts = edgeNode.getIntersectPts();
+        edgeNodeIntPts.insert(edgeNodeIntPts.end(), intersections.begin(),
+                              intersections.end());
+        // 处理当前边，插入数据
+        auto& currSequencedEdge =
+            currentEdge->isFirst() ? sequencedEdge1 : sequencedEdge2;
+        auto& currEdgeNode = currSequencedEdge[currentEdge->getLocation()];
+        auto& currEdgeNodeIntPts = currEdgeNode.getIntersectPts();
+        currEdgeNodeIntPts.insert(currEdgeNodeIntPts.end(),
+                                  intersections.begin(), intersections.end());
+    }
+}
+
+void handleLeftNode(std::set<Edge*, decltype(CompareEdgePtr)>& rbTree,
+                    std::priority_queue<EventNode>& events,
+                    const EventNode& eventNode,
+                    std::vector<EdgeNode>& sequencedEdge1,
+                    std::vector<EdgeNode>& sequencedEdge2) {
+    // 竖直事件单独维护
+    if (eventNode.mIsVertical) {
+        std::cout << "进入竖直边:" << eventNode.mEdge->getStart() << ","
+                  << eventNode.mEdge->getEnd() << "\n\n";
+        handleVerticalNode(rbTree, eventNode, sequencedEdge1, sequencedEdge2);
+        return;
+    }
+    // 修改平衡树排序规则
+    recalculate(rbTree, eventNode.mPoint.x);
+    // 平衡树插入边
+    eventNode.mEdge->calcYCoord(eventNode.mPoint.x);
+    rbTree.insert(eventNode.mEdge);
+    std::cout << "插入:" << eventNode.mEdge->getStart() << ","
+              << eventNode.mEdge->getEnd() << "\tX坐标:" << eventNode.mPoint.x
+              << "\t数量:" << rbTree.size() << std::endl;
+    for (auto it : rbTree) {
+        std::cout << it->getStart() << "," << it->getEnd()
+                  << "\tY坐标:" << it->mYCoord << std::endl;
+    }
+    std::cout << "\n";
+    auto it = rbTree.find(eventNode.mEdge);
+    // 获取迭代器
+    if (it == rbTree.end()) {
+        std::cout << "Element not found\n";
+        return;
+    }
+
+    // 处理前一个
+    if (it != rbTree.begin()) {
+        auto prevIt = std::prev(it);
+        reportIntersection(*prevIt, *it, events, sequencedEdge1,
+                           sequencedEdge2);
+    }
+    // 处理后一个迭代器
+    auto nextIt = std::next(it);
+    if (nextIt != rbTree.end()) {
+        reportIntersection(*nextIt, *it, events, sequencedEdge1,
+                           sequencedEdge2);
+    }
+}
+
+void handleRightNode(std::set<Edge*, decltype(CompareEdgePtr)>& rbTree,
+                     std::priority_queue<EventNode>& events,
+                     const EventNode& eventNode,
+                     std::vector<EdgeNode>& sequencedEdge1,
+                     std::vector<EdgeNode>& sequencedEdge2) {
+    if (eventNode.mIsVertical) {
+        // 离开垂直边时，不需要处理
+        std::cout << "离开竖直边" << eventNode.mEdge->getStart() << ","
+                  << eventNode.mEdge->getEnd() << "\n\n";
+        return;
+    }
+
+    // 非垂直边需要检查上下界是否相交，然后自身从平衡树中移除
+    auto it = rbTree.find(eventNode.mEdge);
+    auto prevIt = std::prev(it);
+    auto nextIt = std::next(it);
+    // 上界和下界要同时存在
+    if (it != rbTree.begin() && nextIt != rbTree.end()) {
+        reportIntersection(*prevIt, *nextIt, events, sequencedEdge1,
+                           sequencedEdge2);
+    }
+    // 平衡树中移除此事件下的边
+    rbTree.erase(eventNode.mEdge);
+    std::cout << "移除:" << eventNode.mEdge->getStart() << ","
+              << eventNode.mEdge->getEnd() << "\n\n";
+}
+
+void handleIntersectNode(std::set<Edge*, decltype(CompareEdgePtr)>& rbTree,
+                         std::priority_queue<EventNode>& pQueue,
+                         const EventNode& eventNode,
+                         std::vector<EdgeNode>& sequencedEdge1,
+                         std::vector<EdgeNode>& sequencedEdge2) {}
+
 void rebuildSequencedEdge(std::vector<EdgeNode>& aSequencedEdge1,
                           std::vector<EdgeNode>& aSequencedEdge2) {
-    // 声明存储事件节点的最小堆
-    std::priority_queue<EventNode> pQueue;
-    // 初始化两个序列边的事件
-    appendEventNode(pQueue, aSequencedEdge1, true);
-    appendEventNode(pQueue, aSequencedEdge2, false);
-    std::cout << "事件数: " << pQueue.size() << "\n\n";
+    // 存储事件节点
+    std::priority_queue<EventNode> events;
+    // 初始化事件
+    appendEventNode(events, aSequencedEdge1, true);
+    appendEventNode(events, aSequencedEdge2, false);
+    std::cout << "事件数: " << events.size() << "\n\n";
+
     // 初始化红黑树
-    std::set<Edge*> rbTree{};
-    while (!pQueue.empty()) {
-        const EventNode& event = pQueue.top();
-        std::cout << "事件点: " << *event.mPoint
-                  << "\t状态: " << static_cast<int>(event.mPosition) << "\n";
+    std::set<Edge*, decltype(CompareEdgePtr)> R(CompareEdgePtr);
+    int evCnt = 1;
+    while (!events.empty()) {
+        const EventNode& event = events.top();
+        std::cout << "事件:" << evCnt++ << "\t" << event.mPoint << "\t"
+                  << static_cast<int>(event.mPosition) << "\n";
         switch (event.mPosition) {
             case EventNode::EventPosition::LEFT: {
-                handleLeftNode(rbTree, pQueue, event);
+                handleLeftNode(R, events, event, aSequencedEdge1,
+                               aSequencedEdge2);
                 break;
             }
             case EventNode::EventPosition::RIGHT: {
-                handleRightNode(rbTree, pQueue, event);
+                handleRightNode(R, events, event, aSequencedEdge1,
+                                aSequencedEdge2);
                 break;
             }
             case EventNode::EventPosition::INTERSECT: {
-                handleIntersectNode(rbTree, pQueue, event);
+                handleIntersectNode(R, events, event, aSequencedEdge1,
+                                    aSequencedEdge2);
                 break;
             }
             default:
                 break;
         }
         // pop完对象会析构，所以放后面处理
-        pQueue.pop();
+        events.pop();
     }
 }
 
@@ -299,39 +466,9 @@ std::vector<Edge> decomposeArcToThree(const Edge& aEdge, const Point& aEast,
     return res;
 }
 
-void handleLeftNode(std::set<Edge*>& rbTree,
-                    std::priority_queue<EventNode>& pQueue,
-                    const EventNode& eventNode) {
-    rbTree.insert(eventNode.mEdge);
-    auto it = rbTree.find(eventNode.mEdge);
-    if (it != rbTree.end()) {
-        // 找到前一个元素
-        if (it != rbTree.begin()) {
-            auto prevIt = std::prev(it);
-        } else {
-        }
 
-        // 找到后一个元素
-        auto nextIt = std::next(it);
-        if (nextIt != rbTree.end()) {
-        } else {
-        }
-    } else {
-        std::cout << "没有此元素\n";
-    }
-}
 
-void handleRightNode(std::set<Edge*>& rbTree,
-                     std::priority_queue<EventNode>& pQueue,
-                     const EventNode& eventNode) {}
 
-void handleIntersectNode(std::set<Edge*>& rbTree,
-                         std::priority_queue<EventNode>& pQueue,
-                         const EventNode& eventNode) {}
-
-int constructProcessedArcPolygon() {
-    return 0;
-}
 
 PolygonsWithHoles booleanOperation(const ArcPolygon& ap1, const ArcPolygon& ap2,
                                    Traits traits) {
@@ -344,6 +481,12 @@ PolygonsWithHoles booleanOperation(const ArcPolygon& ap1, const ArcPolygon& ap2,
                  relatedEdge2);
     // TODO:
     // 组织好数据，返回运算结果
+    exit(100);
+    return {};
+}
+
+int constructProcessedArcPolygon() {
+    return 0;
 }
 
 }  // namespace algorithm

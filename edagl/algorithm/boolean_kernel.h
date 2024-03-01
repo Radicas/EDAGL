@@ -35,6 +35,8 @@ typedef edagl::core::EventNode EventNode;
 typedef edagl::core::PolygonWithHoles PolygonWithHoles;
 typedef std::vector<PolygonWithHoles> PolygonsWithHoles;
 
+struct CompareEdgePtr;
+
 /**
  * @brief 运算策略
  */
@@ -120,35 +122,6 @@ std::vector<Edge> decomposeArcToThree(const Edge& aEdge, const Point& aEast,
 std::vector<Edge> decomposeArcToTwo(const Edge& aEdge,
                                     const Point& aBreakPoint);
 
-/**
- * @brief 处理左节点
- *
- * @param aRbTree
- * @param aEventNode
- */
-void handleLeftNode(std::set<Edge*>& aRbTree,
-                    std::priority_queue<EventNode>& aPQueue,
-                    const EventNode& aEventNode);
-
-/**
- * @brief 处理右节点
- *
- * @param rbTree
- * @param eventNode
- */
-void handleRightNode(std::set<Edge*>& rbTree,
-                     std::priority_queue<EventNode>& pQueue,
-                     const EventNode& eventNode);
-
-/**
- * @brief 处理交点节点
- *
- * @param aRbTree
- * @param aEventNode
- */
-void handleIntersectNode(std::set<Edge*>& aRbTree,
-                         std::priority_queue<EventNode>& aPQueue,
-                         const EventNode& aEventNode);
 
 /**
  * @brief 构建处理过的圆弧多边形

@@ -23,6 +23,10 @@ class BBox;
 namespace edagl {
 namespace geometry {
 
+typedef edagl::core::Point Point;
+typedef edagl::core::Edge Edge;
+typedef edagl::core::BBox BBox;
+
 /********************************** Segment **********************************/
 
 /**
@@ -35,8 +39,8 @@ namespace geometry {
  * @param aE2
  * @return
  */
-bool isSegSegIntersect(const core::Point& aS1, const core::Point& aE1,
-                       const core::Point& aS2, const core::Point& aE2);
+bool isSegSegIntersect(const Point& aS1, const Point& aE1, const Point& aS2,
+                       const Point& aE2);
 
 /**
  * @brief 判断线段和圆是否相交(包括端点)
@@ -47,9 +51,8 @@ bool isSegSegIntersect(const core::Point& aS1, const core::Point& aE1,
  * @param aRadius
  * @return
  */
-bool isSegCircleIntersect(const core::Point& aSegStart,
-                          const core::Point& aSegEnd,
-                          const core::Point& aCenter, double aRadius);
+bool isSegCircleIntersect(const Point& aSegStart, const Point& aSegEnd,
+                          const Point& aCenter, double aRadius);
 
 /**
  * @brief 获取线段和线段交点(包含端点)
@@ -60,10 +63,9 @@ bool isSegCircleIntersect(const core::Point& aSegStart,
  * @param aResult
  * @return
  */
-bool segSegIntersectPoint(const core::Point& aSegStart1,
-                          const core::Point& aSegEnd1,
-                          const core::Point& aSegStart2,
-                          const core::Point& aSegEnd2, core::Point& aResult);
+bool segSegIntersectPoint(const Point& aSegStart1, const Point& aSegEnd1,
+                          const Point& aSegStart2, const Point& aSegEnd2,
+                          Point& aResult);
 
 /********************************** Arc **********************************/
 
@@ -80,11 +82,10 @@ bool segSegIntersectPoint(const core::Point& aSegStart1,
  * @param aResult
  * @return
  */
-bool segArcIntersectPoints(const core::Point& aSegStart,
-                           const core::Point& aSegEnd,
-                           const core::Point& aArcCenter, double aRadius,
+bool segArcIntersectPoints(const Point& aSegStart, const Point& aSegEnd,
+                           const Point& aArcCenter, double aRadius,
                            double aStartAngle, double aSweepAngle, bool aIsCW,
-                           std::vector<core::Point>& aResult);
+                           std::vector<Point>& aResult);
 
 /**
  * @brief 求圆弧和圆弧的交点(包括端点)
@@ -101,12 +102,11 @@ bool segArcIntersectPoints(const core::Point& aSegStart,
  * @param aIsCW2
  * @return
  */
-bool arcArcIntersectPoints(const core::Point& aCenter1, double aRadius1,
+bool arcArcIntersectPoints(const Point& aCenter1, double aRadius1,
                            double aStartAngle1, double aSweepAngle1,
-                           bool aIsCW1, const core::Point& aCenter2,
-                           double aRadius2, double aStartAngle2,
-                           double aSweepAngle2, bool aIsCW2,
-                           std::vector<core::Point>& aResult);
+                           bool aIsCW1, const Point& aCenter2, double aRadius2,
+                           double aStartAngle2, double aSweepAngle2,
+                           bool aIsCW2, std::vector<Point>& aResult);
 
 /*********************************** Edge ***********************************/
 
@@ -118,8 +118,8 @@ bool arcArcIntersectPoints(const core::Point& aCenter1, double aRadius1,
  * @param aResult
  * @return
  */
-bool edgeEdgeIntersectPoints(const core::Edge& aEdge1, const core::Edge& aEdge2,
-                             std::vector<core::Point>& aResult);
+bool edgeEdgeIntersectPoints(const Edge& aEdge1, const Edge& aEdge2,
+                             std::vector<Point>& aResult);
 
 /********************************** Circle **********************************/
 
@@ -133,10 +133,13 @@ bool edgeEdgeIntersectPoints(const core::Edge& aEdge1, const core::Edge& aEdge2,
  * @param aResult
  * @return
  */
-bool segCircleIntersectPoints(const core::Point& aSegStart,
-                              const core::Point& aSegEnd,
-                              const core::Point& aCenter, double aRadius,
-                              std::vector<core::Point>& aResult);
+bool segCircleIntersectPoints(const Point& aSegStart, const Point& aSegEnd,
+                              const Point& aCenter, double aRadius,
+                              std::vector<Point>& aResult);
+
+bool lineCircleIntersectPoints(double A, double B, double C,
+                               const Point& aCenter, double aRadius,
+                               std::vector<Point>& aResult);
 
 /**
  * @brief 求圆和圆交点
@@ -148,9 +151,9 @@ bool segCircleIntersectPoints(const core::Point& aSegStart,
  * @param aResult
  * @return
  */
-bool circleCircleIntersectPoints(const core::Point& aCenter1, double aRadius1,
-                                 const core::Point& aCenter2, double aRadius2,
-                                 std::vector<core::Point>& aResult);
+bool circleCircleIntersectPoints(const Point& aCenter1, double aRadius1,
+                                 const Point& aCenter2, double aRadius2,
+                                 std::vector<Point>& aResult);
 
 /********************************** BBOx **********************************/
 
@@ -162,8 +165,7 @@ bool circleCircleIntersectPoints(const core::Point& aCenter1, double aRadius1,
  * @param aResult
  * @return
  */
-int intersectsBBoxes(const core::BBox& aBBox1, const core::BBox& aBBox2,
-                     core::BBox& aResult);
+int intersectsBBoxes(const BBox& aBBox1, const BBox& aBBox2, BBox& aResult);
 
 }  // namespace geometry
 }  // namespace edagl

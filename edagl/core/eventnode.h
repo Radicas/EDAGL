@@ -30,9 +30,10 @@ class EventNode {
     enum class EventPosition { LEFT = 0x1, RIGHT = 0x2, INTERSECT = 0x4 };
 
     EventPosition mPosition;  ///< 事件位置
-    const Point* mPoint;      ///< 坐标点指针
+    Point mPoint;             ///< 坐标点指针
     Edge* mEdge;              ///< 属于的边
     Edge* mAnotherEdge;       ///< 属于的另一个边(可能为空)
+    bool mIsVertical;         ///< 是否来自垂直边
 
     /**
      * @brief
@@ -54,6 +55,8 @@ class EventNode {
      * @return
      */
     static EventNode createRight(Edge* edge);
+
+    static EventNode createIntersect(Edge* edge, Edge* another, const Point& point);
 
     /**
      * @brief 比较重载

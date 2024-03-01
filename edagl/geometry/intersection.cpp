@@ -103,6 +103,41 @@ bool segArcIntersectPoints(const Point& aSegStart, const Point& aSegEnd,
     return true;
 }
 
+bool lineCircleIntersectPoints(double A, double B, double C,
+                               const Point& center, double radius,
+                               std::vector<Point>& result) {
+    result.clear();
+    // 避免无效的输入
+    if (radius <= 0 || (A == 0 && B == 0)) {
+        return false;
+    }
+    // 计算直线的法线（垂直）距离到圆心的距离
+    double dist = fabs(A * center.x + B * center.y + C) / sqrt(A * A + B * B);
+    // 如果距离大于半径，则没有交点
+    if (dist > radius) {
+        return false;
+    }
+    // 计算交点的坐标
+    double dx = A / sqrt(A * A + B * B);
+    double dy = B / sqrt(A * A + B * B);
+    double x0 = center.x - dx * (C / sqrt(A * A + B * B));
+    double y0 = center.y - dy * (C / sqrt(A * A + B * B));
+    // 直线与圆相切
+    if (dist == radius) {
+        result.emplace_back(x0, y0);
+        return true;
+    }
+    // 计算两个交点
+    double d = sqrt(radius * radius -
+                    dist * dist);  // 从圆心到交点连线与直线的交点的距离
+    double mult = sqrt(d * d / (A * A + B * B));
+    Point p1 = {x0 + B * mult, y0 - A * mult};
+    Point p2 = {x0 - B * mult, y0 + A * mult};
+    result.push_back(p1);
+    result.push_back(p2);
+    return true;
+}
+
 bool arcArcIntersectPoints(const Point& aCenter1, double aRadius1,
                            double aStartAngle1, double aSweepAngle1,
                            bool aIsCW1, const Point& aCenter2, double aRadius2,

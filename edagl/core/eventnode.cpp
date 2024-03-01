@@ -5,33 +5,39 @@ namespace edagl {
 namespace core {
 
 EventNode::EventNode(Edge* edge)
-    : mPosition(), mPoint(nullptr), mEdge(edge), mAnotherEdge(nullptr) {}
+    : mPosition(),
+      mPoint(),
+      mEdge(edge),
+      mAnotherEdge(nullptr),
+      mIsVertical(edge->getStart().x == edge->getEnd().x) {}
 
 EventNode::EventNode(const EventNode& rhs) = default;
 
 bool EventNode::operator<(const EventNode& rhs) const {
-    /**
-     * 先比较x，x越小，优先级越高
-     * 如果x相等，比较y，y越大，优先级越高
-     * 如果y相等，比较当前点是否左端点，左端点优先级高于右端点
-     * 不会出现三个纬度相等的情况
-     * // TODO: 交点等退化情况还没有考虑
-     */
-    if (mPoint->x < rhs.mPoint->x) {
-        return false;  // false 表示当前事件的优先级更高
-    } else if (mPoint->x == rhs.mPoint->x) {
-        if (mPoint->y > rhs.mPoint->y) {
-            return false;
-        } else if (mPoint->y < rhs.mPoint->y) {
-            return true;
-        } else {  // x，y都相等，比较端点序
-            return mPosition != EventPosition::LEFT;
-        }
+    // 先比较x坐标
+    if (mPoint.x != rhs.mPoint.x) {
+        // x越小，优先级越高
+        return mPoint.x > rhs.mPoint.x;
     }
-    return true;  // 如果当前点的x坐标大于另一个点的x坐标，则当前点在优先队列中的优先级更低。
+    // x相同，比较y坐标
+    if (mPoint.y != rhs.mPoint.y) {
+        // y越大，优先级越高
+        return mPoint.y < rhs.mPoint.y;
+    }
+    // x和y都相同，比较端点类型（左端点优先）
+    if (mPosition != rhs.mPosition) {
+        return mPosition == EventPosition::RIGHT;
+    }
+    // 端点类型也相同，比较斜率的绝对值
+    double slope1 = std::abs((mEdge->getEnd().y - mEdge->getStart().y) /
+                             (mEdge->getEnd().x - mEdge->getStart().x));
+    double slope2 = std::abs((rhs.mEdge->getEnd().y - rhs.mEdge->getStart().y) /
+                             (rhs.mEdge->getEnd().x - rhs.mEdge->getStart().x));
+    // 斜率绝对值大的优先级高
+    return slope1 < slope2;
 }
 
-const Point* determineEventPoint(Edge* edge, bool isLeft) {
+Point determineEventPoint(Edge* edge, bool isLeft) {
     const Point& start = edge->getStart();
     const Point& end = edge->getEnd();
     /**
@@ -40,9 +46,9 @@ const Point* determineEventPoint(Edge* edge, bool isLeft) {
      * 如果x相等，y越大优先级越高
      */
     if (start.x < end.x || (start.x == end.x && start.y > end.y)) {
-        return isLeft ? &start : &end;
+        return isLeft ? start : end;
     } else {
-        return isLeft ? &end : &start;
+        return isLeft ? end : start;
     }
 }
 
@@ -58,6 +64,18 @@ EventNode EventNode::createRight(Edge* edge) {
     rightEvent.mPosition = EventPosition::RIGHT;
     rightEvent.mPoint = determineEventPoint(edge, false);
     return rightEvent;
+}
+
+EventNode EventNode::createIntersect(Edge* edge, Edge* another,
+                                     const Point& point) {
+    EventNode intersectEvent(edge);
+    intersectEvent.mAnotherEdge = another;
+    intersectEvent.mPosition = EventPosition::INTERSECT;
+    intersectEvent.mPoint = point;
+    std::cout << "!!!报告交点:" << point << "\t来自边:" << edge->getStart()
+              << "," << edge->getEnd() << "\t" << another->getStart() << ","
+              << another->getEnd() << "\n\n ";
+    return intersectEvent;
 }
 
 }  // namespace core

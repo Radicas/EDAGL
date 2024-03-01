@@ -17,9 +17,6 @@ EdgeNode& EdgeNode::operator=(const EdgeNode& aRhs) = default;
 
 EdgeNode::~EdgeNode() = default;
 
-bool EdgeNode::operator<(const EdgeNode& aRhs) const {
-    return mRelatedEdge < aRhs.mRelatedEdge;
-}
 /* endregion */
 
 /* region Getters */

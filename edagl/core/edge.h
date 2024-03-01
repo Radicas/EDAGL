@@ -16,8 +16,25 @@
 
 namespace edagl {
 namespace core {
+
 class Edge {
    public:
+    Point mStart;        ///< 起点
+    Point mEnd;          ///< 终点
+    Point mAppendix;     ///< 附加点
+    bool mIsArc;         ///< 是否圆弧
+    bool mIsXMonotone;   ///< 是否X单调
+    Point mCenter;       ///< 圆心
+    double mRadius;      ///< 半径
+    double mStartAngle;  ///< 起始角度，(0, 2π]
+    double mEndAngle;    ///< 终止角度，(0, 2π]
+    double mSweepAngle;  ///< 扫过的角度，(0, 2π]
+    bool mIsCW;          ///< true表示顺时针；false逆时针
+    bool mIsFirst;       ///< 标签1，是否属于第一个多边形
+    int mLocation;       ///< 标签2，序列边中的位置
+    std::pair<double, double> mSlopIntercept;  ///< 线段所在直线斜截式
+    double mYCoord;                            ///< 平衡树排序用的y坐标
+
     /* region Constructors / Destructor */
     /**
      * @brief Construct a new Edge object
@@ -58,15 +75,6 @@ class Edge {
      * 
      */
     ~Edge();
-
-    /**
-     * @brief 
-     * 
-     * @param aRhs 
-     * @return true 
-     * @return false 
-     */
-    bool operator<(const Edge& aRhs) const;
 
     /* endregion */
 
@@ -163,6 +171,7 @@ class Edge {
      * @return
      */
     int getLocation() const;
+
     /* endregion */
 
     /* region Setters */
@@ -191,30 +200,26 @@ class Edge {
      */
     friend std::ostream& operator<<(std::ostream& os, const Edge& edge);
 
+    void calcYCoord(double xCoord);
     /* endregion */
 
    private:
     /* region Private Methods */
     /**
+     * @brief
+     */
+    void initSegAttributes();
+
+    /**
      * @brief 初始化圆弧属性
      */
-    void initArcValues();
-    /* endregion */
+    void initArcAttributes();
 
-    Point mStart;        ///< 起点
-    Point mEnd;          ///< 终点
-    Point mAppendix;     ///< 附加点
-    bool mIsArc;         ///< 是否圆弧
-    bool mIsXMonotone;   ///< 是否X单调
-    Point mCenter;       ///< 圆心
-    double mRadius;      ///< 半径
-    double mStartAngle;  ///< 起始角度，(0, 2π]
-    double mEndAngle;    ///< 终止角度，(0, 2π]
-    double mSweepAngle;  ///< 扫过的角度，(0, 2π]
-    bool mIsCW;          ///< true表示顺时针；false逆时针
-    bool mIsFirst;       ///< 标签1，是否属于第一个多边形
-    int mLocation;       ///< 标签2，序列边中的位置
-    double mXCoord;      ///< 扫描线传入的x坐标ï
+    void calcSegYCoord(double x);
+
+    void calcArcYCoord(double x);
+
+    /* endregion */
 };
 
 }  // namespace core

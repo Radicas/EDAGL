@@ -55,15 +55,6 @@ class EdgeNode {
      */
     ~EdgeNode();
 
-    /**
-     * @brief 
-     * 
-     * @param aRhs 
-     * @return true 
-     * @return false 
-     */
-    bool operator<(const EdgeNode& aRhs) const;
-
     /* endregion */
 
     /* region Getters */
