@@ -12,6 +12,7 @@
 #define EDA_GL_SHAPERENDER_H
 
 #include "core/point.h"
+#include <vector>
 
 namespace edagl {
 namespace core {

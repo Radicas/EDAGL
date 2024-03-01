@@ -9,6 +9,7 @@
 #include "core/point.h"
 #include "geometry/geometry.h"
 #include "geometry/intersection.h"
+#include "core/polygon_with_holes.h"
 
 #include <algorithm>
 

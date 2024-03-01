@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "engine/geometry.h"
-#include "engine/intersection.h"
+#include "geometry/geometry.h"
+#include "geometry/intersection.h"
 
 using namespace edagl::core;
 using namespace edagl::geometry;

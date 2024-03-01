@@ -3,7 +3,7 @@
 #include "core/bbox.h"
 #include "core/linkednode.h"
 #include "core/point.h"
-#include "engine/geometry.h"
+#include "geometry/geometry.h"
 
 using namespace edagl::core;
 

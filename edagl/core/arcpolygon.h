@@ -12,6 +12,7 @@
 #define EDA_GL_ARCPOLYGON_H
 
 #include <iostream>
+#include <vector>
 
 namespace edagl {
 namespace core {

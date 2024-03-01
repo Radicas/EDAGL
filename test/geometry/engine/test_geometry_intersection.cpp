@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "core/point.h"
-#include "engine/geometry.h"
-#include "engine/intersection.h"
+#include "geometry/geometry.h"
+#include "geometry/intersection.h"
 
 #include <cmath>
 

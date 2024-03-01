@@ -49,7 +49,7 @@ void display() {
 
     switch (DISPLAY_STATE) {
         case 0: {  // 绘制矩形
-            Rectangle rect(-0.3, -0.3, 0.6, 0.6, 0.0);
+            edagl::core::Rectangle rect(-0.3, -0.3, 0.6, 0.6, 0.0);
             shaperender::drawRectangle(rect);
             break;
         }

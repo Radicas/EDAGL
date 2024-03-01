@@ -23,7 +23,7 @@ Edge::Edge()
       mIsFirst(false),
       mLocation(-1),
       mSlopIntercept(std::make_pair(0.0, 0.0)),
-      mYCoord(std::numeric_limits<double>::max()) {
+      mYCoord(EPSILON) {
     initSegAttributes();  // 初始化线段属性
     initArcAttributes();  // 初始化圆弧属性
 }
@@ -43,9 +43,9 @@ Edge::Edge(const Point& aStart, const Point& aEnd, const Point& aCenter,
       mIsCW(aIsCW),
       mIsFirst(false),
       mLocation(-1),
-      mSlopIntercept(std::make_pair(std::numeric_limits<double>::max(),
-                                    std::numeric_limits<double>::max())),
-      mYCoord(std::numeric_limits<double>::max()) {
+      mSlopIntercept(std::make_pair(EPSILON,
+                                    EPSILON)),
+      mYCoord(EPSILON) {
     initSegAttributes();  // 初始化线段属性
     initArcAttributes();  // 初始化圆弧属性
 }

@@ -7,8 +7,8 @@
 #include <cmath>
 
 using namespace edagl::core;
-using namespace algorithm;
-
+using namespace edagl::algorithm;
+typedef edagl::core::ArcPolygon ArcPolygon;
 // 根据有效轴获取相关边
 class Algorithm_BooleanRelatedEdges : public ::testing::Test {
    public:
@@ -64,13 +64,13 @@ class Algorithm_BooleanRelatedEdges : public ::testing::Test {
 
 TEST_F(Algorithm_BooleanRelatedEdges, relatedEdgesBetweenAxis) {
     std::vector<Edge> relatedEdges{};
-    relatedEdgesBetweenAxis(poly1, 0.1, 0.2, true, relatedEdges);
+    relatedEdgesBetweenAxis(*poly1, 0.1, 0.2, true, relatedEdges);
     EXPECT_EQ(relatedEdges.size(), 1);
 }
 
 TEST_F(Algorithm_BooleanRelatedEdges, relatedEdgesBetweenAxis2) {
     std::vector<Edge> relatedEdges{};
-    relatedEdgesBetweenAxis(poly3, 0.0, 5.0, true, relatedEdges);
+    relatedEdgesBetweenAxis(*poly3, 0.0, 5.0, true, relatedEdges);
     EXPECT_EQ(relatedEdges.size(), 4);
 }
 
@@ -79,7 +79,7 @@ class Algorithm_Boolean_DecomposeArc : public testing::Test {};
 
 TEST_F(Algorithm_Boolean_DecomposeArc, two1) {
     Edge edge({-200.0, 0.0}, {0.0, 200.0}, {0.0, 0.0}, true, false);
-    auto res = algorithm::decomposeArc(edge);
+    auto res = decomposeArc(edge);
     EXPECT_DOUBLE_EQ(res[0].getStart().x, -200.0);
     EXPECT_DOUBLE_EQ(res[0].getStart().y, 0.0);
     EXPECT_DOUBLE_EQ(res[0].getEnd().x, 200.0);
@@ -111,7 +111,7 @@ TEST_F(Algorithm_Boolean_DecomposeArc, two1) {
 
 TEST_F(Algorithm_Boolean_DecomposeArc, two2) {
     Edge edge({0.0, 200.0}, {-200.0, 0.0}, {0.0, 0.0}, true, true);
-    auto res = algorithm::decomposeArc(edge);
+    auto res = decomposeArc(edge);
 
     EXPECT_DOUBLE_EQ(res[0].getStart().x, 0.0);
     EXPECT_DOUBLE_EQ(res[0].getStart().y, 200.0);
@@ -144,7 +144,7 @@ TEST_F(Algorithm_Boolean_DecomposeArc, two2) {
 
 TEST_F(Algorithm_Boolean_DecomposeArc, three1) {
     Edge edge({-150.0, 100.0}, {100.0, 150.0}, {0, 0}, true, false);
-    auto res = algorithm::decomposeArc(edge);
+    auto res = decomposeArc(edge);
 
     // 第一段
     EXPECT_DOUBLE_EQ(res[0].getStart().x, -150.0);
@@ -195,7 +195,7 @@ TEST_F(Algorithm_Boolean_DecomposeArc, three1) {
 
 TEST_F(Algorithm_Boolean_DecomposeArc, three2) {
     Edge edge({100.0, 150.0}, {-150.0, 100.0}, {0, 0}, true, true);
-    auto res = algorithm::decomposeArc(edge);
+    auto res = decomposeArc(edge);
 
     // 第一段
     EXPECT_DOUBLE_EQ(res[0].getStart().x, 100.0);

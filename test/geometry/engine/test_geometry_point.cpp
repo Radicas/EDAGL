@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "engine/geometry.h"
+#include "geometry/geometry.h"
 
 using namespace edagl::core;
 using namespace edagl::geometry;
